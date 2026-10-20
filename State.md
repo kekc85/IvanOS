@@ -21,3 +21,5 @@
 - 2026-10-19: Контент-завод выпустил полный комплект по теме «Ловушка кофе» (карусель 7 слайдов, кинетический рилс, тред Threads 7 постов, ChatPlace build-sheet КОФЕ).
 - 2026-10-19: Свёрстана и отрендерена в PNG (1080x1350) готовая карусель workspace/carousel/kofe/slides/slide-[1-7].png.
 - 2026-10-20: Собрана и отрендерена чистовая версия вертикального ролика Reels (1080x1920 MP4, h264/aac, 50.35s) workspace/reels/kofe/reel-kofe.mp4.
+- 2026-10-20: Создана интерактивная веб-статья с калькулятором (kofe/index.html), запушена в GitHub (kekc85/IvanOS) и задеплоена на Vercel: https://shkola-dolgoletiya-kofe.vercel.app.
+- 2026-10-20: Через ChatPlace MCP создана и активирована воронка «КОФЕ to Direct» для @andrei_pro_zdorovie и настроены автоответы на комментарии.
