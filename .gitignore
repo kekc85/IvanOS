@@ -11,3 +11,5 @@ workspace/reels/kofe/raw_record/
 *.tmp
 .DS_Store
 Thumbs.db
+
+.vercel
