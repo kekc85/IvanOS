@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>CTA Action Card (P7)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0a0a0a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    background: var(--brand-text-dark);
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    color: var(--brand-text-light);
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 25% 30%, var(--brand-primary) 0%, transparent 40%),
+      radial-gradient(circle at 75% 75%, var(--brand-accent) 0%, transparent 35%);
+    opacity: 0.32;
+    pointer-events: none;
+  }
+
+  .top-meta {
+    position: relative;
+    z-index: 2;
+    color: var(--brand-primary);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .action-headline {
+    position: relative;
+    z-index: 2;
+    font-size: 140px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 40px;
+  }
+
+  .action-headline .accent {
+    color: var(--brand-primary);
+  }
+
+  .promise-line {
+    position: relative;
+    z-index: 2;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 56px;
+    max-width: 880px;
+    opacity: 0.92;
+  }
+
+  .keyword-button {
+    position: relative;
+    z-index: 2;
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 20px;
+    padding: 32px 48px;
+    background: var(--brand-primary);
+    color: var(--brand-text-dark);
+    border-radius: 16px;
+    font-size: 42px;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    box-shadow:
+      0 25px 60px rgba(0,0,0,0.45),
+      0 0 0 4px rgba(255,255,255,0.08) inset;
+    margin-bottom: 40px;
+  }
+
+  .keyword-button .arrow {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .instruction {
+    position: relative;
+    z-index: 2;
+    font-size: 28px;
+    font-weight: 500;
+    opacity: 0.78;
+    line-height: 1.4;
+    max-width: 880px;
+    margin-bottom: 40px;
+  }
+
+  .bottom-bar {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 2px solid rgba(255,255,255,0.18);
+  }
+
+  .brand-handle {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .swipe-cue {
+    font-size: 22px;
+    font-weight: 600;
+    opacity: 0.7;
+    color: var(--brand-primary);
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="top-meta">{{top_meta}}</div>
+
+    <h1 class="action-headline">{{action_headline_html}}</h1>
+
+    <p class="promise-line">{{promise_line}}</p>
+
+    <div class="keyword-button">
+      <span>{{keyword}}</span>
+      <span class="arrow">→</span>
+    </div>
+
+    <p class="instruction">{{instruction}}</p>
+
+    <div class="bottom-bar">
+      <span class="brand-handle">{{brand_handle}}</span>
+      <span class="swipe-cue">{{swipe_cue}}</span>
+    </div>
+  </div>
+</body>
+</html>

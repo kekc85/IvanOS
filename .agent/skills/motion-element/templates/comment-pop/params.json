@@ -1,0 +1,18 @@
+{
+  "template": "comment-pop",
+  "duration": 8,
+  "canvas": { "w": 1080, "h": 1920 },
+  "accent_color": "#4f8cff",
+  "bg": "#0e0f13",
+  "seed": 7,
+  "comments": [
+    { "av": "А", "av_color": "#4f8cff", "name": "Артём", "text": "как?? это реально за 20 минут?", "like": "❤️" },
+    { "av": "М", "av_color": "#ff5a8a", "name": "Марина", "text": "дай скилл пожалуйста 🙏", "like": "🔥" }
+  ],
+  "emoji_burst": ["❤️", "🔥", "💸", "🚀"],
+  "watermark": "<твой-хэндл>",
+  "_out": "transparent",
+  "_with_audio": true,
+  "_sfx": { "per_comment": "pop", "climax": "impact", "bed": "tech" },
+  "_notes": "Тексты комментов — РЕАЛЬНЫЕ реплики/возражения ЦА (issledovanie-ca / ig-radar), не выдумка. Context-gap gate. Positions seeded, no RNG."
+}

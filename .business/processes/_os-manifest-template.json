@@ -1,0 +1,28 @@
+{
+  "launch": "Solo Launch OS — <имя продукта>",
+  "note": "ШАБЛОН. Установка (Pre-0.0) копирует этот файл в папку продукта как _status-manifest.json и подставляет реальные имена. Статус считает launch-status.py из артефактов + ручных гейтов в _state.json. Имена файлов — иллюстративные, задаются Установкой.",
+  "marathon_date": "—",
+  "phases": [
+    { "id": "0",  "name": "Установка системы",            "done": [ {"type":"file","path":"config.md"} ] },
+    { "id": "0.1","name": "Распаковка (паспорт/ядро)",     "done": [ {"type":"file","path":"Product-Core.md"} ] },
+    { "id": "1",  "name": "Архетип продукта",              "done": [ {"type":"file","path":"Архетип.md"} ] },
+    { "id": "2",  "name": "Проверка спроса (Pre-MVP)",     "kind":"planned_vs_produced",
+      "planned":  [ {"type":"file","path":"Pre-MVP-гейты.md"} ],
+      "produced": [ {"type":"manual","flag":"pre_mvp_passed"} ] },
+    { "id": "3",  "name": "Рынок и аудитория",             "done": [ {"type":"file","path":"2-Конкуренты.md"} ] },
+    { "id": "4",  "name": "Бренд и голос",                 "done": [ {"type":"file","path":"Распаковка-бренда.md"} ] },
+    { "id": "5",  "name": "Уникальный метод",              "done": [ {"type":"file","path":"2.1-Unique-Mechanism.md"} ] },
+    { "id": "6",  "name": "Оффер",                         "done": [ {"type":"file","path":"Финальный-оффер.md"} ] },
+    { "id": "7",  "name": "Продукт / доставка-архитектура","done": [ {"type":"file","path":"Продукт.md"} ] },
+    { "id": "8",  "name": "Карта смыслов",                 "done": [ {"type":"file","path":"5.2-Карта-смыслов.md"} ] },
+    { "id": "9",  "name": "Реализация запуска",            "done": [ {"type":"file","path":"Готовность.md"} ] },
+    { "id": "10", "name": "Запуск",                        "done": [ {"type":"file","path":"Daily-Debrief.md"} ] },
+    { "id": "11", "name": "Доставка / доведение",          "kind":"planned_vs_produced",
+      "planned":  [ {"type":"file","path":"Delivery-дизайн.md"} ],
+      "produced": [ {"type":"manual","flag":"delivery_built"} ] },
+    { "id": "12", "name": "Удержание / MRR",               "kind":"planned_vs_produced",
+      "planned":  [ {"type":"file","path":"Retention-дизайн.md"} ],
+      "produced": [ {"type":"manual","flag":"retention_built"} ] },
+    { "id": "13", "name": "Пост-запуск",                   "done": [ {"type":"file","path":"Ретро.md"} ] }
+  ]
+}

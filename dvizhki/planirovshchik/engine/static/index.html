@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Планировщик</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header>
+  <h1>Планировщик</h1>
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="plan">План</button>
+    <button data-tab="week" class="active">Неделя</button>
+    <button data-tab="cycle">Цикл</button>
+    <button data-tab="track">Трекеры</button>
+    <button data-tab="settings">Настройки</button>
+    <a href="/day.html" class="navlink" style="margin-left:auto;font-size:13px;color:#70757a;text-decoration:none;padding:10px 12px;white-space:nowrap">Ритм дня</a>
+    <a href="/guide.html" class="navlink" style="font-size:13px;color:#70757a;text-decoration:none;padding:10px 12px;white-space:nowrap">Как пользоваться</a>
+  </nav>
+  <span class="saved" id="saved">сохранено</span>
+</header>
+
+<main id="tab-root"></main>
+
+<script src="app.js"></script>
+<script src="tab-week.js"></script>
+<script src="autoplan.js"></script>
+<script src="tab-cycle.js"></script>
+<script src="tab-track.js"></script>
+<script src="tab-settings.js"></script>
+<script src="tab-plan.js"></script>
+<script src="command.js"></script>
+</body>
+</html>

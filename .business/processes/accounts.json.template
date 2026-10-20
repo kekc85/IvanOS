@@ -1,0 +1,9 @@
+{
+  "_note": "Твои аккаунты внешних сервисов (BYOA). Заполняется через онбординг скиллов, не руками. Канон: ~/.claude/skills/_shared/bring-your-own-account.md. Helper: python3 ~/.claude/skills/_shared/bin/account.py set <сервис>.<поле> <значение>",
+  "heygen":      { "mode": "browser", "avatar_name": "", "avatar_id": "", "voice_name": "", "api_key": "", "voice_id": "" },
+  "elevenlabs":  { "api_key": "", "voice_id": "" },
+  "higgsfield":  { "mode": "browser", "connected": false },
+  "instagram":   { "cookies_path": "~/.business/processes/.ig-cookies.json" },
+  "google_flow": { "mode": "browser", "cdp_profile": "~/.chrome-cdp-profile", "connected": false },
+  "openai":      { "api_key": "" }
+}

@@ -1,0 +1,12 @@
+anthropic==0.117.0
+APScheduler==3.10.4
+fastapi==0.139.0
+httpx==0.28.1
+pyotp==2.9.0
+python-telegram-bot==21.9
+# sentry-sdk - НЕобязателен: трекер ошибок. Нужен - раскомментируй
+# sentry-sdk==1.45.1
+starlette==1.3.1
+uvicorn==0.49.0
+# смоук-тесты кита запускаются при установке
+pytest==8.3.4

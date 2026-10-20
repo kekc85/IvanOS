@@ -1,0 +1,18 @@
+# ключи от твоих аккаунтов - никогда в репозиторий
+.env
+.env.local
+
+# рабочие данные движка
+*.db
+*.db-wal
+*.db-shm
+*.log
+media/
+
+# мусор питона и системы
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.DS_Store

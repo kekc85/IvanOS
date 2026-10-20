@@ -1,0 +1,509 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<script src="assets/gsap.min.js"></script>
+<style>
+@font-face{font-family:Anton;src:url('assets/fonts/Anton.ttf')}
+@font-face{font-family:Oswald;src:url('assets/fonts/Oswald-Bold.ttf')}
+@font-face{font-family:Montser;src:url('assets/fonts/Montserrat-Black.ttf')}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#16110d}
+#stage{position:absolute;width:1080px;height:1920px;overflow:hidden;
+  background:radial-gradient(120% 80% at 50% 16%,#2a2018 0%,#16110d 58%,#0d0a07 100%);font-family:Inter,Helvetica,Arial,sans-serif}
+.scene{position:absolute;inset:0;opacity:0}
+.mono{font-family:Menlo,monospace}
+.term{position:absolute;border-radius:24px;background:#1b1510;box-shadow:0 30px 80px rgba(0,0,0,.55);border:1px solid #3a2c20;overflow:hidden}
+.bar{height:58px;background:#241b14;display:flex;align-items:center;padding:0 24px;gap:11px}
+.dot{width:15px;height:15px;border-radius:50%}
+.tbody{padding:28px 34px;font-family:Menlo,monospace}
+.kicker{position:absolute;font-family:Anton;letter-spacing:.5px;color:#f3ece0;text-transform:uppercase;line-height:.98;text-shadow:0 6px 28px rgba(0,0,0,.6)}
+.gold{color:#f7c204}.terra{color:#E46F4E}.agreen{color:#7bd88f}
+.card{position:absolute;border-radius:26px;overflow:hidden;box-shadow:0 36px 90px rgba(0,0,0,.6);border:1px solid #4a3829;background:#0f0c09}
+.acard{position:absolute;border-radius:18px;background:#1d1712;border:1px solid #3c2d20;box-shadow:0 16px 40px rgba(0,0,0,.5);padding:22px 26px;font-family:Menlo,monospace}
+.adot{display:inline-block;width:13px;height:13px;border-radius:50%;background:#7bd88f;margin-right:12px;box-shadow:0 0 14px #7bd88f;vertical-align:middle}
+.spkwrap{position:absolute;left:0;top:0;width:1080px;height:1920px;opacity:0}
+.spkcard{position:absolute;left:140px;width:800px;border-radius:34px;overflow:hidden;
+  box-shadow:0 30px 90px rgba(0,0,0,.6);border:1px solid rgba(247,194,4,.18);background:#1a140e}
+.spkcard video{position:absolute;left:50%;transform:translateX(-50%);width:940px}
+.spkcut{position:absolute;left:50%;transform:translateX(-50%);width:940px;pointer-events:none}
+#cap{position:absolute;left:0;right:0;top:1250px;text-align:center}
+#capbox{display:inline-block;background:rgba(22,16,11,.84);border:1px solid rgba(247,194,4,.18);
+  padding:16px 32px;border-radius:16px;font-family:Oswald,sans-serif;font-weight:700;font-size:62px;
+  letter-spacing:.5px;color:#fff;text-transform:uppercase;text-shadow:0 4px 18px rgba(0,0,0,.7)}
+.starbadge{position:absolute;font-family:Montser,sans-serif;color:#f7c204;background:#16110d;
+  padding:12px 26px;border-radius:16px;border:1px solid rgba(247,194,4,.5);text-shadow:0 6px 30px rgba(0,0,0,.6)}
+.route{position:absolute;border-radius:20px;padding:26px 30px;font-family:Oswald,sans-serif;font-weight:700;
+  color:#fff;text-transform:uppercase;letter-spacing:.5px;background:#1d1712;border:1px solid #3c2d20}
+.caret{display:inline-block;width:14px;height:34px;background:#f3ece0;vertical-align:-4px;margin-left:3px}
+</style></head>
+<body><div id="stage">
+
+  <div class="scene" id="s1">
+    <div class="kicker" id="hookT" style="top:120px;left:60px;width:960px;font-size:112px"></div>
+    <div class="term" id="term" style="top:430px;left:70px;width:940px;height:430px">
+      <div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span><span class="mono" style="margin-left:16px;color:#8a7866;font-size:24px">claude code</span></div>
+      <div class="tbody" id="termbody" style="font-size:34px;line-height:1.5"></div>
+    </div>
+  </div>
+
+  <div class="scene" id="s2">
+    <div class="kicker" style="top:130px;left:60px;width:960px;font-size:92px">ЭТО <span class="terra">RUFLOW</span></div>
+    <div class="card" id="ghcard" style="left:80px;top:430px;width:920px;height:1000px"><img src="footage/gh-repo-top.png" id="ghimg" style="width:100%;display:block"></div>
+    <div class="starbadge" id="starnum" style="right:120px;top:470px;font-size:96px">0</div>
+  </div>
+
+  <div class="scene" id="s3">
+    <div class="kicker" style="top:110px;left:60px;width:960px;font-size:82px">60 АГЕНТОВ <span class="gold">РАЗОМ</span></div>
+    <div id="agrid"></div>
+    <div class="route" id="route" style="left:90px;top:1040px;width:900px;font-size:44px;line-height:1.5;opacity:0">простое → <span class="gold">дешёвые модели</span><br>сложное → <span class="terra">Opus</span></div>
+  </div>
+
+  <div class="scene" id="s4">
+    <div class="kicker" style="top:110px;left:60px;width:960px;font-size:78px">СТАВИТСЯ ЗА <span class="gold">МИНУТУ</span></div>
+    <div class="card" id="ghcard2" style="left:80px;top:330px;width:920px;height:560px"><img src="footage/gh-code-dropdown.png" id="ghimg2" style="width:100%;display:block"></div>
+    <div class="term" id="term2" style="top:930px;left:80px;width:920px;height:240px"><div class="bar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span></div><div class="tbody mono" id="term2body" style="font-size:33px;color:#cdbfaf;line-height:1.5"></div></div>
+  </div>
+
+  <div class="scene" id="s5">
+    <div class="kicker" style="top:110px;left:60px;width:960px;font-size:76px">ОДНА ЗАДАЧА → <span class="gold">КОМАНДА</span></div>
+    <div id="hive"></div>
+  </div>
+
+  <div class="scene" id="s6">
+    <div class="kicker" id="flowT" style="top:300px;left:0;width:1080px;text-align:center;font-size:300px;font-family:Anton">ФЛОУ</div>
+    <div class="kicker gold" id="ctaSub" style="top:640px;left:0;width:1080px;text-align:center;font-size:52px;font-family:Oswald">напиши в комменты</div>
+    <div id="burst" style="position:absolute;left:540px;top:450px"></div>
+  </div>
+
+  <div class="spkwrap" id="spk1">
+    <div class="spkcard" id="spk1card" style="top:1085px;height:755px"><video id="spk1bg" src="../heygen/avatar-seg1.mp4" muted playsinline preload="auto"></video></div>
+    <video class="spkcut" id="spk1cut" src="../heygen/avatar-seg1-web.webm" muted playsinline preload="auto"></video>
+  </div>
+  <div class="spkwrap" id="spk2">
+    <div class="spkcard" id="spk2card" style="top:1085px;height:755px"><video id="spk2bg" src="../heygen/avatar-seg2c.mp4" muted playsinline preload="auto" style="width:820px"></video></div>
+    <video class="spkcut" id="spk2cut" src="../heygen/avatar-seg2c.webm" muted playsinline preload="auto" style="width:820px"></video>
+  </div>
+
+  <div id="cap"><span id="capbox"></span></div>
+</div>
+<script>
+const CAPS = [
+{
+"t0": 0.0,
+"t1": 0.92,
+"text": "Если ты платишь",
+"gold": false
+},
+{
+"t0": 0.92,
+"t1": 1.84,
+"text": "за клод на",
+"gold": true
+},
+{
+"t0": 1.84,
+"t1": 2.76,
+"text": "полную, останови ролик.",
+"gold": false
+},
+{
+"t0": 2.76,
+"t1": 3.49,
+"text": "Твой клод гоняет",
+"gold": true
+},
+{
+"t0": 3.49,
+"t1": 4.23,
+"text": "всего одного агента",
+"gold": false
+},
+{
+"t0": 4.23,
+"t1": 4.96,
+"text": "за раз,",
+"gold": false
+},
+{
+"t0": 4.96,
+"t1": 6.01,
+"text": "а одна бесплатная",
+"gold": true
+},
+{
+"t0": 6.01,
+"t1": 7.06,
+"text": "штука гоняет до",
+"gold": false
+},
+{
+"t0": 7.06,
+"t1": 8.1,
+"text": "60 разом и",
+"gold": true
+},
+{
+"t0": 8.1,
+"t1": 9.15,
+"text": "режет счет за",
+"gold": false
+},
+{
+"t0": 9.15,
+"t1": 10.2,
+"text": "модели на 75%.",
+"gold": true
+},
+{
+"t0": 10.2,
+"t1": 11.42,
+"text": "Называется Ruflow, open",
+"gold": true
+},
+{
+"t0": 11.42,
+"t1": 12.65,
+"text": "source, почти 60",
+"gold": true
+},
+{
+"t0": 12.65,
+"t1": 13.87,
+"text": "тысяч звезд на",
+"gold": true
+},
+{
+"t0": 13.88,
+"t1": 15.1,
+"text": "GitHub.",
+"gold": false
+},
+{
+"t0": 15.1,
+"t1": 16.69,
+"text": "Один агент планирует,",
+"gold": false
+},
+{
+"t0": 16.69,
+"t1": 18.28,
+"text": "другой пишет код,",
+"gold": false
+},
+{
+"t0": 18.28,
+"t1": по решению автора,
+"text": "третий гоняет тесты,",
+"gold": false
+},
+{
+"t0": по решению автора,
+"t1": 21.78,
+"text": "четвертый проверяет безопасность,",
+"gold": false
+},
+{
+"t0": 21.78,
+"t1": 22.69,
+"text": "и все работают",
+"gold": false
+},
+{
+"t0": 22.69,
+"t1": 23.59,
+"text": "параллельно в одной",
+"gold": true
+},
+{
+"t0": 23.59,
+"t1": 24.5,
+"text": "общей памяти.",
+"gold": false
+},
+{
+"t0": 24.5,
+"t1": 25.21,
+"text": "А экономит он",
+"gold": false
+},
+{
+"t0": 25.21,
+"t1": 25.92,
+"text": "так.",
+"gold": false
+},
+{
+"t0": 25.92,
+"t1": 26.95,
+"text": "Простые задачи сам",
+"gold": false
+},
+{
+"t0": 26.95,
+"t1": 27.99,
+"text": "отправляет на дешевые",
+"gold": false
+},
+{
+"t0": 27.99,
+"t1": по решению автора,
+"text": "модели,",
+"gold": false
+},
+{
+"t0": по решению автора,
+"t1": по решению автора,
+"text": "и только сложное",
+"gold": false
+},
+{
+"t0": по решению автора,
+"t1": 31.1,
+"text": "доходит до опуса.",
+"gold": true
+},
+{
+"t0": 31.1,
+"t1": 32.7,
+"text": "Ставится за минуту.",
+"gold": false
+},
+{
+"t0": 32.7,
+"t1": 33.75,
+"text": "Заходишь в репозиторий,",
+"gold": false
+},
+{
+"t0": 33.75,
+"t1": 34.79,
+"text": "жмешь зеленую кнопку",
+"gold": false
+},
+{
+"t0": 34.79,
+"t1": 35.84,
+"text": "код,",
+"gold": false
+},
+{
+"t0": 35.84,
+"t1": 36.97,
+"text": "копируешь ссылку, вставляешь",
+"gold": false
+},
+{
+"t0": 36.97,
+"t1": 38.09,
+"text": "в клод код",
+"gold": true
+},
+{
+"t0": 38.09,
+"t1": 39.22,
+"text": "и говоришь «поставь",
+"gold": false
+},
+{
+"t0": 39.22,
+"t1": 40.34,
+"text": "это».",
+"gold": false
+},
+{
+"t0": 40.34,
+"t1": 41.02,
+"text": "Дальше смотри.",
+"gold": false
+},
+{
+"t0": 41.02,
+"t1": 41.86,
+"text": "Даю ему одну",
+"gold": false
+},
+{
+"t0": 41.86,
+"t1": 42.7,
+"text": "задачу, а он",
+"gold": false
+},
+{
+"t0": 42.7,
+"t1": 43.54,
+"text": "разбивает ее на",
+"gold": false
+},
+{
+"t0": 43.54,
+"t1": 44.38,
+"text": "агентов.",
+"gold": false
+},
+{
+"t0": 44.38,
+"t1": 45.5,
+"text": "Планирование, код, тесты,",
+"gold": false
+},
+{
+"t0": 45.5,
+"t1": 46.62,
+"text": "все одновременно, не",
+"gold": false
+},
+{
+"t0": 46.62,
+"t1": 47.74,
+"text": "по очереди.",
+"gold": false
+},
+{
+"t0": 47.74,
+"t1": 49.44,
+"text": "Open source. Бесплатно.",
+"gold": true
+},
+{
+"t0": 49.44,
+"t1": 50.42,
+"text": "На 75% дешевле,",
+"gold": true
+},
+{
+"t0": 50.42,
+"t1": 51.4,
+"text": "чем гонять все",
+"gold": false
+},
+{
+"t0": 51.4,
+"t1": 52.38,
+"text": "через опус.",
+"gold": true
+},
+{
+"t0": 52.38,
+"t1": 53.21,
+"text": "Напиши флоу в",
+"gold": true
+},
+{
+"t0": 53.21,
+"t1": 54.04,
+"text": "комменты, и я",
+"gold": false
+},
+{
+"t0": 54.04,
+"t1": 54.86,
+"text": "пришлю свою настройку",
+"gold": false
+},
+{
+"t0": 54.86,
+"t1": 55.69,
+"text": "и гайд по",
+"gold": false
+},
+{
+"t0": 55.69,
+"t1": 56.52,
+"text": "установке для новичков.",
+"gold": false
+}
+];
+const $=id=>document.getElementById(id);
+const tl = gsap.timeline({paused:true});
+
+function typeInto(el,text,t0,dur,caret){const n=text.length;
+  for(let i=0;i<=n;i++) tl.call(((k)=>()=>{el.innerHTML=text.slice(0,k)+(caret?'<span class="caret"></span>':'');})(i),[],t0+i*(dur/n));}
+function countUp(el,from,to,suf,t0,dur,steps){for(let i=0;i<=steps;i++){const v=Math.round(from+(to-from)*i/steps);
+  tl.call(((val)=>()=>{el.textContent=val.toLocaleString('ru-RU')+suf;})(v),[],t0+dur*i/steps);}}
+function sceneFade(id,a,b){tl.fromTo($(id),{opacity:0},{opacity:1,duration:.35},a);tl.to($(id),{opacity:0,duration:.35},b-0.35);}
+
+const W={s1:[0,10.4],s2:[10.4,18.0],s3:[18.0,31.1],s4:[31.1,40.4],s5:[40.4,47.7],s6:[47.7,57.0]};
+for(const k in W){sceneFade(k,W[k][0],W[k][1]);}
+
+// B1
+$('hookT').innerHTML="ПЛАТИШЬ ЗА <span class='gold'>CLAUDE</span>?";
+tl.fromTo('#hookT',{opacity:0,y:40,scale:.9},{opacity:1,y:0,scale:1,duration:.4,ease:"back.out(2)"},0.3);
+typeInto($('termbody'),'$ claude code "build it"',0.8,1.1,true);
+(()=>{const L=[];for(let i=1;i<=8;i++)L.push(`[agent-0${i}] queued…`);
+ L.forEach((ln,i)=>tl.call(((k)=>()=>{$('termbody').innerHTML='<div style="color:#f3ece0">$ claude code "build it"</div>'+L.slice(0,k+1).map(x=>`<div style="color:#7bd88f;font-size:25px">${x}</div>`).join('');})(i),[],2.4+i*0.14));})();
+tl.call(()=>{$('termbody').innerHTML='<div style="color:#f3ece0">$ claude code "build it"</div><div style="color:#E46F4E;font-size:30px;margin-top:8px">» 1 агент. медленно. дорого.</div>';},[],4.0);
+tl.set('#spk1',{opacity:1},2.2);
+tl.fromTo('#spk1',{y:130},{y:0,duration:.5,ease:"power3.out"},2.2);
+tl.to('#spk1',{opacity:0,duration:.3},10.1);
+
+// B2
+tl.fromTo('#ghcard',{opacity:0,y:60,scale:.94},{opacity:1,y:0,scale:1,duration:.5,ease:"power2.out"},10.5);
+tl.fromTo('#ghimg',{y:0},{y:-160,duration:6.5,ease:"none"},10.6);
+tl.set('#starnum',{opacity:0,scale:.6}); tl.to('#starnum',{opacity:1,scale:1,duration:.25},11.2);
+countUp($('starnum'),0,59480,' ★',11.3,3.2,40);
+for(let p=11.6;p<17.4;p+=1.3){tl.to('#starnum',{scale:1.08,duration:.18,yoyo:true,repeat:1},p);}
+
+// B3
+const AG=[["планирует"],["пишет код"],["гоняет тесты"],["проверяет защиту"]];
+const agrid=$('agrid');
+AG.forEach((a,i)=>{const x=90+(i%2)*470,y=290+Math.floor(i/2)*330;
+  const d=document.createElement('div');d.className='acard';d.id='ag'+i;
+  d.style.cssText=`left:${x}px;top:${y}px;width:420px;height:280px;opacity:0`;
+  d.innerHTML=`<div style="color:#8a7866;font-size:28px">agent --role</div><div id="agt${i}" style="color:#f3ece0;font-size:42px;margin:12px 0 20px;font-weight:bold;min-height:50px"></div><div style="color:#7bd88f;font-size:28px"><span class="adot" id="agd${i}"></span><span id="ags${i}"></span></div>`;
+  agrid.appendChild(d);
+  const t0=18.4+i*0.55;
+  tl.fromTo('#ag'+i,{opacity:0,y:28,scale:.9},{opacity:1,y:0,scale:1,duration:.3,ease:"back.out(1.8)"},t0);
+  typeInto($('agt'+i),a[0],t0+0.15,0.5,false);
+  tl.call(()=>{$('ags'+i).textContent='running';},[],t0+0.7);
+});
+for(let i=0;i<4;i++){for(let b=19;b<31;b+=0.6){tl.to('#agd'+i,{opacity:.4,duration:.3,yoyo:true,repeat:1},b+i*0.12);}}
+tl.fromTo('#route',{opacity:0,y:30,scale:.96},{opacity:1,y:0,scale:1,duration:.4,ease:"power2.out"},26.0);
+
+// B4
+tl.fromTo('#ghcard2',{opacity:0,y:50,scale:.95},{opacity:1,y:0,scale:1,duration:.45},31.3);
+tl.fromTo('#ghimg2',{y:-20},{y:-90,duration:7,ease:"none"},31.4);
+typeInto($('term2body'),'> вставь репозиторий и поставь это',34.5,3.0,true);
+
+// B5
+const HV=[["Agent 1","layout"],["Agent 2","auth"],["Agent 3","dashboard"],["Agent 4","projects"]];
+const hive=$('hive');
+HV.forEach((h,i)=>{const d=document.createElement('div');d.className='acard';d.id='hv'+i;
+  d.style.cssText=`left:90px;top:${300+i*290}px;width:900px;height:230px;opacity:0`;
+  d.innerHTML=`<div style="color:#7bd88f;font-size:34px"><span class="adot"></span>${h[0]} spawned</div><div style="color:#cdbfaf;font-size:30px;margin-top:16px">→ ${h[1]} agent · generating…</div>`;
+  hive.appendChild(d);
+  const t0=41.0+i*0.55;
+  tl.fromTo('#hv'+i,{opacity:0,x:-40},{opacity:1,x:0,duration:.28,ease:"power3.out"},t0);
+  tl.fromTo('#hv'+i,{boxShadow:'0 0 0 rgba(123,216,143,0)'},{boxShadow:'0 0 36px rgba(123,216,143,.7)',duration:.2,yoyo:true,repeat:1},t0+0.1);
+});
+
+// B6
+tl.fromTo('#flowT',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.5,ease:"back.out(1.7)"},48.0);
+tl.fromTo('#ctaSub',{opacity:0,y:20},{opacity:1,y:0,duration:.35},48.7);
+const burst=$('burst');
+for(let p=0;p<16;p++){const sp=document.createElement('div');
+  sp.style.cssText='position:absolute;width:14px;height:14px;border-radius:50%;background:#f7c204;opacity:0';burst.appendChild(sp);
+  const ang=(p/16)*Math.PI*2,dist=240+(p%3)*60;
+  tl.to(sp,{opacity:1,duration:.05},48.0);
+  tl.to(sp,{x:Math.cos(ang)*dist,y:Math.sin(ang)*dist*0.7,opacity:0,duration:.9,ease:"power2.out"},48.05);}
+for(let b=49;b<56.5;b+=0.8){tl.to('#flowT',{textShadow:'0 0 70px rgba(247,194,4,.7),0 8px 30px rgba(0,0,0,.6)',duration:.4,yoyo:true,repeat:1},b);}
+tl.set('#spk2',{opacity:1},48.0);
+tl.fromTo('#spk2',{y:110},{y:0,duration:.5,ease:"power3.out"},48.0);
+tl.set({},{},57.0);
+
+function placeSpeaker(){
+  $('spk1bg').style.top='-370px';
+  $('spk1cut').style.top='715px';
+  $('spk2bg').style.top='-360px';
+  $('spk2cut').style.top='730px';
+}
+placeSpeaker();
+function seekVid(v,t){ if(v && v.readyState>=1){ try{v.currentTime=Math.max(0,Math.min((v.duration||99)-0.05,t));}catch(e){} } }
+window.render=function(t){
+  tl.time(Math.max(0,Math.min(tl.duration(),t))); tl.pause();
+  seekVid($('spk1bg'),t); seekVid($('spk1cut'),t);
+  seekVid($('spk2bg'),t-47.97); seekVid($('spk2cut'),t-47.97);
+  const box=$('capbox');
+  let cur=(t>=10.4&&t<47.5)?CAPS.find(c=>t>=c.t0&&t<c.t1):null;
+  if(cur){let txt=cur.text.replace(/[.,]+$/,'');box.style.display='inline-block';
+    box.innerHTML=cur.gold?`<span class="gold">${txt}</span>`:txt;} else box.style.display='none';
+};
+window.__ready=true; render(0);
+</script></body></html>

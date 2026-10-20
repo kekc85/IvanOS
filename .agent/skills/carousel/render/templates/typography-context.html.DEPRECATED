@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1350px;
+    background: {{BACKGROUND_COLOR}};
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px;
+    overflow: hidden;
+  }
+  .context-label {
+    font-size: 24pt;
+    font-weight: 700;
+    color: {{ACCENT_COLOR}};
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+  }
+  .context-body {
+    font-size: 52pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    max-width: 900px;
+  }
+  .context-sub {
+    font-size: 30pt;
+    font-weight: 400;
+    color: #6a6a6a;
+    margin-top: 40px;
+    line-height: 1.4;
+    max-width: 850px;
+  }
+</style>
+</head>
+<body>
+  <div class="context-label">{{LABEL}}</div>
+  <div class="context-body">{{CONTEXT_BODY}}</div>
+  <div class="context-sub">{{CONTEXT_SUB}}</div>
+</body>
+</html>

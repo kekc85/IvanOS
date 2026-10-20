@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/kofe/index.html" },
+    { "source": "/kofe", "destination": "/kofe/index.html" }
+  ]
+}

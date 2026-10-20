@@ -1,0 +1,46 @@
+{
+ "cycle": {
+  "name": "Цикл 1",
+  "start": "2001-01-01",
+  "end": "2001-03-25",
+  "weeks": 12
+ },
+ "goals": [
+  {
+   "id": "g1",
+   "title": "Пример цели: замени на свою",
+   "note": "Одна цель - одна метрика результата (lag) и 2-3 недельных действия (leads), которые к ней ведут. Действие должно быть таким, чтобы в конце недели можно было честно поставить галочку.",
+   "lag": {
+    "metric": "Что меряем в конце цикла",
+    "target": 100,
+    "current": 0,
+    "unit": "штук",
+    "due": "2001-03-25"
+   },
+   "leads": [
+    {
+     "id": "g1l1",
+     "title": "Пример недельного действия: сделать N единиц работы",
+     "weeklyTarget": 3,
+     "weeks": [false, false, false, false, false, false, false, false, false, false, false, false]
+    },
+    {
+     "id": "g1l2",
+     "title": "Пример второго действия: разобрать прошедшую неделю в субботу",
+     "weeklyTarget": 1,
+     "weeks": [false, false, false, false, false, false, false, false, false, false, false, false]
+    }
+   ]
+  }
+ ],
+ "execution": {
+  "weeks": [null, null, null, null, null, null, null, null, null, null, null, null]
+ },
+ "stopList": [
+  {
+   "id": "s1",
+   "title": "Пример: то, чего я в этом цикле НЕ делаю",
+   "reason": "Стоп-лист держит фокус. Сюда пишешь то, что соблазнительно начать, но в этом цикле оно вне игры, и почему."
+  }
+ ]
+}

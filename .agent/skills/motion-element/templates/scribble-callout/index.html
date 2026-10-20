@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      /* solid bg = chroma/transparent mode: маркер кладётся ПОВЕРХ твоей съёмки. Здесь placeholder-цель. */
+      #target { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-size: 64px; font-weight: 800; color: #fff; background: #1b1d24; padding: 36px 56px; border-radius: 20px; }
+      svg { position: absolute; inset: 0; width: 1080px; height: 1920px; pointer-events: none; }
+      .ink { fill: none; stroke: #ffd23f; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 12px rgba(255,210,63,.5)); }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="4" data-width="1080" data-height="1920">
+      <div id="target">Deploy</div>
+      <svg viewBox="0 0 1080 1920">
+        <!-- rough hand-drawn ellipse around center target (~540,960) -->
+        <path id="circle" class="ink" data-sfx="whoosh" data-sfx-at="draw"
+          d="M320,940 C360,860 720,850 760,945 C800,1040 700,1090 540,1090 C380,1090 285,1035 320,940 Z" />
+        <!-- arrow pointing in -->
+        <path id="arrow" class="ink"
+          d="M210,1180 C320,1150 430,1120 500,1075 M500,1075 L455,1095 M500,1075 L470,1120" />
+      </svg>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // draw-on via stroke-dashoffset, bound to timeline
+      [ "#circle", "#arrow" ].forEach((id) => {
+        const el = document.querySelector(id);
+        const len = el.getTotalLength();
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+      });
+
+      tl.add("draw", 0.3);
+      tl.to("#circle", { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" }, "draw");
+      tl.to("#arrow", { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" }, "draw+=0.7");
+      tl.to("#root", { opacity: 1, duration: 1.4 }, 2.2); // hold
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

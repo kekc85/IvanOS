@@ -1,0 +1,539 @@
+<!doctype html>
+<!-- 🔴 КОММЕНТАРИИ - КАНОН. Рабочие пометки живут в ЭТОМ файле и в черновиках,
+     в собранный HTML они НЕ попадают. Всё, что ниже начинается с «🔴», «Разъезд»,
+     «Почему», любые даты инцидентов, «канон», «запрещено», объяснения решений -
+     это кухня сборщика, а не код страницы: читатель жмёт Ctrl+U и видит наши
+     внутренние заметки, чужие слаги и хронику косяков кластера.
+     Оставлять в проде можно РОВНО одно - маркеры внешних счётчиков, которые
+     вендор просит не трогать (Яндекс.Метрика открывает и закрывает блок
+     комментарием). Всё остальное вырезается последним шагом сборки:
+
+         python3 article-template/strip_notes.py <собранный.html>
+
+     Приёмка перед заливкой (должно быть 0 или только вендорские маркеры):
+
+         python3 article-template/strip_notes.py --check <собранный.html>
+
+     Разъезд по решению автора: пометки уехали на прод - /guide-neyropoisk/ 30 штук,
+     /guide-claude-code-windows/ 18, /guide-neyroset-pishet-kod/ 17,
+     /guide-claude-code/ 15 против 2 у эталона /guide-pamyat.html. -->
+<!-- 🔴 ЕДИНСТВЕННЫЙ СБОРЩИК. Этот файл руками в страницу не превращается.
+     Вход - JSON-спека статьи, выход - готовый index.html, между ними ровно один
+     скрипт: article-template/build_page.py. Он и только он принимает решения по
+     ОБВЯЗКЕ (крошки, шапка, подвал, TOC, классы, якоря, порядок хвоста,
+     picture+srcset+sizes, зум, время чтения, Метрика, favicon, JSON-LD).
+     Автор статьи отвечает только за СОДЕРЖАНИЕ. Канон решений - в шапке
+     build_page.py, раздел «КАНОН ОБВЯЗКИ», и в knowledge/visual-layer.md.
+     Причина: по решению автора семь живых страниц кластера собирались разными
+     агентами разными скриптами и разъехались по 14 признакам сразу. -->
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<!-- 🔴 FOUC-ГВАРД - КАНОН, стоит ПЕРВОЙ строкой после charset и НИКОГДА не
+     переезжает ниже. Читает сохранённый выбор темы и ставит атрибут на <html>
+     ДО первой отрисовки. Без него человек, выбравший тёмную тему, при каждом
+     переходе получает вспышку светлого листа в лицо, пока грузится остальной
+     head. Скрипт синхронный намеренно: defer/async тут = та же вспышка.
+     Байт в байт тот же, что уже стоит на 12 витринных страницах прода
+     (laneT2, по решению автора) - ключ localStorage 'theme' общий, поэтому выбор
+     читателя переезжает со статьи на главную и обратно. -->
+<script>(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light'){document.documentElement.dataset.theme=t;}}catch(e){}})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>%%TITLE%%</title>
+<meta name="description" content="%%META_DESCRIPTION%%" />
+<link rel="canonical" href="%%CANONICAL_URL%%" />
+
+<!-- favicon -->
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="120x120" href="/favicon-120.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="%%OG_TYPE%%" />
+<meta property="og:site_name" content="автор" />
+<meta property="og:locale" content="ru_RU" />
+<meta property="og:title" content="%%TITLE%%" />
+<meta property="og:description" content="%%META_DESCRIPTION%%" />
+<meta property="og:url" content="%%CANONICAL_URL%%" />
+<meta property="og:image" content="%%OG_IMAGE%%" />
+<meta property="og:image:alt" content="%%OG_IMAGE_ALT%%" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+%%OG_EXTRA%%%%ARTICLE_TIMES%%
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="%%TITLE%%" />
+<meta name="twitter:description" content="%%META_DESCRIPTION%%" />
+<meta name="twitter:image" content="%%OG_IMAGE%%" />
+<meta name="twitter:image:alt" content="%%OG_IMAGE_ALT%%" />
+
+<!-- шрифты бренда: свои файлы на /assets/fonts/, внешних CDN нет.
+     Внешняя таблица стилей Google блокировала рендер: при обрыве запроса
+     (типовое поведение под российским троттлингом) страница висела белым
+     экраном больше 25 секунд. Сами @font-face лежат в tokens.css и приезжают
+     сюда инлайном ниже. Здесь только preload начертаний LCP-элемента.
+
+     🔴 Д.2 (по решению автора): preload переставлен с JetBrains Mono на Spectral.
+     Греется тот шрифт, которым набран самый крупный элемент первого экрана,
+     а это H1 и текст статьи - то есть Spectral. Моно-гарнитура держит подписи
+     и крошки, её очередь вторая, ей достаточно font-display: swap.
+     Кириллический сабсет: статьи русские, латиница в заголовке встречается
+     кусками и приезжает обычным порядком.
+
+     🔴 Редизайн v2 (по решению автора): H1 набран Unbounded 700, а не Spectral -
+     значит греется он. Второй preload остался за телом статьи (Spectral 400).
+     Место Spectral 600 отдано Unbounded: заголовки с него ушли, а лид и
+     полужирный внутри абзаца дожидаются своей очереди на font-display: swap
+     под метрической подложкой (третий preload отбирал бы полосу у LCP). -->
+<link rel="preload" href="/assets/fonts/unbounded-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/spectral-cyrillic-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- 🔴 ПРАВИЛО КОММЕНТАРИЕВ. Сборка меняет токены тупой заменой по всему файлу,
+     комментарии она не пропускает. Значит имя токена внутри комментария пишем
+     БЕЗ обёртки процентами: TOC, NAV_CTA_URL, HERO_IMAGE. Иначе в комментарий
+     подставится значение - и, например, на месте слова «токен TOC» окажется
+     целый список оглавления (так и было на обеих страницах кластера по решению автора:
+     комментарий раздувался на полтора десятка строк и уезжал в прод). -->
+
+<!-- tokens.css встраивается сборкой, один файл на выходе -->
+<style>
+%%INLINE_CSS%%
+%%EXTRA_CSS%%
+</style>
+
+<script type="application/ld+json">
+%%JSONLD%%
+</script>
+
+%%ANALYTICS%%
+</head>
+<body>
+
+%%READBAR%%
+
+<!-- 🔴 ШАПКА - КАНОН. Блок ниже копируется в страницу КАК ЕСТЬ, меняется
+     ровно один токен NAV_CTA_URL. Полное описание - knowledge/visual-layer.md,
+     раздел «Шапка сайта».
+       логотип  «автор&nbsp;» -> "/"           (корень, НЕ /index.html и НЕ index.html)
+       пункт 1  «Гайды»      -> "/blog/"   .only-wide
+       пункт 2  «Об авторе»  -> "/about/"  .only-wide   («Обо мне» запрещено)
+       кнопка   «На <твой-продукт>» -> NAV_CTA_URL  .btn-nav (РОВНО одна, текст НЕ переменная)
+       кнопка переключатель темы, id theme-toggle (РОВНО одна, добавлена v3 по решению автора)
+
+     🔴 ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ - КАНОН, добавлен по решению автора волной «Дизайн v3».
+     Разметка снята БАЙТ В БАЙТ с 12 витринных страниц прода (laneT2, по решению автора),
+     чтобы кнопка на статье и кнопка на главной были одним объектом, а не двумя
+     похожими. Три жёстких требования:
+       1) кнопка стоит МЕЖДУ пилюлей и чекбоксом бургера. Ниже 640px пилюля
+          скрыта, и кнопка остаётся видимой рядом с бургером - это единственное
+          место, где она доступна с телефона;
+       2) внутри кнопки ТОЛЬКО две SVG, ни одной текстовой ноды: подпись несёт
+          aria-label. Текст сломал бы ширину 44x44 и тап-цель;
+       3) aria-pressed НЕ ставим сознательно: состояний три (система, тёмная,
+          светлая), булев атрибут соврал бы скринридеру.
+     Пара к кнопке - FOUC-гвард в head и обработчик клика перед закрытием body.
+     Все три куска обязаны ехать вместе: гвард без кнопки = тема не меняется,
+     кнопка без гварда = вспышка светлого при каждом переходе.
+     Текст кнопки зашит намеренно: пока он был плейсхолдером, четыре страницы
+     кластера родили четыре разные шапки (по решению автора). Переменная - только адрес.
+     NAV_CTA_URL = точка входа в текущую воронку из канона запуска (.business),
+     дефолт кластера гайдов: https://<твой-домен>/<твой-продукт>/?utm_source=guide&amp;utm_content=<slug>
+     Все href корневые: относительный blog со страницы /guide-x/ уводит
+     на несуществующий /guide-x/blog/
+
+     🔴 БУРГЕР (<640px) - КАНОН, добавлен по решению автора. Работает БЕЗ JS: состояние
+     держит скрытый чекбокс, выпадашку открывают селекторы `.nav-toggle:checked ~`
+     (tokens.css, раздел 4a). Отсюда два жёстких требования к разметке:
+       1) порядок узлов input -> label -> div ломать нельзя, `~` смотрит вперёд;
+       2) id="nav-toggle" и for="nav-toggle" обязаны совпадать, иначе меню мёртво.
+     Пункты выпадашки ДУБЛИРУЮТ шапку (Гайды / Об авторе / кнопка-инвайт) - на
+     узком экране инлайн-пункты и пилюля скрыты, и это единственный вход в них.
+     Адрес кнопки берётся из ТОГО ЖЕ токена NAV_CTA_URL: два разных адреса в одной
+     шапке = две разные воронки с одной страницы. -->
+<header class="site-header">
+  <div class="inner">
+    <a class="site-logo" href="/">автор&nbsp;</a>
+    <nav class="site-nav">
+      <a class="only-wide" href="/blog/">Гайды</a>
+      <a class="only-wide" href="/about/">Об авторе</a>
+      <a class="btn-nav" href="%%NAV_CTA_URL%%">На <твой-продукт></a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Переключить тему"><svg class="icon-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg><svg class="icon-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+      <input class="nav-toggle" type="checkbox" id="nav-toggle" aria-label="Меню" />
+      <label class="nav-burger" for="nav-toggle" aria-hidden="true"><span></span><span></span><span></span></label>
+      <div class="nav-drop">
+        <a href="/blog/">Гайды</a>
+        <a href="/about/">Об авторе</a>
+        <a class="nav-drop-cta" href="%%NAV_CTA_URL%%">На <твой-продукт></a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="layout%%LAYOUT_MOD%%">
+
+  <!-- 🔴 TOC - КАНОН (переписан по решению автора, волна р13). Оглавление на
+       странице РОВНО ОДНО: aside.toc-desktop (тут, липкая колонка, scroll-spy
+       .is-current, видна от 1024px). Раскрывающийся details.toc-mobile[open] в
+       теле статьи и пилюля «Содержание» внизу экрана УДАЛЕНЫ с движка и со всех
+       статей: оглавление, которое надо раскрывать нажатием, признано неудобным
+       для читателя и выведено из канона целиком, вместе с пилюлей и шторкой.
+       Значит второго оглавления не бывает
+       НИ В КАКОМ ВИДЕ: ни details.toc-mobile, ни статичный <nav class="toc"> в
+       теле, ни пилюля-шторка. Ниже 1024px страница остаётся без оглавления
+       НАМЕРЕННО - замену взамен НЕ добавлять.
+       Пункты = ВСЕ контентные h2.num + чек-лист + FAQ, и больше НИЧЕГО: «Источники»,
+       «Читайте также» и любые промо-плашки в оглавление не входят (закон уровней
+       заголовков ниже, перед <article>). Порядок пунктов = порядок в документе,
+       расходиться нельзя. Чтобы он не расходился руками, токен TOC собирается
+       не из отдельного списка, а из тела статьи: article-template/toc_build.py,
+       функция build_toc(body_html, items) - она сортирует пункты по позиции якоря
+       в теле и падает, если якоря нет или он ведёт на служебный h3.
+       Машинная приёмка: tools/structure-check.py <index.html> --visual
+       + article_gates.py --toc-mobile <каталог статьи> (гейт-негатив: любой
+       живой блок class="toc-mobile" в собранных байтах = FAIL, чтобы удалённое
+       оглавление-кнопка не вернулось соседней волной) -->
+%%TOC_DESKTOP%%
+
+  <main>
+    <!-- 🔴 ЗАКОН УРОВНЕЙ ЗАГОЛОВКОВ - КАНОН. Один закон на все статьи кластера,
+         проверяется глазами и гейтом tools/structure-check.py <index.html> --visual.
+         Схема заголовков = карта РАЗДЕЛОВ статьи, промо в ней не живёт.
+
+           h1  ровно один, .article-h1, без якоря
+           h2  КОНТЕНТНЫЙ РАЗДЕЛ. Обязательно class="num" (сквозной номер в тексте)
+               + якорь: id на самом h2 ЛИБО id на секции-обёртке. Попадает в TOC
+               и получает там тот же номер
+           h2  БЕЗ .num - только два блока шаблона: «Чек-лист…» (#checklist) и
+               «Частые вопросы» (#faq). Они в TOC, но без номера, потому что это
+               не шаги статьи, а её оснастка (и они же кормят JSON-LD).
+               Третий такой h2 - «Читайте также» (#related), он в TOC не идёт
+           h3  ВСЁ СЛУЖЕБНОЕ И ПРОМО: «Источники» (в секции id="istochniki"),
+               врезка <твой-продукт>, заголовки cta-mid и cta-final. В TOC не попадают
+               НИКОГДА. Рекламная плашка уровня h2 встаёт в схеме документа
+               наравне с разделом: поисковик читает промо как содержание,
+               а TOC либо тянет его к себе, либо молча расходится с телом
+           h4  внутри разделов по смыслу, в TOC не идёт
+
+         Разъезд по решению автора: у /guide-claude-code-windows/ «Источники» и финальный
+         CTA были h3, у /guide-neyroset-pishet-kod/ те же блоки - h2, из-за чего
+         промо-плашка «Пять прогонов ты посмотрел…» попала в схему разделов,
+         а «Источники» - в оглавление и сломали там порядок. -->
+    <article>
+
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <ol>
+%%BREADCRUMBS%%
+        </ol>
+      </nav>
+
+      <!-- 🔴 ПОРЯДОК ВХОДА - КАНОН Д.2 (по решению автора), бриф раздел 2.4.
+           крошки -> рубрика -> H1 -> hero-картинка -> лид -> быстрый ответ.
+           До Д.2 hero-картинка 1200x630 стояла ВЫШЕ заголовка, и h1 начинался
+           на 874px при высоте окна 900 (390px: 504 при 844). Человек приходил
+           из поиска и на первом экране видел крошки и картинку, но не ответ на
+           свой запрос. Менять порядок обратно нельзя: это самая дешёвая правка
+           первого экрана из всех, что есть у статьи.
+           по решению автора (P3, конвейер seo-dvizhok-x4, круг 1 фаза 1): «мета»
+           (N мин чтения · автор) СНЯТА из этого места входа - см. комментарий
+           у %%ARTICLE_META%% в хвосте статьи ниже. Причина - служебная строка
+           стояла между H1 и лидом и на 100% страниц кластера (128 из 128 по
+           замеру `audit_snippet.py`, аналитика по решению автора) попадала в первые
+           600 символов текста после H1, и Яндекс строил из неё сниппет вместо
+           прямого ответа на запрос. -->
+%%EYEBROW%%
+%%H1_BLOCK%%
+
+%%HERO_FIGURE%%
+%%LEAD%%
+      <!-- быстрый ответ: первые 2-3 предложения отвечают на запрос прямо -->
+%%QUICK_ANSWER_BLOCK%%
+
+      <!-- «поделиться» 1 из 2: в начале, пока читатель ещё на первом экране.
+           Один блок на 88% документа читатель просто не доживал увидеть. -->
+%%SHARE_TOP%%
+
+      <!-- CTA 1 из 3: компактная, сразу после быстрого ответа.
+           CTA даётся КНОПКОЙ .btn-cta с текстом действия, не голым URL:
+           голый t.me-адрес на телефоне ломается в две строки и не читается как кнопка.
+           Сам URL со start=<код-слово> при этом менять нельзя. -->
+%%CTA_COMPACT_BLOCK%%
+
+      <!-- по решению автора: тут стоял details.toc-mobile (раскрывающееся оглавление
+           тела статьи). Удалён по канону волны р13, см. канон TOC выше.
+           Нового блока оглавления сюда НЕ ставить. -->
+
+%%CONTENT_FIRST%%
+
+      <!-- CTA 2 из 3: середина статьи. Заголовок внутри - ТОЛЬКО h3 (закон уровней выше) -->
+%%CTA_MID_BLOCK%%
+
+%%CONTENT_SECOND%%
+
+      <!-- 🔴 СЛУЖЕБНАЯ СТРОКА «N мин чтения · автор» - P3 (по решению автора,
+           конвейер seo-dvizhok-x4, круг 1 фаза 1). Раньше стояла между H1 и
+           лидом (см. комментарий «ПОРЯДОК ВХОДА» выше) и попадала в первые
+           600 символов текста после H1 на КАЖДОЙ странице сборки - Яндекс
+           строил сниппет из неё, а не из прямого ответа на запрос. Автор и
+           время чтения НЕ удаляются (канон правило №0 - `~/CLAUDE.md`),
+           просто уезжают в некликовый хвост перед источниками: здесь тело
+           статьи уже прошло тысячи символов, капсула-ответ (быстрый ответ
+           выше) читателю уже отдана. Классы `.article-meta`/`<span>` и их
+           содержимое НЕ менялись - меняется только МЕСТО подстановки в этом
+           файле, значение `%%ARTICLE_META%%` собирает build_page.py как и
+           раньше (КАНОН 8). -->
+%%ARTICLE_META%%
+
+%%TAIL%%
+
+    </article>
+  </main>
+
+  <!-- 🔴 ПРАВЫЙ РЕЛЬС - КАНОН Д.2 (по решению автора), бриф раздел 2.3.
+       Третья колонка сетки ≥1200px. Ширина зеркалит TOC - на этой симметрии
+       держится центрирование колонки текста (tokens.css, раздел 6), трогать
+       ширину нельзя. До Д.2 колонка была пустым балансиром: 360px экрана без
+       содержания, композиция читалась как недоделанная.
+       Внутри - липкая карточка с ОДНИМ действием (тот же токен NAV_CTA_URL,
+       второй адрес в рельсе = вторая воронка с одной страницы) и «наверх».
+       Ниже 1200px рельс не показывается: те же выходы уже стоят в потоке. -->
+  <div class="layout-balance">
+    <aside class="rail" aria-label="Быстрые действия">
+      <p class="eyebrow">Дальше</p>
+      <p>Разбираем это на живых проектах в <твой-продукт></p>
+      <a class="btn-cta" href="%%NAV_CTA_URL%%">На <твой-продукт></a>
+      <a class="rail-top" href="#top">Наверх</a>
+    </aside>
+  </div>
+</div>
+
+<!-- 🔴 ПОДВАЛ - КАНОН. Три строки ниже копируются в страницу КАК ЕСТЬ, меняются
+     ровно два токена: NAV_CTA_URL и YEAR. Эталон - живой подвал
+     /guide-claude-code/ (по решению автора).
+       строка 1  имя-ссылка на "/" + тэглайн бренда (текст зашит, не переменная)
+       строка 2  Гайды -> /blog/ · Об авторе -> /about/ ·
+                 <твой-продукт> -> FOOTER_CTA_URL · Telegram -> канал автора
+                 (тот же адрес, что в шапке; отдельный токен нужен только
+                  чтобы не терять utm_content подвала там, где он свой)
+       строка 3  .muted копирайт
+     Огрызок «автор · все гайды» (две ссылки, ни тэглайна, ни выходов)
+     стоял в шаблоне до этой редакции и уехал на обе новые страницы кластера:
+     подвал - последний экран лонгрида, читателю там нужен выход в воронку,
+     а не тупик. Ссылки корневые по той же причине, что и в шапке. -->
+<footer class="site-footer">
+  <div class="inner">
+    <p><a href="/">автор</a> · Вайбмаркетинг и вайбкодинг для тех, кто начинает с нуля</p>
+    <p><a href="/blog/">Гайды</a> · <a href="/about/">Об авторе</a> · <a href="%%FOOTER_CTA_URL%%"><твой-продукт></a> · <a href="https://<твой-tg-канал>" target="_blank" rel="noopener">Telegram</a> · <a href="/politika/">Политика</a></p>
+    <p class="muted">© %%YEAR%% автор</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* прогресс-бар чтения. Д.2: где браузер умеет scroll-driven анимации,
+     полосу ведёт CSS (tokens.css, раздел 3), и обработчик скролла не вешается
+     вовсе - это минус один слушатель на каждой странице кластера.
+     Где не умеет - остаётся прежний путь: transform + rAF-троттлинг. */
+  var bar = document.getElementById('readbar');
+  var cssDrivesBar = window.CSS && CSS.supports && CSS.supports('animation-timeline', 'scroll()');
+  if (bar && !cssDrivesBar) {
+    var ticking = false;
+    var updBar = function () {
+      var d = document.documentElement;
+      var max = d.scrollHeight - d.clientHeight;
+      bar.style.transform = 'scaleX(' + (max > 0 ? d.scrollTop / max : 0) + ')';
+      ticking = false;
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { window.requestAnimationFrame(updBar); ticking = true; }
+    }, { passive: true });
+    updBar();
+  }
+
+  /* Код-блок: обёртка + полоса хрома + копи-кнопка, одна делегированная
+     обработка кликов. Д.2: кнопка переехала из «висит поверх кода» в полосу
+     сверху, туда же встаёт ярлык языка - но ТОЛЬКО если он реально задан
+     атрибутом data-lang. Выдумывать язык за автора нельзя: подпись «shell»
+     над питоном хуже, чем её отсутствие. */
+  var pres = document.querySelectorAll('article pre');
+  for (var i = 0; i < pres.length; i++) {
+    var pre = pres[i];
+    if (pre.closest('.code-block')) continue;
+    var wrap = document.createElement('div');
+    wrap.className = 'code-block';
+    pre.parentNode.insertBefore(wrap, pre);
+    var bar = document.createElement('div');
+    bar.className = 'code-bar';
+    var lang = document.createElement('span');
+    lang.className = 'code-lang';
+    lang.textContent = pre.getAttribute('data-lang') || '';
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'copy-btn';
+    btn.textContent = 'Скопировать';
+    bar.appendChild(lang);
+    bar.appendChild(btn);
+    wrap.appendChild(bar);
+    wrap.appendChild(pre);
+  }
+
+  function copyText(text, btn, label) {
+    function done() {
+      var old = btn.textContent;
+      btn.textContent = label;
+      /* v3: подтверждение не только надписью, но и вспышкой кнопки (is-copied) */
+      btn.classList.add('is-copied');
+      setTimeout(function () { btn.textContent = old; btn.classList.remove('is-copied'); }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallback(); });
+    } else { fallback(); }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var copyBtn = e.target.closest('.copy-btn');
+    if (copyBtn) {
+      /* кнопка живёт в .code-bar, а <pre> - её сосед по .code-block:
+         искать надо от обёртки, а не от родителя кнопки */
+      var block = copyBtn.closest('.code-block');
+      var pre = block ? block.querySelector('pre') : null;
+      if (pre) copyText(pre.innerText, copyBtn, 'Скопировано ✓');
+      return;
+    }
+    var listBtn = e.target.closest('.checklist-copy');
+    if (listBtn) {
+      var items = listBtn.closest('.checklist').querySelectorAll('li');
+      var lines = [];
+      for (var j = 0; j < items.length; j++) lines.push('- ' + items[j].innerText.trim());
+      copyText(lines.join('\n'), listBtn, 'Скопировано ✓');
+    }
+  });
+
+  /* якорь-ссылка у каждого h2/h3 с id, видна при ховере */
+  var heads = document.querySelectorAll('article h2[id], article h3[id]');
+  for (var k = 0; k < heads.length; k++) {
+    var a = document.createElement('a');
+    a.className = 'h-anchor';
+    a.href = '#' + heads[k].id;
+    a.setAttribute('aria-label', 'Ссылка на раздел');
+    a.textContent = '#';
+    heads[k].appendChild(a);
+  }
+
+  /* клик-увеличение скринов: ссылка на полноразмер работает и без JS,
+     JS перехватывает клик и открывает лёгкий лайтбокс поверх страницы */
+  var box = null;
+  function closeBox() {
+    if (box) { box.remove(); box = null; document.removeEventListener('keydown', onKey); }
+  }
+  function onKey(e) { if (e.key === 'Escape') closeBox(); }
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('.fig a.zoom,.article-hero a.zoom'); /* zoom-hero v1 (по решению автора): hero тоже открывается в лайтбоксе - плотную таблицу замера с телефона иначе не прочитать */
+    if (!z || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+    e.preventDefault();
+    closeBox();
+    box = document.createElement('div');
+    box.className = 'lightbox';
+    var full = document.createElement('img');
+    full.src = z.getAttribute('href');
+    var img = z.querySelector('img');
+    full.alt = img ? img.alt : '';
+    var cl = document.createElement('button');
+    cl.type = 'button';
+    cl.className = 'lightbox-close';
+    cl.setAttribute('aria-label', 'Закрыть');
+    cl.textContent = '×';
+    box.appendChild(full);
+    box.appendChild(cl);
+    document.body.appendChild(box);
+    document.addEventListener('keydown', onKey);
+    box.addEventListener('click', closeBox);
+  });
+
+  /* Здесь раньше инициализировалась плавающая кнопка вызова оглавления внизу
+     экрана. Блок удалён вместе с раскрывающимся оглавлением тела статьи:
+     оглавление на странице ровно одно - липкая колонка слева. Обработчик не
+     возвращать, соответствующей разметки на странице больше нет. */
+
+  /* scrollspy: подсветка текущего раздела в десктоп-TOC */
+  var tocLinks = document.querySelectorAll('.toc-desktop .toc-list a[href^="#"]');
+  if ('IntersectionObserver' in window && tocLinks.length) {
+    var byId = {};
+    for (var m = 0; m < tocLinks.length; m++) {
+      byId[decodeURIComponent(tocLinks[m].getAttribute('href')).slice(1)] = tocLinks[m];
+    }
+    var spy = new IntersectionObserver(function (entries) {
+      for (var n = 0; n < entries.length; n++) {
+        if (!entries[n].isIntersecting) continue;
+        for (var p = 0; p < tocLinks.length; p++) tocLinks[p].classList.remove('is-current');
+        var link = byId[entries[n].target.id];
+        if (link) link.classList.add('is-current');
+      }
+    }, { rootMargin: '-15% 0px -70% 0px' });
+    var spyTargets = document.querySelectorAll('article section[id], article h2[id]');
+    for (var q = 0; q < spyTargets.length; q++) {
+      if (byId[spyTargets[q].id]) spy.observe(spyTargets[q]);
+    }
+  }
+})();
+</script>
+
+<!-- 🔴 ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ - обработчик клика. Отдельным скриптом от общего
+     рантайма намеренно: он обязан работать даже если что-то упало выше.
+     Логика и ключ localStorage - РОВНО те же, что на 12 витринных страницах
+     прода (laneT2, по решению автора), менять нельзя: выбор темы общий на весь сайт,
+     разойдутся ключи - человек будет переключать тему заново на каждой странице.
+     Три состояния: атрибута нет (как в системе) -> тёмная -> светлая -> тёмная.
+     Первый клик уводит В СТОРОНУ, ПРОТИВОПОЛОЖНУЮ системной теме на этот
+     момент, то есть всегда даёт видимый результат. -->
+<!-- Второй скрипт темы (первый - FOUC-гвард в head). Живёт перед </body>: он
+     трогает DOM шапки, до неё разметка обязана существовать.
+     Д2 (скептик r1): смена темы идёт круговым view-transition ИЗ ТОЧКИ КНОПКИ.
+     Обработчик клика ОДИН - вторым слушателем на ту же кнопку тема переключилась
+     бы дважды за клик и вернулась бы на место. Поэтому переход обёрнут вокруг
+     той же функции применения, а не повешен рядом. Откаты: нет
+     startViewTransition (Firefox, старые сборки) или человек просил покой -
+     мгновенное переключение ровно как раньше. CSS перехода - tokens, блок 24.15 -->
+<script>(function(){var b=document.getElementById('theme-toggle');if(!b)return;var m=window.matchMedia('(prefers-color-scheme: dark)');function eff(){var t=document.documentElement.dataset.theme;return (t==='dark'||t==='light')?t:(m.matches?'dark':'light');}function lab(){b.setAttribute('aria-label',eff()==='dark'?'Включить светлую тему':'Включить тёмную тему');}lab();b.addEventListener('click',function(){var cur=document.documentElement.dataset.theme;var next=(cur==='dark')?'light':(cur==='light'?'dark':(m.matches?'light':'dark'));var apply=function(){document.documentElement.dataset.theme=next;try{localStorage.setItem('theme',next);}catch(e){}lab();};if(!document.startViewTransition||window.matchMedia('(prefers-reduced-motion: reduce)').matches){apply();return;}var r=b.getBoundingClientRect(),d=document.documentElement.style;d.setProperty('--vt-x',(r.left+r.width/2)+'px');d.setProperty('--vt-y',(r.top+r.height/2)+'px');document.startViewTransition(apply);});})();</script>
+
+<!-- Цель Метрики «клик по инвайту» (r13, по решению автора). Движок оптимизировал клики из
+     поиска, но ни один клик не был прослежен до бота: реестр именных приглашений держит
+     сотни ссылок и ни одного счётчика переходов, поэтому при тысячах кликов в месяц
+     конверсия страницы в заявку не измерялась вообще. Здесь стоит самый дешёвый из трёх
+     возможных замеров - JS-цель Метрики на клик по любой ссылке-приглашению.
+     ИДЕНТИФИКАТОР ЦЕЛИ: invite_click (в интерфейсе Метрики создаётся один раз,
+     тип «JavaScript-событие»); в отчёт уезжает параметр invite_page = адрес статьи,
+     по нему считается конверсия каждой страницы отдельно.
+     Номер счётчика НЕ зашит: берётся из уже вставленного на страницу сниппета Метрики -
+     иначе смена счётчика тихо обнулила бы замер, а шаблон получил бы ещё одну привязку
+     к конкретному аккаунту.
+     Существующие счётчики не трогаются: ym только ВЫЗЫВАЕТСЯ, не инициализируется, и без
+     него обработчик молча выходит. Слушатель ОДИН, делегированный на document, passive -
+     ни разметки, ни скорости страницы это не касается.
+     Тонкость отложенного счётчика: сниппет Метрики поднимается лениво, по первому
+     scroll/mousemove/touchstart/click/keydown на window (или через 3 с после load). Клик
+     доходит до window ПОЗЖЕ, чем до делегата на document, поэтому на «холодной» странице
+     ym в этот момент ещё не существовал бы и цель терялась. Перед отправкой счётчик
+     будится синхронно - холостым событием mousemove на window; других слушателей этого
+     события на странице нет, будить нечего кроме самого счётчика.
+     Известный предел дешёвого замера: ссылка-приглашение уводит в том же окне, поэтому
+     клик, сделанный до полной загрузки счётчика, всё равно может не доехать. Точный счёт
+     до последнего перехода даёт только промежуточный редирект со своим логом - это
+     следующий по цене вариант, не этот. -->
+<script>(function(){var GOAL='invite_click',id=null,resolved=false,lastEl=null,lastAt=0;function counterId(){if(resolved)return id;resolved=true;var s=document.scripts,i,m;for(i=0;i<s.length;i++){m=/mc\.yandex\.ru\/metrika\/tag\.js(?:\?id=(\d+))?/.exec(s[i].src||'');if(m&&m[1]){id=Number(m[1]);return id;}}var ns=document.getElementsByTagName('noscript');for(i=0;i<ns.length;i++){m=/mc\.yandex\.ru\/watch\/(\d+)/.exec(ns[i].textContent||'');if(m){id=Number(m[1]);return id;}}return id;}function wakeCounter(){if(typeof window.ym==='function')return true;try{window.dispatchEvent(new Event('mousemove'));}catch(err){try{var ev=document.createEvent('Event');ev.initEvent('mousemove',true,true);window.dispatchEvent(ev);}catch(err2){}}return typeof window.ym==='function';}function isInvite(a){var h=a.getAttribute('href')||'',p=a.href||'';return h.indexOf('t.me/+')>-1||h.indexOf('t.me/%2B')>-1||p.indexOf('t.me/+')>-1||p.indexOf('t.me/%2B')>-1;}function onInviteClick(e){var t=e.target;if(!t||!t.closest)return;var a=t.closest('a[href]');if(!a||!isInvite(a))return;var now=e.timeStamp||Date.now();if(a===lastEl&&now-lastAt<500)return;lastEl=a;lastAt=now;var c=counterId();if(!c||!wakeCounter())return;try{window.ym(c,'reachGoal',GOAL,{invite_page:location.pathname});}catch(err){}}var opts={capture:true,passive:true};document.addEventListener('click',onInviteClick,opts);document.addEventListener('auxclick',onInviteClick,opts);})();</script>
+
+</body>
+</html>

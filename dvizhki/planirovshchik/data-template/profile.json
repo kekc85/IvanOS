@@ -1,0 +1,24 @@
+{
+ "wake": "08:00",
+ "sleep": "00:00",
+ "workStart": "10:00",
+ "workEnd": "22:00",
+ "peakFrom": "10:00",
+ "peakTo": "14:00",
+ "training": {
+  "days": [
+   "mon",
+   "wed",
+   "fri"
+  ],
+  "start": "09:00",
+  "dur": 60
+ },
+ "windDown": "22:30",
+ "protectedDays": [
+  "sun"
+ ],
+ "capacityPercent": 60,
+ "deepBlockMin": 90,
+ "breakMin": 15
+}

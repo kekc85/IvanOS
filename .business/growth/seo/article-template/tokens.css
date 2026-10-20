@@ -1,0 +1,1783 @@
+/* ============================================================
+   tokens.css - дизайн-токены и компоненты статьи 2.0
+   <твой-домен> · бумажная тема · Spectral + JetBrains Mono
+   Встраивается ИНЛАЙН в страницу при сборке (плейсхолдер INLINE_CSS).
+   Без Tailwind. Ванильный CSS, один файл.
+   ============================================================ */
+
+/* ---------- 0. Шрифты бренда (свои файлы, без внешних CDN) ----------
+   Файлы лежат на проде в /assets/fonts/, зеркало исходников -
+   ~/.business/scripts/seo/images/fonts/web/.
+   Это ровно те же бинарники, что раздавал Google (сабсеты latin,
+   latin-ext, cyrillic), поэтому рендер совпадает пиксель-в-пиксель.
+   Заголовки и текст держит ОДНА гарнитура Spectral (Production Type, OFL) -
+   у неё есть кириллица. До этой редакции тут стояли Fraunces и Newsreader без
+   кириллицы: русские слова в заголовке падали в системную Georgia, латинские
+   оставались брендовыми, и заголовок читался двумя разными шрифтами.
+   Не возвращать латино-только гарнитуры: разнобой вернётся.
+   font-display: swap - текст виден сразу, шрифт подменяется по загрузке.
+   Начертания italic объявлены, но ни одной страницей пока не используются:
+   объявленный @font-face без применения браузером НЕ качается, стоит 0 байт
+   трафика и страхует будущие статьи от синтетического наклона.
+   ------------------------------------------------------------------ */
+@font-face{font-family:'Spectral';font-style:normal;font-weight:300;font-display:swap;src:url(/assets/fonts/spectral-latin-300.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:300;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-300.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:300;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-300.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-latin-400.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-400.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-400.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/spectral-latin-500.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-500.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-500.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-latin-600.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-600.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-600.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/spectral-latin-700.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-700.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-700.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-latin-400-italic.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-400-italic.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:400;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-400-italic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-latin-600-italic.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-latin-ext-600-italic.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'Spectral';font-style:italic;font-weight:600;font-display:swap;src:url(/assets/fonts/spectral-cyrillic-600-italic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(/assets/fonts/jetbrainsmono-cyrillic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(/assets/fonts/jetbrainsmono-cyrillic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/jetbrainsmono-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/jetbrainsmono-cyrillic.woff2) format('woff2');unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}
+
+/* ---------- 0b. Дисплейная гарнитура Unbounded (редизайн v2, по решению автора) ------
+   H1 редизайна: заголовки сайта держит Unbounded 700, тело остаётся на Spectral.
+   До этой правки движок печатал новые статьи целиком на Spectral, а 199 живых
+   страниц уже ехали на Unbounded через /assets/tw-static.css - каждая свежая
+   статья выходила в старом виде и откатывала редизайн.
+   Объявления сняты ДОСЛОВНО с боевого рецепта (laneB/tw-static.v2.css и
+   append-блока laneD-doors, снятого с живой /guide-vidrush/): те же два файла,
+   те же unicode-range, тот же font-display. Один источник истины на сайт.
+   Файлы на проде: /assets/fonts/unbounded-700-{cyrillic,latin}.woff2 (оба 200).
+   Начертания 800 нет ни на проде, ни в зеркале исходников - не объявляем,
+   иначе браузер синтезирует жир и заголовок «поплывёт».
+   ------------------------------------------------------------------------- */
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/unbounded-700-cyrillic.woff2) format('woff2');unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116,U+20BD}
+@font-face{font-family:'Unbounded';font-style:normal;font-weight:700;font-display:swap;src:url(/assets/fonts/unbounded-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+20BD,U+2122,U+2212}
+
+/* ---------- 0a. Метрические подложки (Д.5) ----------
+   font-display: swap показывает текст СРАЗУ системным шрифтом, а через
+   100-400 мс подменяет его брендовым. Если у подложки другая ширина буквы и
+   другая высота строки, в момент подмены весь текст меняет размер - страница
+   дёргается, это и есть CLS. Замер Д.4: 0.21 на шаблоне статьи при 390px.
+   Лечится не отключением swap, а подложкой С ТЕМИ ЖЕ метриками: браузер
+   заранее резервирует ту высоту и ширину, которую займёт брендовый шрифт.
+   Числа не на глаз - померены в Chromium против боевых woff2 (canvas
+   measureText + fontBoundingBox, скрипт scratchpad/d5_metrics.py):
+     Spectral 400 / Georgia          ширина 3363.4 / 3425.3 = 98.2 %
+     Spectral 600 / Georgia Bold     ширина 3463.6 / 3919.2 = 88.4 %
+     JetBrains Mono / Courier New    ширина 3900.2 / 3900.6 = 100.0 %
+     подъём/спуск (на 100px кегля): Spectral 106/46, JetBrains Mono 102/30
+   JetBrains Mono и Courier New совпали по ширине знака в ноль - обе моноширинные
+   с шагом 0.6em. Именно поэтому крошки (они на моноширинном) после Д.5 не
+   меняют длину строки вообще, ни на пиксель.
+   Тот же паттерн уже живёт в корпусе: guide-svoy-golos несёт Fraunces-fb и
+   Newsreader-fb на локальной Georgia. Трафика подложки стоят 0 байт: local().
+   -------------------------------------------------------------------- */
+@font-face{font-family:'Spectral-fb';src:local('Georgia'),local('Times New Roman');font-style:normal;font-weight:400;size-adjust:98.2%;ascent-override:108%;descent-override:46.8%;line-gap-override:0%}
+@font-face{font-family:'Spectral-fb';src:local('Georgia Bold'),local('Georgia'),local('Times New Roman');font-style:normal;font-weight:500 700;size-adjust:88.4%;ascent-override:119.9%;descent-override:52.1%;line-gap-override:0%}
+@font-face{font-family:'Spectral-fb';src:local('Georgia Italic'),local('Georgia'),local('Times New Roman');font-style:italic;font-weight:400 700;size-adjust:98.2%;ascent-override:108%;descent-override:46.8%;line-gap-override:0%}
+@font-face{font-family:'JetBrainsMono-fb';src:local('Courier New'),local('Courier');font-style:normal;font-weight:400 700;size-adjust:100%;ascent-override:102%;descent-override:30%;line-gap-override:0%}
+/* Подложка под Unbounded (редизайн v2, по решению автора). Unbounded - широкий гротеск,
+   его подложка не Georgia, а Arial с поправкой ширины 131%: числа взяты из того
+   же боевого рецепта, что уже стоит на 199 живых страницах, не пересчитаны на
+   глаз. Имя 'UnboundedFB' сохранено дословно рецепту (не 'Unbounded-fb'),
+   чтобы движок и tw-static.css грепались одной строкой. */
+@font-face{font-family:'UnboundedFB';src:local('Arial Bold'),local('Arial');font-weight:600 900;font-display:swap;size-adjust:131%;ascent-override:99%;descent-override:24%;line-gap-override:0%}
+
+/* ---------- 1. Токены ---------- */
+:root {
+  color-scheme: light;
+  --sh-heroimg: 0 1px 2px rgba(28, 24, 21, 0.18);
+  /* палитра «бумага» (светлая, канон живых страниц) */
+  --paper: #FAF6EF;
+  --panel: #F3ECE0;
+  --card: #FFFFFF;
+  --ink: #1C1815;
+  --ink-soft: #2A241F;
+  --muted: #6E6358;
+  --line: #E4DACB;
+  --line-soft: #EFE6D7;
+  --accent: #BE4A24;
+  --accent-soft: rgba(190, 74, 36, 0.35);
+  /* Д.5 · заливка кнопок отдельным токеном.
+     На кнопке акцент несёт не сам себя, а БЕЛЫЙ ТЕКСТ поверх, и порог у текста
+     жёстче: WCAG AA требует 4.5:1. В светлой теме терракота #BE4A24 под #FAF6EF
+     даёт 4.65:1 и проходит, поэтому здесь токен равен акценту.
+     В сумерках акцент светлее (#E0693C) - тот же белый текст падал до 3.12:1
+     (замер Д.4, дефект D2), кнопка «На <твой-продукт>» читалась хуже основного текста.
+     Ссылки и рамки остаются на светлом --accent: им нужен контраст с ФОНОМ,
+     а не с текстом, и там #E0693C даёт 5.5:1. Разводим два разных требования. */
+  --accent-btn: #BE4A24;
+  --accent-btn-ink: #FAF6EF;
+  --amber: #C98A3C;
+  --warn-bg: #F7ECE6;
+
+  /* терминал-мокап: тёмный в ОБЕИХ темах */
+  --code-bg: #0E0D0C;
+  --code-ink: #D7D0C4;
+  --code-line: #2A2724;
+  /* Д1 (скептик r1, визуальный судья). Объём материала «машина» держит ОДИН
+     токен-тень, разведённый по темам, - раньше рецепт был вписан прямо в
+     правило блока 24.3 и потому был одинаков в обеих темах.
+     Светлое значение здесь = ровно то, что стояло в правиле до правки: в
+     светлой теме материал уже читается (чёрная плашка на кремовой бумаге,
+     контраст 18:1), менять там нечего и незачем. */
+  --code-lift: var(--lift-2), var(--edge-dark);
+
+  /* CTA-плашка: тёмная в ОБЕИХ темах */
+  --cta-bg: #1C1815;
+  --cta-ink: #FAF6EF;
+  --cta-link: #FFD23F;
+
+  /* типографика */
+  /* Д.5: между брендовым и системным шрифтом встала метрическая подложка
+     (блок 0a). Порядок важен: пока Spectral едет, строку держит Spectral-fb
+     той же ширины и высоты, и подмена проходит без рывка. */
+  /* Редизайн v2 (по решению автора): дисплейный стек ушёл на Unbounded, тело осталось
+     на Spectral. Пара «широкий гротеск в заголовке + серифная антиква в тексте»
+     - это ровно то, что уже стоит на 199 живых страницах через tw-static.css.
+     --font-body НЕ ТРОГАТЬ: Spectral держит корпус текста, меру строки (62ch)
+     и все замеры Д.5. Порядок в стеке важен: пока Unbounded едет, строку держит
+     UnboundedFB той же ширины (блок 0a), и подмена проходит без рывка. */
+  --font-display: 'Unbounded', 'UnboundedFB', ui-sans-serif, system-ui, sans-serif;
+  --font-body: 'Spectral', 'Spectral-fb', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'JetBrainsMono-fb', ui-monospace, SFMono-Regular, monospace;
+
+  /* геометрия */
+  --content-width: 720px;
+  --toc-width: 250px;
+
+  /* ---------- Д.2 · ШКАЛЫ (бриф design-brief-2026-08-06, разд. 2.1) ----------
+     До Д.2 в статье жило 22 разных кегля и 8 радиусов: размеры считались em
+     поверх em (отсюда 15.2064px), радиусы - тоже. Ниже одна шкала на всё,
+     литеральных font-size и border-radius в файле не остаётся.
+     Имена старых токенов сохранены: --radius и --radius-lg стали алиасами,
+     чтобы ни одно существующее правило и ни одна собранная страница не поехали.
+     ------------------------------------------------------------------------ */
+
+  /* типошкала: 9 ступеней, одна на весь сайт */
+  --fs-caption: 0.8125rem;  /* 13px - ТОЛЬКО декоративные метки, не проза */
+  --fs-small:   0.875rem;   /* 14px - нижний порог читаемого текста */
+  --fs-ui:      0.9375rem;  /* 15px - TOC, крошки, кнопки, мета */
+  --fs-body:    1.15rem;    /* 18.4px - канон абзаца, не трогать */
+  --fs-lead:    1.3rem;     /* 20.8px - лид, быстрый ответ, заголовок карточки */
+  --fs-h3:      1.5rem;     /* 24px - было 20px, ступень к body не работала */
+  --fs-h2:      2rem;       /* 32px */
+  --fs-h1:      3rem;       /* 48px - кегль h1 в серифной антикве (легаси-слои) */
+  --fs-h1-display: 2.35rem; /* 37.6px - кегль h1 в Unbounded (редизайн v2).
+                               У широкого гротеска х-высота и ширина знака больше,
+                               чем у Spectral: те же 3rem дают заголовок, который
+                               на 390px переносится по слогам и лезет за колонку.
+                               2.35rem - число из боевого append-блока живых
+                               страниц (/guide-vidrush/, хабы .hub-h1), не с глаза. */
+  --fs-display: 3.75rem;    /* 60px - только hero главной */
+
+  /* интерлиньяж по кеглю */
+  --lh-tight:   1.15;       /* h1, h2. Было 1.07: выносные «у р ц щ» слипались */
+  --lh-heading: 1.28;       /* h3 */
+  --lh-body:    1.65;       /* абзац, не трогать */
+  --lh-ui:      1.4;
+
+  /* ритм: шаг 4px, четыре рабочих тира */
+  --sp-1: 0.25rem;  --sp-2: 0.5rem;   --sp-3: 0.75rem;  --sp-4: 1rem;
+  --sp-6: 1.5rem;   --sp-8: 2rem;     --sp-12: 3rem;    --sp-16: 4rem;
+  --sp-24: 6rem;
+  --rhythm-inline:  var(--sp-4);   /* абзац к абзацу */
+  --rhythm-block:   var(--sp-8);   /* абзац к картинке, коду, таблице, врезке */
+  --rhythm-sub:     var(--sp-12);  /* перед h3 */
+  --rhythm-section: var(--sp-24);  /* перед h2. Было 8px - это и была стена текста */
+
+  /* форма: одна шкала, дробных значений нет */
+  --r-xs: 4px;     /* инлайн-код, чипы, кольцо фокуса */
+  --r-sm: 8px;     /* кнопки, поля */
+  --r-md: 12px;    /* карточки, код-блок, таблица */
+  --r-lg: 16px;    /* врезки, CTA, hero */
+  --r-pill: 999px;
+  --radius: var(--r-md);      /* алиас: старое имя, то же значение (12px) */
+  --radius-lg: var(--r-lg);   /* алиас: старое имя, то же значение (16px) */
+
+  /* ---------- ЯДРО ФИЗИКИ v3 «ОТТИСК» (по решению автора) ----------
+     Одна физика на весь сайт, из неё выводится каждый приём, а не придумывается.
+       ЛАМПА    один источник света, сверху и чуть слева. Значит: блик только по
+                ВЕРХНЕЙ кромке (inset 0 1px 0), тень только вниз, подсветка только
+                тёплая. Холодных и цветных свечений в системе нет.
+       ДАВЛЕНИЕ глубина = объект ЛЕЖИТ на столе, а не парит. Тень двухчастная:
+                жёсткий контакт 1-2px прямо под объектом + мягкая среда 20-60px.
+       КРОМКА   --edge светлая в светлой теме (лист под лампой) и почти
+                невидимая в тёмной. Разведение обязательно: --edge со светлым
+                значением на тёмной панели даёт БЕЛУЮ ПОЛОСУ - ровно тот класс
+                дефекта, который ловили три фикс-волны v2 (см. kritik-F2 п.16).
+     --edge-dark НЕ меняется по теме сознательно: он для зон, которые тёмные в
+     ОБЕИХ темах (терминал, CTA-плашка, подвал) - им светлая кромка не положена
+     никогда.
+     -------------------------------------------------------------------- */
+  --lamp: #DBB36A;
+  --lift-1: 0 1px 1px rgba(28, 24, 21, 0.05);
+  --lift-2: 0 1px 1px rgba(28, 24, 21, 0.06), 0 8px 16px -8px rgba(28, 24, 21, 0.10),
+            0 22px 40px -22px rgba(28, 24, 21, 0.12);
+  --lift-3: 0 1px 1px rgba(28, 24, 21, 0.07), 0 12px 22px -10px rgba(28, 24, 21, 0.13),
+            0 36px 64px -30px rgba(28, 24, 21, 0.18);
+  --edge: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --edge-dark: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+
+  /* глубина: тени тонированы в бумагу, чёрных нет.
+     v3: --shadow-* стали АЛИАСАМИ на --lift-*, имена сохранены - апгрейд
+     физики получают разом все компоненты, которые их уже потребляют
+     (.rail, .author-card, .checklist, .callout, .nav-drop, .cta, .quick-answer),
+     ноль новых селекторов и ноль правок в 250+ уже собранных страницах. */
+  --shadow-1: var(--lift-1);
+  --shadow-2: var(--lift-2);
+  --shadow-3: var(--lift-3);
+
+  /* motion: три длительности, две кривые, больше не нужно */
+  --dur-fast: 140ms;   /* цвет, граница */
+  --dur-base: 200ms;   /* transform, тень */
+  --dur-slow: 320ms;   /* раскрытие details */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* геометрия каркаса */
+  /* Высота липкой шапки: scroll-margin считается, а не угадывается.
+     v3, замер в браузере (getBoundingClientRect живой шапки, 1440 и 390):
+     .inner padding 0.85rem×2 = 27.2 + содержимое min-height 44 + рамка 1 = 72.2.
+     Токен стоял 68 ещё до этой волны, то есть каждый якорь и каждый пункт TOC
+     не доезжал 4px и заголовок подлезал под шапку. Кнопка темы высоту НЕ меняет
+     (те же 44px, что у логотипа и пунктов), но расхождение чиним заодно. */
+  --header-h: 72px;
+  --rail-width: var(--toc-width);  /* правый рельс. Ширина = ширине TOC намеренно:
+                                      симметрия колонок центрирует колонку текста
+                                      по центру окна (см. раздел 6, там же расчёт) */
+}
+
+/* тёмная тема: «бумага в сумерках», не чёрный экран.
+   Контрасты: ink #EAE3D6 на #161311 ≈ 13.5:1 · muted #A2988A ≈ 6.2:1 ·
+   accent #E0693C на #161311 ≈ 5.5:1 (AA для текста и ссылок) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --sh-heroimg: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --paper: #161311;
+    --panel: #201C18;
+    --card: #1D1915;
+    --ink: #EAE3D6;
+    --ink-soft: #D6CCBD;
+    --muted: #A2988A;
+    --line: #332D26;
+    --line-soft: #2A2520;
+    --accent: #E0693C;
+    --accent-soft: rgba(224, 105, 60, 0.4);
+    /* Д.5 · заливка кнопок в сумерках темнее акцента: #FAF6EF на #E0693C = 3.12:1
+       (провал AA), на #BE4A24 = 4.65:1. Против фона страницы #161311 кнопка
+       остаётся отдельной фигурой: 3.69:1 при пороге 3:1 для элементов интерфейса. */
+    --accent-btn: #BE4A24;
+    --accent-btn-ink: #FAF6EF;
+    --amber: #D89A50;
+    --warn-bg: #2A1E17;
+    --cta-bg: #26211C;
+    --cta-ink: #EAE3D6;
+
+    /* 🔴 Д1 (находка скептика r1): в сумерках материал «машина» СЛИВАЛСЯ с
+       бумагой. Замер судьи: body rgb(22,19,17) против pre rgb(14,13,12) =
+       контраст 1,05. Три материала концепции (бумага, машина, шов) в половине
+       состояний схлопывались в один, доказательство гайда переставало быть
+       отдельным предметом на странице.
+       Лечение двухчастное, и вторая часть обязательна:
+         1) заливка уходит ГЛУБЖЕ бумаги: #0A0908 вместо #0E0D0C;
+         2) границу материала рисует бевел-кромка, потому что ЗАЛИВКОЙ её на
+            тёмной бумаге нарисовать физически нельзя - даже чистый чёрный
+            против #161311 даёт максимум 1,14, а порог отделения 1,8. Кромка
+            #454240 против бумаги = 1,85, против заливки = 2,0.
+       Порядок слоёв тени: внутренний блик сверху (свет лампы лёг на фаску),
+       кольцо в 1px (внешняя фаска), глубокая мягкая тень (материал висит над
+       бумагой, а не врезан в неё). */
+    --code-bg: #0A0908;
+    --code-line: #454240;
+    --code-lift: var(--edge-dark), 0 0 0 1px rgb(255 255 255/.08), 0 18px 44px -20px rgb(0 0 0/.85);
+    /* --code-ink не трогаем: текст кода одинаков в обеих темах */
+
+    /* Д.2: в сумерках глубину держит не тень (её на тёмном не видно),
+       а тонкая светлая обводка. Токены те же, значения другие.
+       v3: значения переехали в --lift-*, --shadow-* остались алиасами. */
+    --lift-1: 0 0 0 1px rgba(255, 255, 255, 0.05);
+    --lift-2: 0 0 0 1px rgba(255, 255, 255, 0.07), 0 10px 28px -14px rgba(0, 0, 0, 0.62);
+    --lift-3: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 18px 44px -18px rgba(0, 0, 0, 0.72);
+    /* 🔴 кромка в сумерках почти невидима. Без этой строки принудительная
+       тёмная тема на светлой системе рисовала бы белую полосу по верху
+       каждой карточки (класс дефекта v2). */
+    --edge: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+    --shadow-1: var(--lift-1);
+    --shadow-2: var(--lift-2);
+    --shadow-3: var(--lift-3);
+  }
+}
+
+/* ---------- 2. База ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  /* НЕ ставить overflow-x: hidden на body: он делает body скролл-контейнером,
+     и position: sticky у шапки и десктоп-TOC умирает (липнет к скроллпорту body,
+     который не скроллится). Горизонтальное переполнение режет html выше. */
+}
+img { max-width: 100%; height: auto; }
+/* Редизайн v2: у Unbounded в наборе только 700 - вес объявлен явно, иначе
+   браузер синтезирует полужирный из 700 и заголовок «мажет». letter-spacing
+   -0.02em - тот же, что в боевом append-блоке живых страниц: у широкого
+   гротеска дефолтный трекинг на крупном кегле выглядит разреженным. */
+h1, h2, h3 { font-family: var(--font-display); font-weight: 700; letter-spacing: -0.02em; overflow-wrap: break-word; color: var(--ink); }
+/* mobile-headings v1 (по решению автора, волна novichok-20260823).
+   text-wrap: balance СНЯТ с базового правила и возвращён только на широком
+   вьюпорте. Почему: balance выравнивает длину строк по САМОЙ ДЛИННОЙ ЛЕЗУЩЕЙ
+   единице, и на колонке 390px у Unbounded (широкий гротеск, letter-spacing
+   -0.02em) этой единицей становится одно слово - заголовок рассыпается в
+   лесенку «по слову на строку». Замер Playwright 390x844, DSF 2,
+   document.fonts.ready, по живому снимку prod-snapshot.html страницы
+   guide-rossiyskie-neyroseti: с balance 27 одиночных строк из 53 в 11
+   заголовках из 14, худший H2 «Где отечественный сервис реально сильнее» -
+   5 строк по одному слову. Без balance браузер набивает строки жадно, то
+   есть перенос делается ТОЛЬКО когда слово физически не влезло.
+   720px - ширина колонки статьи (--content-width): на ней balance снова
+   полезен и лесенки не даёт (та же проверка на 1280px). */
+@media (min-width: 720px) { h1, h2, h3 { text-wrap: balance; } }
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-soft); }
+
+/* ---------- 2a. Состояния интерфейса (Д.2, бриф разд. 2.12) ----------
+   До Д.2 на статье было ровно два правила :focus-visible и оба про декор:
+   у ссылок, кнопок, пунктов TOC и карточек своего фокуса не было вообще -
+   клавиатурой по странице ходить было нельзя. Правило ниже одно на всё и
+   завёрнуто в :where(), поэтому НЕ поднимает специфичность и не перебивает
+   ни одно существующее правило компонента.
+   Ховеры собраны под @media (hover: hover) and (pointer: fine): без гейта
+   на тач-экране состояние залипает после тапа и «зависшая» ссылка держится
+   до следующего касания. */
+:where(a, button, summary, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+:where(button, .btn-cta, .btn-nav, .copy-btn, .checklist-copy, .share-btn, .nav-burger) {
+  transition: transform var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+:where(button, .btn-cta, .btn-nav, .copy-btn, .checklist-copy, .share-btn):active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  a:hover { border-bottom-color: var(--accent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button, .btn-cta, .btn-nav, .copy-btn, .checklist-copy, .share-btn):active { transform: none; }
+}
+
+/* ---------- 3. Прогресс-бар чтения ---------- */
+.readbar {
+  position: fixed; top: 0; left: 0; z-index: 60;
+  width: 100%; height: 3px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: 0 50%;
+  will-change: transform;
+  pointer-events: none;
+}
+/* Д.2: где браузер умеет scroll-driven анимации, полосу ведёт сам компоновщик,
+   а обработчик скролла в скрипте выключается (см. page-template.html, флаг
+   CSS.supports). Где не умеет - остаётся прежний JS-путь, полоса живёт всегда. */
+@supports (animation-timeline: scroll()) {
+  .readbar {
+    animation: readbar linear both;
+    animation-timeline: scroll(root block);
+  }
+  @keyframes readbar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+}
+
+/* ---------- 4. Шапка сайта ---------- */
+.site-header {
+  position: sticky; top: 0; z-index: 40;
+  background: color-mix(in srgb, var(--paper) 85%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.site-header .inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0.85rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+}
+.site-logo {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--fs-lead); color: var(--ink); border-bottom: none;
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+/* align-items: center - пункты-ссылки и пилюля разной высоты, без него
+   текст «Гайды/Об авторе» встаёт по верхнему краю кнопки и шапка едет.
+   Д.2: min-height 44px у каждого пункта - палец на телефоне промахивался
+   мимо 22-40px целей (48 таких целей на статье при 390). */
+.site-nav { display: flex; align-items: center; gap: var(--sp-6); font-size: var(--fs-ui); position: relative; }
+.site-nav a {
+  color: var(--ink-soft); border-bottom: none; position: relative;
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+.site-nav a::after { content: ''; position: absolute; left: 0; bottom: 0.7rem; height: 1px; width: 0; background: var(--accent); transition: width var(--dur-base) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .site-nav a:hover::after { width: 100%; }
+}
+/* Кнопка-вход в воронку. ОДНО правило заливки на обе темы: акцент + осветление
+   на ховере. До этой редакции их было два (светлая тема var(--ink), тёмная
+   var(--accent) в @media): копии расходились при правке и на части страниц
+   кластера пилюля уезжала в чернильную, а на части в терракотовую.
+   Селектор той же весомости, что и `.site-header .site-nav a` выше:
+   иначе цвет ссылки перебивает цвет кнопки и текст сливается с заливкой */
+.site-header .site-nav a.btn-nav {
+  background: var(--accent-btn); color: var(--accent-btn-ink);
+  border-radius: var(--r-pill); padding: var(--sp-2) var(--sp-4);
+  font-family: var(--font-body); font-size: var(--fs-ui);
+  border-bottom: none; white-space: nowrap;
+  min-height: 44px; display: inline-flex; align-items: center;
+  transition: filter var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-header .site-nav a.btn-nav:hover { filter: brightness(1.08); }
+}
+.site-header .site-nav a.btn-nav:active { transform: scale(0.97); }
+.site-header .site-nav a.btn-nav::after { display: none; }
+
+/* ---------- 4a. Мобильная навигация: бургер БЕЗ JS ----------
+   Паттерн «скрытый чекбокс + соседи по `~`»: состояние держит сам браузер,
+   скрипт не нужен, меню работает и при выключенном JS.
+   До этой редакции узкий экран просто прятал.only-wide - «Гайды» и «Об авторе»
+   пропадали совсем, и с телефона по сайту было не походить.
+   Порядок узлов в разметке жёсткий: input.nav-toggle -> label.nav-burger ->
+   div.nav-drop, селекторы `~` завязаны на него. */
+.nav-toggle, .nav-burger, .nav-drop { display: none; }
+
+@media (max-width: 639.98px) {
+  /* инлайн-пункты и пилюля уходят в выпадашку, в строке остаётся бургер */
+  .site-nav .only-wide,
+  .site-header .site-nav a.btn-nav { display: none; }
+  .site-nav { gap: 0; }
+
+  /* сам чекбокс невидим, но лежит ровно поверх бургера: он и ловит палец,
+     и держит фокус с клавиатуры (Tab + Space), поэтому доступность цела */
+  .nav-toggle {
+    display: block; position: absolute; right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 2.75rem; height: 2.75rem; margin: 0; padding: 0;
+    opacity: 0; cursor: pointer; z-index: 2;
+    -webkit-appearance: none; appearance: none;
+  }
+  .nav-burger {
+    display: flex; flex-direction: column; justify-content: center; gap: 5px;
+    width: 2.75rem; height: 2.75rem; padding: 0 0.65rem;
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+    background: transparent; cursor: pointer;
+  }
+  .nav-burger span {
+    display: block; height: 2px; border-radius: var(--r-xs);
+    background: var(--ink);
+    transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);
+  }
+  .nav-toggle:checked ~ .nav-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle:checked ~ .nav-burger span:nth-child(2) { opacity: 0; }
+  .nav-toggle:checked ~ .nav-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-toggle:focus-visible ~ .nav-burger { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .nav-drop {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    position: absolute; top: calc(100% + 0.85rem); right: 0;
+    min-width: 13rem; padding: 0.55rem;
+    background: var(--paper);
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    box-shadow: var(--shadow-3);
+    opacity: 0; visibility: hidden; transform: translateY(-6px);
+    transition: opacity var(--dur-base) var(--ease-out),
+                transform var(--dur-base) var(--ease-out),
+                visibility var(--dur-base) var(--ease-out);
+    z-index: 50;
+  }
+  .nav-toggle:checked ~ .nav-drop { opacity: 1; visibility: visible; transform: none; }
+  .site-nav .nav-drop a {
+    padding: var(--sp-3); border-radius: var(--r-sm);
+    color: var(--ink); font-size: var(--fs-body); white-space: nowrap;
+    min-height: 44px;
+  }
+  .site-nav .nav-drop a::after { display: none; }
+  .site-header .site-nav .nav-drop a.nav-drop-cta {
+    margin-top: var(--sp-1); text-align: center; justify-content: center;
+    background: var(--accent-btn); color: var(--accent-btn-ink);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .site-nav .nav-drop a:hover { background: var(--panel); }
+    .site-header .site-nav .nav-drop a.nav-drop-cta:hover { filter: brightness(1.08); }
+  }
+}
+
+/* ---------- 5. Хлебные крошки (видимые) ----------
+   Д.5, два дефекта разом.
+   D1 (блокер). До Д.5 крошки жили на 15px с flex-wrap. На 390px строка
+   «Главная → Гайды → Нейросети и ИИ-инструменты» в неё не помещалась: пока
+   работала системная подложка - влезала, приезжал JetBrains Mono - переносилась
+   во вторую строку, и ВСЯ статья ниже уезжала на 38px вниз. Один этот перенос
+   и давал CLS 0.21 (замер Д.4: h1, мета, лид и быстрый ответ сдвинуты на 38-39px
+   при неизменной высоте). Лечим не отступом у соседа, а самим классом:
+     • кегль 14px = --fs-small, нижний порог читаемого (узлов мельче 14px по-прежнему 0);
+     • строка не переносится никогда: nowrap на элементах, лишнее уезжает
+       горизонтальной прокруткой ВНУТРИ полосы крошек, а не страницы;
+     • высота полосы задана в пикселях и от шрифта не зависит вообще.
+   D5. Тач-цель ссылки ≥ 44px берётся высотой строки и вертикальным padding,
+   кегль при этом не растёт. Полоса 52px = 44px цель + по 4px сверху и снизу
+   под кольцо фокуса (outline 2px + offset 2px), иначе прокрутка его срезает.
+   Верхний отступ уменьшен с 24px до 8px: высота блока выросла на 31px,
+   и без этого шапка отъезжала от заголовка. */
+.breadcrumbs {
+  font-size: var(--fs-small); color: var(--muted); margin: var(--sp-2) 0 0;
+  font-family: var(--font-mono); line-height: var(--lh-ui);
+}
+.breadcrumbs ol {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: nowrap; align-items: center; gap: var(--sp-2);
+  min-height: 52px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none; -ms-overflow-style: none;
+}
+.breadcrumbs ol::-webkit-scrollbar { width: 0; height: 0; }
+/* Полоса прокручивается, но полосы прокрутки не видно - иначе она бы прыгала
+   и добавляла свою высоту. Чтобы обрыв на узком экране не выглядел браком
+   вёрстки, последние 28px растворяются: это читается как «строка продолжается»
+   и зовёт потянуть. Там, где крошки помещаются целиком, растворяется пустота. */
+@supports (mask-image: linear-gradient(#000, #000)) {
+  .breadcrumbs ol {
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+}
+.breadcrumbs li { display: flex; align-items: center; gap: var(--sp-2); flex: 0 0 auto; white-space: nowrap; }
+.breadcrumbs li + li::before { content: '→'; color: var(--muted); }
+.breadcrumbs li:last-child { padding-right: var(--sp-4); }
+.breadcrumbs a, .breadcrumbs [aria-current] {
+  display: inline-flex; align-items: center; min-height: 44px;
+}
+.breadcrumbs a { color: var(--muted); border-bottom: none; transition: color var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .breadcrumbs a:hover { color: var(--accent); }
+}
+.breadcrumbs [aria-current] { color: var(--ink-soft); }
+
+/* ---------- 6. Раскладка: контент + сайдбар-TOC ---------- */
+.layout { max-width: var(--content-width); margin: 0 auto; padding: 0 1.25rem; }
+.toc-desktop { display: none; }
+.layout-balance { display: none; }
+/* Д.2: планшет и узкий ноут 1024-1199px до этого оставались вообще без
+   оглавления - десктопное включалось только от 1200px, а мобильное там уже
+   пряталось. Две колонки: сайдбар 200px + колонка текста. */
+@media (min-width: 1024px) and (max-width: 1199.98px) {
+  .layout {
+    --toc-width: 200px;
+    --col-gap: 2rem;
+    max-width: calc(var(--toc-width) + var(--content-width) + var(--col-gap) + 2.5rem);
+    display: grid;
+    grid-template-columns: var(--toc-width) minmax(0, var(--content-width));
+    gap: var(--col-gap);
+    align-items: start;
+  }
+  .layout.layout-solo { display: block; max-width: var(--content-width); }
+  .toc-desktop { display: block; }
+}
+@media (min-width: 1200px) {
+  /* три колонки: TOC | текст | пустой балансир.
+     Балансир зеркалит ширину TOC, поэтому центрируется НЕ пара колонок,
+     а сама колонка текста - её центр совпадает с центром окна.
+     +2.5rem в max-width = собственный padding .layout (box-sizing: border-box),
+     иначе колонки не получают свои полные ширины на широком экране. */
+  .layout {
+    --col-gap: 3rem;
+    max-width: calc(var(--toc-width) * 2 + var(--content-width) + var(--col-gap) * 2 + 2.5rem);
+    display: grid;
+    grid-template-columns: var(--toc-width) minmax(0, var(--content-width)) var(--toc-width);
+    gap: var(--col-gap);
+    align-items: start;
+  }
+  /* третья колонка: правый рельс (Д.2). До Д.2 тут стоял пустой балансир и
+     360px экрана не несли ничего. Ширина колонки не изменилась ни на пиксель,
+     поэтому центрирование колонки текста осталось тем же - изменилось только
+     содержимое: липкая карточка перехода в воронку и «наверх». */
+  .layout > .layout-balance { display: block; }
+  /* страница «Об авторе» (layout-solo): у неё нет TOC, и в трёхколоночной сетке
+     слева оставалась пустая колонка в 250px, а текст висел левее центра */
+  .layout.layout-solo {
+    display: block;
+    max-width: calc(var(--content-width) + 2.5rem);
+  }
+  /* у solo-страницы сетки нет, значит третьей колонки тоже нет: без этой
+     строки рельс вываливается блоком в конец потока страницы «Об авторе» */
+  .layout.layout-solo > .layout-balance { display: none; }
+  .toc-desktop { display: block; }
+}
+.toc-desktop {
+  position: sticky; top: calc(var(--header-h) + var(--sp-4));
+  max-height: calc(100dvh - var(--header-h) - var(--sp-8));
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--sp-6) 0;
+  font-size: var(--fs-ui);
+}
+/* узкий десктоп 1200-1355px: симметрия съела бы ширину текста (720 -> 564),
+   поэтому ужимаем сайдбар и зазор - колонка текста остаётся ~676-720px и по центру */
+@media (min-width: 1200px) and (max-width: 1355px) {
+  .layout { --toc-width: 210px; --col-gap: 2rem; }
+}
+.toc-title { font-family: var(--font-mono); font-size: var(--fs-small); letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin: 0 0 var(--sp-3); }
+.toc-list { list-style: none; margin: 0; padding: 0; }
+.toc-list li { margin: 0; }
+.toc-list a {
+  display: block; padding: var(--sp-2) 0 var(--sp-2) var(--sp-3);
+  color: var(--muted); border-bottom: none;
+  border-left: 2px solid var(--line);
+  line-height: var(--lh-ui);
+  min-height: 44px;
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .toc-list a:hover { color: var(--ink); border-left-color: var(--ink-soft); }
+}
+.toc-list a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-xs); }
+.toc-list a.is-current { color: var(--accent); border-left-color: var(--accent); }
+
+/* по решению автора, волна р13: тут жили правила МОБИЛЬНОГО оглавления
+   (.toc-mobile - сворачиваемый details в теле статьи) и раздел 6a «Пилюля
+   Содержание» (.toc-fab / .toc-scrim / .toc-mobile.is-sheet - кнопка внизу
+   экрана со шторкой). Оба блока удалены с движка и со всех статей: оглавление,
+   которое надо раскрывать нажатием, признано неудобным для читателя и выведено
+   из канона. Оглавление на странице одно - липкая
+   колонка .toc-desktop выше. Ниже 1024px оглавления нет НАМЕРЕННО, замену сюда
+   не возвращать (гейт стадии page toc-mobile ловит возврат блока в разметке). */
+
+/* ---------- 7. Hero и заголовок ----------
+   Д.2, бриф разд. 2.4: порядок узлов в page-template.html изменён -
+   крошки -> рубрика -> H1 -> мета -> hero-картинка. До Д.2 картинка 1200x630
+   стояла ВЫШЕ заголовка, и h1 начинался на 874px при высоте окна 900:
+   человек из поиска видел на первом экране крошки и картинку, но не ответ. */
+.article-hero { margin: var(--rhythm-block) 0 0; }
+/* Hero - ОДНА иллюстрация без вшитого текста, на всех ширинах.
+   Титульная карточка с заголовком осталась только там, где рядом нет H1: в
+   og:image для шаринга. На самой странице она дублировала H1 слово в слово
+   в 40px над ним (визуальная тавтология), а на 350 CSS-px ещё и превращалась
+   в кашу. Одна ветка = одна картинка в загрузке. */
+.article-hero picture { display: block; }
+.article-hero img {
+  width: 100%; height: auto; display: block;
+  aspect-ratio: 1200 / 630;   /* дубль атрибутов width/height в CSS: если атрибут
+                                 потеряется при правке, высота всё равно занята
+                                 до загрузки файла и макет не прыгает */
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+}
+/* info-hero v1 (по решению автора, волна novichok-20260823): ЗАКОН РАЗДЕЛЕНИЯ КАДРОВ.
+   Информационный кадр (в нём данные: собственный замер, результат, шаг) не
+   режется НИКОГДА и ни на одной ширине; декоративный резать можно.
+   Было: правило ниже стояло на голом `.article-hero img` и применялось ко
+   ВСЕМ кадрам подряд. Замер того же кадра на 390px: натуральный 1400x717
+   (1.953), бокс 336x189 (1.778), object-fit: cover -> теряется 9.0% ширины,
+   по 4.5% с каждой стороны; на кадре приёмки qa-look-mobile.png у слова
+   «Открывается» срезано начало, левая колонка ушла за край. По зеркалу
+   корпуса такой срез шёл на 155 hero из 163, худший 48.4%.
+   Стало: cover живёт только под классом .hero-decor, который сборка ставит по
+   `class` из shots-manifest.json (own-run / result / step = информационный,
+   всё остальное = декор). Кадр без манифеста считается ИНФОРМАЦИОННЫМ:
+   безопасный дефолт - лучше высокий hero, чем срезанные данные.
+   aspect-ratio: auto у информационной ветки снимает и второй источник потери -
+   растяжение картинки в чужую пропорцию 1200x630 (у кадра-таблицы 1400x717).
+   Метка ветки - АТРИБУТ data-hero="decor" (его ставит build_page.hero_figure_mark):
+   второй класс внутри class="article-hero" разорвал бы регулярку реверса
+   spec_from_page.py:367. Класс .hero-decor оставлен вторым написанием того же
+   правила - для страниц, размеченных вручную. */
+.article-hero:not([data-hero="decor"]):not(.hero-decor) img { aspect-ratio: auto; object-fit: contain; }
+@media (max-width: 519.98px) {
+  /* на телефоне пропорция 1200x630 съедает треть экрана ради декора */
+  .article-hero[data-hero="decor"] img,
+  .article-hero.hero-decor img { aspect-ratio: 16 / 9; object-fit: cover; }
+}
+.article-hero figcaption { font-size: var(--fs-small); color: var(--muted); margin-top: var(--sp-2); line-height: var(--lh-ui); }
+.article-h1 {
+  /* редизайн v2: Unbounded 700. Было 400 + (-0.015em) под Spectral - у гротеска
+     тот же трекинг читается разреженным, а 400 браузер брал бы от 700-файла. */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.8rem, 1.28rem + 2.2vw, var(--fs-h1-display));
+  line-height: var(--lh-tight);  /* было 1.07: выносные «у р ц щ» упирались в строку ниже */
+  margin: 0 0 var(--sp-4);
+  padding-bottom: 0.08em;        /* резерв под те же выносные при lh 1.15 */
+}
+.article-meta {
+  display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); align-items: center;
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--muted);
+  margin: 0 0 var(--sp-6);
+}
+.article-meta .updated { color: var(--ink-soft); }
+.article-meta .updated::before { content: '⟳ '; color: var(--accent); }
+
+/* ---------- 8. Быстрый ответ ---------- */
+.quick-answer {
+  background: var(--panel);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  padding: 1.1rem 1.3rem;
+  margin: 0 0 var(--rhythm-block);
+  font-size: var(--fs-lead); line-height: 1.55;
+}
+.quick-answer p { margin: 0; font-size: inherit; }
+.quick-answer p + p { margin-top: var(--sp-3); }
+
+/* ---------- 9. Секции и заголовки контента ----------
+   Д.2, бриф разд. 2.2 и правка №1 топ-10. Было: у article h2 стоял
+   margin-top 8px, то есть новая глава статьи начиналась через тот же зазор,
+   что абзац и картинка. На полотне в 22439px с 15 главами читатель не видел,
+   где кончилась мысль - это и была «стена текста».
+   Стало: ритм в четыре тира, отбивка главы 96px (--rhythm-section).
+   Отступы у section обнулены: раньше зазор набирался из двух источников
+   сразу (padding секции + margin заголовка) и не читался как система. */
+article section { padding: 0; }
+article h2 {
+  /* редизайн v2: вес и трекинг под Unbounded (в наборе только 700; было 600 и
+     -0.01em под Spectral). Кегль ступени --fs-h2 не тронут: в гротеске 2rem
+     держит колонку 720px и не переносится. */
+  font-size: var(--fs-h2); line-height: var(--lh-tight); font-weight: 700;
+  margin: var(--rhythm-section) 0 var(--sp-4); position: relative;
+  letter-spacing: -0.02em;
+  scroll-margin-top: calc(var(--header-h) + var(--sp-2));
+}
+/* у первого заголовка после лида отбивка меньше: сверху уже стоит воздух
+   быстрого ответа и оглавления, полные 96px там читаются как обрыв */
+article > section:first-of-type > h2:first-child,
+article > h2:first-of-type { margin-top: var(--rhythm-sub); }
+article h3 {
+  font-size: var(--fs-h3);   /* было 20px против 18.4px абзаца: ступень 1.09x
+                                не работала, 12 подразделов сливались с текстом */
+  line-height: var(--lh-heading); font-weight: 700;   /* редизайн v2: Unbounded 700 */
+  margin: var(--rhythm-sub) 0 var(--sp-2);
+  scroll-margin-top: calc(var(--header-h) + var(--sp-2));
+}
+/* mobile-headings v1 (по решению автора, волна novichok-20260823): мобильный clamp
+   ступеней h2 и h3. Было: h1 ужимается clamp-ом (.article-h1 ниже), а --fs-h2
+   стоит фиксированными 2rem = 32px, --fs-h3 фиксированными 1.5rem = 24px.
+   Замер Playwright 390x844 по живой странице guide-rossiyskie-neyroseti:
+   h1 = 29.06px против h2 = 32px, то есть НА ТЕЛЕФОНЕ ПОДЗАГОЛОВОК КРУПНЕЕ
+   ЗАГОЛОВКА, иерархия перевёрнута, и крупный кегль сам гонит перенос.
+   Стало: те же две ступени едут по вьюпорту вместе с h1 и приходят к своим
+   десктопным значениям ровно на 720px (--content-width), где старая
+   калибровка «2rem держит колонку 720px» и была снята.
+   Числа выведены из h1, а не с глаза: h1 = clamp(1.8rem, 1.28rem + 2.2vw,
+   2.35rem) даёт на 390px 29.06px. Коэффициенты h2 подобраны так, чтобы
+   f(390) = 24px и f(720) = 32px (проверено прогоном mobile_typography_check.py
+   на 390 и 360), h3 - так, чтобы f(390) = 20.5px и f(720) = 24px: обе ступени
+   ниже h1 на телефоне и выше абзаца (18.4px), лестница кеглей сохранена. */
+@media (max-width: 719.98px) {
+  article h2 { font-size: clamp(1.4rem, 0.91rem + 2.42vw, var(--fs-h2)); }
+  article h3 { font-size: clamp(1.2rem, 1.02rem + 1.07vw, var(--fs-h3)); }
+}
+article h4 { font-size: var(--fs-lead); line-height: var(--lh-heading); font-weight: 600; margin: var(--sp-8) 0 var(--sp-2); }
+article p, article li { font-size: var(--fs-body); line-height: var(--lh-body); }
+article p { margin: var(--rhythm-inline) 0 0; }
+article section > p:first-of-type { margin-top: 0; }
+/* разделитель тысяч у нас обычный пробел, и браузер рвёт по нему строку:
+   «24 841» разъезжалось на два ряда ровно там, где на числе держится факт.
+   NBSP в теле статьи нельзя (гейт cadence считает U+00A0 AI-маркером), поэтому
+   неразрывность даёт класс - его ставит build_page.py, ось nowrap_thousands.
+
+   по решению автора, `display: contents` - ЗАЩИТА ОТ БЛОКИФИКАЦИИ ВО ФЛЕКС-КОНТЕЙНЕРЕ.
+   По css-display-3 любой inline-потомок флекс-контейнера получает used
+   display: block, то есть становится отдельной флекс-колонкой. Спан с числом
+   внутри `.toc-list > li > a { display: flex }` разносил пункт оглавления на
+   несколько колонок, а `flex-wrap` по умолчанию `nowrap` - пункт уезжал за край
+   и обрезался (/guide-ii-navyki/: scrollWidth 314 при clientWidth 248). Та же
+   болячка тише работала в кнопках `.btn-cta` (inline-flex): колонки вместо
+   строки, высота 92 px вместо 68 px.
+   `display: contents` убирает бокс спана вовсе - число перестаёт быть отдельным
+   флекс-элементом и сливается с соседним текстом в один анонимный, а
+   `white-space: nowrap` наследуется в текст и держит число целым.
+   Замер перед выбором, Chromium + WebKit, 1440 и 390: `display: inline` НЕ
+   лечит (блокификация всё равно даёт block, переполнение те же 108 px);
+   `display: contents` даёт 0 px переполнения, высота пункта не меняется, а в
+   обычном потоке число не рвётся ни на одной из 211 проверенных ширин
+   (без nowrap рвётся на 45 из них). Старые движки без поддержки `contents`
+   просто отбрасывают строку и получают прежнее поведение - деградация мягкая.
+   Первый барьер стоит раньше и выше: build_page.py вообще не заводит спан
+   внутри aside.toc-desktop. */
+.nbr { display: contents; white-space: nowrap; }
+/* блочные объекты внутри текста дышат ровно одним тиром, а не пятью разными */
+article > :is(figure, pre, table, .fig, .tablebox, .table-scroll, .checklist) ,
+article section > :is(figure, pre, table, .fig, .tablebox, .table-scroll, .checklist) {
+  margin-top: var(--rhythm-block); margin-bottom: var(--rhythm-block);
+}
+/* якорь у секции-обёртки: без него клик по TOC ставил заголовок под шапку
+   (у #checklist, #faq, #related было scroll-margin-top: 0) */
+article section[id], article [id] { scroll-margin-top: calc(var(--header-h) + var(--sp-2)); }
+.h-anchor {
+  margin-left: var(--sp-2); color: var(--line);
+  border-bottom: none; font-family: var(--font-mono); font-size: 0.9em;
+  opacity: 0; transition: opacity var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  article h2:hover .h-anchor, article h3:hover .h-anchor { opacity: 1; color: var(--accent); }
+}
+.h-anchor:focus-visible { opacity: 1; color: var(--accent); }
+.eyebrow { font-family: var(--font-mono); letter-spacing: 0.22em; text-transform: uppercase; font-size: var(--fs-small); color: var(--muted); }
+
+/* ---------- 10. Картинки контента ---------- */
+.fig { margin: var(--rhythm-block) 0; }
+.fig img {
+  width: 100%; height: auto; display: block;
+  border-radius: var(--r-md); border: 1px solid var(--line);
+}
+.fig figcaption { font-size: var(--fs-small); color: var(--muted); margin-top: var(--sp-2); line-height: var(--lh-ui); }
+
+/* Узкий кадр (фиксер по решению автора, волна r21, дефект major «step-1 растянут на
+   1.5 экрана»). Реальный файл снят по CSS-селектору ОДНОГО узкого DOM-элемента
+   (карточка тарифа), а не по всему экрану, и физически имеет портретную
+   ориентацию. .fig img тянет любую картинку на 100% колонки статьи - для
+   узкого источника это апскейл и кадр на полтора экрана высотой, читатель
+   теряет ритм. Класс держит такой кадр у его родного разрешения, по центру
+   колонки, без апскейла до полной ширины. Добавляется ВТОРЫМ классом рядом
+   с «fig» (не вместо него), чтобы кадр не терял рамку/тень/скругление canona */
+.fig-narrow img { max-width: 480px; margin-left: auto; margin-right: auto; }
+
+/* ---------- 11. Терминал-мокап и копи-кнопка ----------
+   Д.2, бриф разд. 2.6 и правка №9 топ-10. Код - главный контент технических
+   гайдов, а был самым бедным элементом: кегль 13.12px против 16.61px у того же
+   кода инлайном (один тип контента двумя кеглями, разница 27%), кнопка
+   «Скопировать» - серая плашка со слабым контрастом и без подтверждения.
+   Стало: единый кегль 14px, хром терминала с ярлыком, живая кнопка. */
+.code-block {
+  position: relative; margin: var(--rhythm-block) 0;
+  border-radius: var(--r-md); overflow: hidden;
+  background: var(--code-bg); border: 1px solid var(--code-line);
+}
+.code-block pre, article pre {
+  background: var(--code-bg); color: var(--code-ink);
+  border: 1px solid var(--code-line); border-radius: var(--r-md);
+  padding: var(--sp-4) 1.1rem; margin: 0;
+  font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  tab-size: 2;
+}
+/* внутри обёртки рамка, скругление и объём живут у обёртки, у pre они лишние:
+   иначе бевел-кромка нарисовалась бы дважды, вторым швом под полосой хрома */
+.code-block pre { border: 0; border-radius: 0; box-shadow: none; }
+/* полоса хрома: ярлык слева, кнопка справа. Ставится сборкой или скриптом,
+   при её отсутствии кнопка остаётся плавающей в правом верхнем углу */
+.code-block .code-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  min-height: 44px; padding: 0 var(--sp-3);
+  border-bottom: 1px solid var(--code-line);
+  font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--code-ink) 62%, transparent);
+}
+.code-block .code-bar .code-lang { letter-spacing: 0.08em; }
+.code-block .code-bar .copy-btn { position: static; }
+.code-block .copy-btn {
+  position: absolute; top: var(--sp-2); right: var(--sp-2);
+  background: rgba(250, 246, 239, 0.08); color: var(--code-ink);
+  border: 1px solid var(--code-line); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  min-height: 44px; padding: 0 var(--sp-3); cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .code-block .copy-btn:hover { border-color: var(--code-ink); background: rgba(250, 246, 239, 0.16); }
+}
+.code-block .copy-btn:focus-visible { outline: 2px solid var(--code-ink); outline-offset: 2px; }
+code { font-family: var(--font-mono); font-size: 0.9em; background: var(--panel); border: 1px solid var(--line-soft); border-radius: var(--r-xs); padding: 0.12em 0.36em; }
+pre code { background: none; border: none; padding: 0; font-size: inherit; }
+/* Длинная команда или голый URL внутри строчного code - неразрывный токен: на 320-390px
+   он распирает колонку, а html{overflow-x:hidden} не даёт доскроллить и просто РЕЖЕТ хвост.
+   anywhere на code разрешает перенос внутри токена, break-word на текстовых блоках -
+   на границе слова. Оба срабатывают только когда строка иначе не влезает. */
+code { overflow-wrap: anywhere; }
+p, li, dd, figcaption, .quick-answer, .note, .warn { overflow-wrap: break-word; }
+
+/* ---------- 12. Callout-блоки ---------- */
+.note { background: var(--panel); border-left: 3px solid var(--amber); border-radius: var(--r-sm); padding: var(--sp-4) 1.2rem; margin: var(--rhythm-block) 0; }
+.warn { background: var(--warn-bg); border-left: 3px solid var(--accent); border-radius: var(--r-sm); padding: var(--sp-4) 1.2rem; margin: var(--rhythm-block) 0; }
+.note p, .warn p { margin: 0; }
+.note p + p, .warn p + p { margin-top: var(--sp-3); }
+
+/* ---------- 12a. Врезка-каллаут (Д.2, бриф разд. 2.7) ----------
+   Один компонент, четыре варианта, отличаются ровно акцентным токеном:
+   статья получает ритм, а визуальный язык остаётся прежним - новых цветов,
+   рамок и форм не заводится. --amber работает только в предупреждении. */
+.callout {
+  --callout-accent: var(--accent);
+  --callout-bg: var(--card);
+  margin: var(--rhythm-block) 0;
+  padding: var(--sp-6);
+  background: var(--callout-bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--callout-accent);
+  border-radius: var(--r-lg);
+  font-size: var(--fs-body); line-height: var(--lh-body);
+}
+.callout > .callout-label {
+  display: block; margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 500;
+  line-height: 1; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--callout-accent);
+}
+.callout p { margin: 0; }
+.callout p + p { margin-top: var(--sp-3); }
+.callout-key { --callout-accent: var(--accent); }
+.callout-warn { --callout-accent: var(--amber); --callout-bg: var(--warn-bg); }
+.callout-tip { --callout-accent: var(--accent); --callout-bg: var(--panel); }
+.callout-quiet { --callout-accent: var(--line); --callout-bg: transparent; }
+
+/* ---------- 12b. Цитата (Д.2, бриф разд. 2.8) ----------
+   Было: просто отступ, ни линейки, ни смены начертания - цитату от абзаца
+   было не отличить. Кавычки-«ёлочки» и атрибуция через <cite> - правило
+   редактуры в скилле lead-magnit, тут только форма. */
+article blockquote {
+  margin: var(--rhythm-block) 0;
+  padding-left: var(--sp-6);
+  border-left: 2px solid var(--accent-soft);
+  font-size: var(--fs-lead); line-height: 1.5;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+article blockquote p { margin: 0 0 var(--sp-3); font-size: inherit; line-height: inherit; }
+article blockquote p:last-child { margin-bottom: 0; }
+article blockquote cite {
+  display: block; margin-top: var(--sp-3);
+  font-family: var(--font-mono); font-size: var(--fs-small); font-style: normal;
+  line-height: var(--lh-ui); color: var(--muted);
+}
+
+/* ---------- 13. Списки и таблицы ---------- */
+.bul { list-style: none; padding: 0; margin: var(--rhythm-inline) 0 0; }
+.bul > li { position: relative; padding-left: 1.4rem; margin-top: var(--sp-3); font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-soft); }
+.bul > li::before { content: ''; position: absolute; left: 0.15rem; top: 0.72em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+.micro { counter-reset: micro; list-style: none; padding: 0; margin: var(--rhythm-block) 0; }
+.micro > li { position: relative; padding-left: 3rem; min-height: 2rem; margin-top: var(--sp-4); }
+.micro > li::before {
+  counter-increment: micro; content: counter(micro);
+  position: absolute; left: 0; top: -2px; width: 2rem; height: 2rem; border-radius: 50%;
+  background: var(--accent); color: var(--paper);
+  font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-small);
+  display: flex; align-items: center; justify-content: center;
+}
+/* ---------- 13a. Таблицы (Д.2, бриф разд. 2.9) ----------
+   Было: шапка 11.52px (ниже порога читаемости), тело 15.68px против 18.4px
+   абзаца, хайрлайн под КАЖДОЙ строкой - на длинной таблице это решётка,
+   а не данные. Стало: один регистр 14px, шапка липкая и на подложке,
+   зебра вместо линеек, числа табличными цифрами. */
+.tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: var(--rhythm-block) 0; overscroll-behavior-x: contain; }
+table.fix { width: 100%; border-collapse: collapse; font-size: var(--fs-small); min-width: 520px; }
+table.fix th {
+  position: sticky; top: 0; z-index: 1;
+  text-align: left; background: var(--panel);
+  font-family: var(--font-mono); font-size: var(--fs-small); font-weight: 500;
+  line-height: 1.3; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft);
+  padding: var(--sp-3) var(--sp-4); border-bottom: 1px solid var(--line);
+}
+table.fix td {
+  padding: var(--sp-3) var(--sp-4); vertical-align: top; color: var(--ink-soft);
+  font-size: var(--fs-small); line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+table.fix tbody tr:nth-child(even) { background: color-mix(in srgb, var(--panel) 45%, transparent); }
+table.fix tr:last-child td { border-bottom: none; }
+
+/* ---------- 14. Чек-лист «Сохрани себе» ---------- */
+.checklist {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: var(--sp-6); margin: var(--rhythm-block) 0;
+  box-shadow: var(--shadow-1);
+}
+.checklist-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); flex-wrap: wrap; margin-bottom: var(--sp-2); }
+.checklist-head .eyebrow { margin: 0; }
+.checklist ul { list-style: none; margin: var(--sp-3) 0 0; padding: 0; }
+.checklist li { position: relative; padding-left: 1.8rem; margin-top: var(--sp-3); font-size: var(--fs-body); line-height: 1.55; color: var(--ink-soft); }
+.checklist li::before { content: '☐'; position: absolute; left: 0; top: 0; color: var(--accent); font-size: var(--fs-body); }
+.checklist-copy {
+  background: var(--panel); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  min-height: 44px; padding: 0 var(--sp-4); cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .checklist-copy:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+/* ---------- 14б. Блоки-визуалы (бывшие текст-карточки) ----------
+   Правка автора: plain text в картинки не запекаем. Схема шагов,
+   чек-карта и сравнение - живые HTML-блоки на токенах: мгновенная загрузка,
+   текст выделяется и индексируется, тёмная тема нативно. Картинкой остаются
+   только реальные скрины интерфейсов, терминал-мокапы с реального прогона
+   и фото-обложки (эталон - скрины в /guide-n8n/). */
+.vizblock {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: var(--sp-6); margin: var(--rhythm-block) 0;
+  box-shadow: var(--shadow-1);
+}
+.vizblock-title { font-weight: 700; font-size: 1.18em; margin: 0 0 var(--sp-4); color: var(--ink); }
+.vizblock-foot { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--ink-soft); margin: var(--sp-4) 0 0; }
+.vizsteps ol { list-style: none; margin: 0; padding: 0; counter-reset: vizstep; }
+.vizsteps li {
+  counter-increment: vizstep; position: relative;
+  background: var(--panel); border-radius: var(--r-md);
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) 3.4rem; margin: 0;
+}
+.vizsteps li + li { margin-top: 2.1rem; }
+.vizsteps li + li::after {
+  content: '↓'; position: absolute; top: -1.9rem; left: 50%;
+  transform: translateX(-50%); color: var(--accent); font-size: 1.15rem; line-height: 1.7rem;
+}
+.vizsteps li::before {
+  content: counter(vizstep); position: absolute; left: var(--sp-4); top: var(--sp-4);
+  width: 1.9rem; height: 1.9rem; border-radius: 50%;
+  background: var(--accent); color: var(--paper);
+  font-weight: 700; font-size: 0.95rem; display: flex; align-items: center; justify-content: center;
+}
+.vizsteps b, .vizcheck b { display: block; color: var(--ink); margin-bottom: 0.15rem; }
+.vizsteps span, .vizcheck span { color: var(--ink-soft); font-size: var(--fs-body); line-height: 1.5; }
+.vizcheck ul { list-style: none; margin: 0; padding: 0; }
+.vizcheck li { position: relative; padding-left: 1.9rem; margin-top: var(--sp-3); color: var(--ink-soft); line-height: 1.55; }
+.vizcheck li::before { content: '✓'; position: absolute; left: 0; top: 0; color: var(--accent); font-weight: 700; }
+.vizcompare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.vizcompare-col { background: var(--panel); border-radius: var(--r-md); padding: var(--sp-4); }
+.vizcompare-col h4 { margin: 0 0 var(--sp-2); font-size: 1em; color: var(--ink); }
+.vizcompare-col ul { list-style: none; margin: 0; padding: 0; }
+.vizcompare-col li { position: relative; padding-left: 1.2rem; margin-top: var(--sp-2); color: var(--ink-soft); line-height: 1.5; }
+.vizcompare-col li::before { content: '·'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.vizcompare-verdict { border-left: 3px solid var(--accent); padding-left: var(--sp-4); margin: var(--sp-4) 0 0; color: var(--ink); }
+@media (max-width: 639.98px) { .vizcompare-grid { grid-template-columns: 1fr; } }
+
+/* ---------- 15. CTA-точки ---------- */
+.cta-inline {
+  border: 1px dashed var(--accent-soft); border-radius: var(--r-md);
+  padding: var(--sp-4) 1.2rem; margin: var(--rhythm-block) 0;
+  font-size: var(--fs-body); background: var(--panel);
+}
+.cta-inline p { margin: 0; }
+.cta { background: var(--cta-bg); color: var(--cta-ink); border-radius: var(--r-lg); padding: var(--sp-8); margin: var(--rhythm-block) 0; box-shadow: var(--shadow-2); }
+.cta h2, .cta h3, .cta p { color: var(--cta-ink); }
+.cta h2, .cta h3 { margin-top: 0; }
+.cta p { margin: var(--sp-3) 0 0; }
+.cta a.botlink {
+  color: var(--cta-link); font-family: var(--font-mono); font-size: var(--fs-ui);
+  word-break: break-all; border-bottom: 1px solid rgba(255, 210, 63, 0.45);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cta a.botlink:hover { border-bottom-color: var(--cta-link); }
+}
+.kw { font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.06em; color: var(--cta-link); }
+.kw-ink { font-family: var(--font-mono); font-weight: 700; letter-spacing: 0.06em; color: var(--accent); }
+
+/* ---------- 16. FAQ (Д.2, бриф разд. 2.10) ----------
+   Было: семь <details> подряд, хайрлайн под каждым, раскрытие рывком,
+   маркер «+» не поворачивался и состояния не показывал.
+   Стало: плюс поворачивается в крестик, раскрытие плавное через
+   ::details-content там, где браузер умеет. Где не умеет - раскрытие
+   мгновенное: контент за анимацией не прячется никогда. */
+.faq details { border-bottom: 1px solid var(--line-soft); padding: var(--sp-2) 0; }
+.faq summary {
+  /* 🔴 редизайн v2 (по решению автора): вопрос FAQ остаётся на ТЕКСТОВОЙ гарнитуре.
+     Проверено глазами на живой сборке guide-neyroset-dlya-detey: семь вопросов
+     подряд в Unbounded 700 давали чёрную стену, а h2 «Частые вопросы» переставал
+     читаться как уровень выше - у него та же гарнитура и тот же вес, разница
+     только в кегле. Вопрос-аккордеон это пункт списка, не дисплейный заголовок.
+     На живых страницах прода FAQ тоже остался Spectral: append-блок дверей
+     переводил на Unbounded только h1/h2/h3. */
+  cursor: pointer; font-family: var(--font-body); font-weight: 600; font-size: var(--fs-lead);
+  line-height: var(--lh-ui); list-style: none;
+  display: flex; align-items: center; gap: var(--sp-3);
+  min-height: 44px; padding: var(--sp-2) 0;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::before {
+  content: '+'; color: var(--accent); font-family: var(--font-mono); font-weight: 700;
+  display: inline-block; line-height: 1;
+  transition: rotate var(--dur-base) var(--ease-out);
+}
+.faq details[open] summary::before { rotate: 45deg; }
+.faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: var(--r-xs); }
+/* Ответ в FAQ приезжает от сборщика ГОЛЫМ текстом внутри <details>, без <p>
+   (см. build_page.build_faq). Значит правило `.faq details p` мертво и всегда
+   было мёртвым: цвет и отступ ответа задаём на самом details, а заголовок
+   возвращаем чернильным на summary. Правило под <p> оставлено на случай,
+   когда ответ придёт абзацем. */
+.faq details { color: var(--ink-soft); font-size: var(--fs-body); line-height: var(--lh-body); }
+.faq details[open] { padding-bottom: var(--sp-4); }
+.faq summary { color: var(--ink); }
+.faq details p { margin: var(--sp-3) 0 var(--sp-4); font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-soft); }
+@supports selector(details::details-content) {
+  .faq details::details-content {
+    block-size: 0; overflow: hidden;
+    transition: block-size var(--dur-slow) var(--ease-out),
+                content-visibility var(--dur-slow) allow-discrete;
+  }
+  .faq details[open]::details-content { block-size: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq summary::before { transition: none; }
+}
+
+/* ---------- 17. Карточка автора ---------- */
+.author-card {
+  display: flex; gap: 1.2rem; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--r-lg); padding: var(--sp-6); margin: var(--rhythm-block) 0;
+  box-shadow: var(--shadow-1);
+}
+.author-card img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+.author-card .name { font-family: var(--font-display); font-size: var(--fs-lead); font-weight: 600; margin: 0; }
+/* Имя ведёт на /avtor/ (страница автора, матрица ГР по решению автора) - убираем
+   акцентный цвет и подчёркивание базового `a`, чтобы карточка не поменяла вид */
+.author-card .name a { color: var(--ink); border-bottom: none; }
+@media (hover: hover) and (pointer: fine) {
+  .author-card .name a:hover { color: var(--accent); }
+}
+.author-card .bio { font-size: var(--fs-small); color: var(--muted); margin: var(--sp-2) 0 0; line-height: 1.55; }
+.author-links { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: var(--sp-3); font-family: var(--font-mono); font-size: var(--fs-small); }
+
+/* ---------- 18. «Читайте также» карточками ---------- */
+.related-grid { display: grid; gap: var(--sp-4); grid-template-columns: 1fr; margin: var(--sp-4) 0 0; align-items: stretch; }
+@media (min-width: 640px) { .related-grid { grid-template-columns: 1fr 1fr; } }
+/* Д.2, бриф разд. 2.11: карточки одной высоты растягивались, текст висел
+   вверху, низ пустовал, а ховер менял только цвет рамки - «мёртвая» карточка.
+   Стало: flex-колонка, мета прижата к низу (margin-top: auto), подъём на 2px
+   и тень на ховере под гейтом hover:hover, кольцо фокуса с клавиатуры. */
+.related-card {
+  display: flex; flex-direction: column; background: var(--card);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  padding: 1.1rem 1.2rem; color: var(--ink);
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              transform var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .related-card:hover { border-color: var(--accent); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+}
+.related-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .related-card { transition: border-color var(--dur-fast) linear; }
+  @media (hover: hover) and (pointer: fine) {
+    .related-card:hover { transform: none; }
+  }
+}
+/* Широкая таблица скроллится ВНУТРИ своей обёртки, страница по горизонтали
+   не ездит никогда. Обёртку вешает сборщик на каждую <table> (КАНОН 22):
+   сравнительная table.cmp у /claude-vpn-bez-banov/ разъезжалась до 582px и
+   тащила за собой весь документ на 320 и 390. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  margin: var(--rhythm-block) 0;
+  max-width: 100%;
+}
+.table-scroll > table { margin: 0; min-width: 34rem; }
+@media (min-width: 760px) { .table-scroll > table { min-width: 0; } }
+
+/* надпись-рубрика над заголовком карточки: есть не у всех статей, поэтому
+   правило живёт в общем файле, а на страницу приезжает только если класс
+   реально встретился (чистка мёртвых правил в build_page.prune_css) */
+.related-card .rc-tag {
+  display: block; font-family: var(--font-mono); font-size: var(--fs-small);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+  margin: 0 0 var(--sp-2);
+}
+.related-card .rc-title { font-family: var(--font-display); font-size: var(--fs-lead); line-height: 1.25; font-weight: 600; margin: 0; text-wrap: balance; }
+/* обрезка по СТРОКАМ, а не многоточием в сборщике: фраза не рвётся на полуслове */
+.related-card .rc-desc {
+  font-size: var(--fs-small); color: var(--muted); margin: var(--sp-2) 0 0; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.related-card .rc-meta {
+  margin-top: auto; padding-top: var(--sp-3);
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--muted);
+}
+
+/* ---------- 19. Share-кнопки ---------- */
+.share-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); margin: var(--rhythm-block) 0; }
+.share-row .eyebrow { margin-right: 0.3rem; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  background: var(--panel); color: var(--ink-soft);
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  min-height: 44px; padding: 0 var(--sp-4);
+  border-bottom: 1px solid var(--line);
+}
+@media (hover: hover) and (pointer: fine) {
+  .share-btn:hover { border-color: var(--accent); color: var(--accent); }
+}
+
+/* ---------- 20. Футер ---------- */
+.site-footer { background: var(--cta-bg); color: var(--cta-ink); border-top: 1px solid var(--line); margin-top: var(--sp-16); }
+.site-footer .inner { max-width: var(--content-width); margin: 0 auto; padding: var(--sp-8) 1.25rem; font-size: var(--fs-ui); }
+.site-footer p { line-height: 1.9; }
+.site-footer a { color: var(--cta-ink); border-bottom-color: rgba(250, 246, 239, 0.3); display: inline-block; min-height: 44px; line-height: 44px; }
+@media (hover: hover) and (pointer: fine) {
+  .site-footer a:hover { border-bottom-color: var(--cta-ink); }
+}
+.site-footer .muted { color: rgba(250, 246, 239, 0.55); }
+
+/* ---------- 21. Анимации и reduced-motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { opacity: 0; animation: rise 0.55s var(--ease-out) forwards; }
+/* стаггер соседей в сетке карточек: 50ms шаг, ряд «проявляется», а не мигает */
+.d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.1s; } .d3 { animation-delay: 0.15s; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise { animation: none; opacity: 1; transform: none; }
+  * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  /* полоса прогресса чтения информационная, а не декоративная: она остаётся.
+     На scroll-timeline длительность задаёт не время, а долю прокрутки,
+     поэтому глобальные 0.01ms её сломали бы - возвращаем auto. */
+  .readbar { animation-duration: auto !important; }
+}
+
+/* ---------- 22. Волна 2.0: визуальный слой, удержание, виральность ---------- */
+
+/* 22.1 Быстрый ответ - один на статью, note - примечание по смыслу.
+   Быстрый ответ = карточка-флагман с меткой (её читает и человек, и ИИ-ответчик).
+   note = врезка-примечание по смыслу (риск, деньги, необратимое действие).
+   Резюме разделов врезками НЕ оформляются: ответ несёт первая фраза раздела. */
+.quick-answer {
+  margin-top: var(--rhythm-block, 1.4rem); /* qa-gap v1 по решению автора: лид не прилипает к карточке */
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--r-lg);
+  padding: 2.1rem 1.4rem 1.3rem;
+  box-shadow: var(--shadow-1);
+}
+.quick-answer::before {
+  content: 'Коротко о главном';
+  position: absolute; top: 0.8rem; left: 1.4rem;
+  font-family: var(--font-mono); font-size: var(--fs-small); line-height: 1;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+}
+.note {
+  background: none;
+  border-left: 2px solid var(--line);
+  border-radius: 0;
+  padding: 0.1rem 0 0.1rem var(--sp-4);
+  margin: var(--rhythm-block) 0;
+  font-size: var(--fs-body); line-height: 1.55;
+  color: var(--muted);
+}
+
+/* 22.2 Сквозная нумерация шаговых разделов: и в тексте, и в обоих оглавлениях */
+article { counter-reset: h2num; }
+/* висячий отступ: перенос строки заголовка встаёт под текст, а не под номер */
+article h2.num { padding-left: 2.6rem; }
+article h2.num::before {
+  counter-increment: h2num;
+  content: counter(h2num);
+  position: absolute; left: 0; top: 0.16em;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: 0.78em; color: var(--accent);
+}
+/* Номер в оглавлении получает КАЖДЫЙ пункт, кроме служебных блоков шаблона.
+   Служебные опознаются по якорю, а не по номеру позиции: чек-лист, FAQ,
+   «читайте также» и «источники» всегда сидят на фиксированных id из шаблона.
+   Было `li:nth-child(-n+12)` = «первые двенадцать»: на статье с 13 разделами
+   тринадцатый пункт оставался в оглавлении без номера, хотя в теле его
+   заголовок пронумерован (/guide-neyroset-pishet-kod/, по решению автора). У статьи
+   ровно на 12 разделов дефект был не виден, поэтому и дожил до прода.
+   `content: none` не создаёт псевдоэлемент, значит и counter-increment не
+   срабатывает - служебные пункты счётчик не сдвигают. */
+.toc-list { counter-reset: tocnum; }
+/* по решению автора, r9: `display: flex` тут ОСТАВЛЕН ОСОЗНАННО, и вот чем он больше
+   не опасен. Флекс блокифицирует каждого inline-потомка в отдельную колонку -
+   именно так r8 разорвал пункт за край, когда постобработка занесла в
+   оглавление span.nbr. Барьер перенесён в РАЗМЕТКУ: build_toc кладёт всю
+   подпись в <span class="toc-txt">, поэтому у пункта ровно два потомка -
+   ::before со счётчиком и один блок с текстом. Любой тег, который занесут в
+   подпись завтра, окажется ВНУТРИ этого блока, в обычном инлайновом потоке.
+   Своего правила у .toc-txt нет намеренно: флекс-элементом он блокифицируется
+   сам, а снимут флекс - останется инлайном и не оторвёт номер на свою строку.
+   Альтернативу «снять флекс, номер через position:absolute» отвергли: она
+   ломает вертикальное центрирование пункта (align-items:center при
+   min-height:44px) на всём корпусе ради дефекта, у которого по слепку 366
+   страниц ноль живых случаев. Неразрывность числа в подписи держит не CSS, а
+   символ U+00A0 от сборщика (build_page.nbsp_thousands). */
+.toc-list > li > a { display: flex; align-items: center; }
+.toc-list > li > a::before {
+  counter-increment: tocnum;
+  content: counter(tocnum);
+  display: inline-block; min-width: 1.8em;
+  font-family: var(--font-mono); font-size: 0.85em; color: var(--muted);
+}
+.toc-list > li > a[href="#checklist"]::before,
+.toc-list > li > a[href="#faq"]::before,
+.toc-list > li > a[href="#related"]::before,
+.toc-list > li > a[href^="#istochnik"]::before,
+.toc-list > li > a[href^="#sources"]::before { content: none; }
+.toc-list a.is-current::before { color: var(--accent); }
+
+/* 22.3 удалён по решению автора вместе с мобильным оглавлением (см. тумбстоун в
+   разделе 6): две колонки пунктов и компактная полоса на телефоне относились
+   только к .toc-mobile, а его на странице больше нет */
+
+/* 22.4 Таблицы: тень-градиент по краям (сама гаснет в конце прокрутки) + подпись */
+.tablebox { margin: var(--rhythm-block) 0; }
+.tablebox .tablewrap { margin: 0; }
+.tablewrap {
+  background-image:
+    linear-gradient(to right, var(--paper) 32%, transparent),
+    linear-gradient(to left, var(--paper) 32%, transparent),
+    radial-gradient(farthest-side at 0 50%, rgba(28, 24, 21, 0.24), transparent),
+    radial-gradient(farthest-side at 100% 50%, rgba(28, 24, 21, 0.24), transparent);
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: 46px 100%, 46px 100%, 26px 100%, 26px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+.tablehint {
+  display: none; margin: 0.5rem 0 0;
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  letter-spacing: 0.07em; color: var(--muted);
+}
+@media (max-width: 760px) { .tablehint { display: block; } }
+
+/* 22.5 CTA кнопкой, а не голым URL: на телефоне URL ломался в две строки */
+.btn-cta {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  background: var(--cta-link); color: #1C1815;
+  font-family: var(--font-mono); font-weight: 700;
+  font-size: var(--fs-ui); letter-spacing: 0.01em; line-height: 1.3;
+  min-height: 48px; padding: var(--sp-3) 1.35rem; border-radius: var(--r-sm);
+  border-bottom: none;
+}
+.btn-cta::after { content: '→'; font-weight: 700; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-cta:hover { border-bottom: none; filter: brightness(1.07); }
+}
+.cta .btn-cta { margin-top: 0.3rem; }
+.cta-inline .btn-cta { background: var(--accent-btn); color: var(--accent-btn-ink); }
+.cta-inline p + p { margin-top: 0.85rem; }
+.cta-note { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--muted); margin-top: var(--sp-3); }
+.cta .cta-note { color: rgba(250, 246, 239, 0.5); }
+
+/* 22.6 Скрины: клик-увеличение (ссылка работает и без JS, JS открывает лайтбокс) */
+/* zoom-hero v1 (по решению автора, волна novichok-20260823): лайтбокс распространён с
+   .fig на hero. У .fig зум живёт с r6, у hero его не было вовсе - плотную
+   таблицу собственного замера с телефона прочитать было нечем даже после
+   снятия обрезки. Разметку ставит build_page.build_hero, обработчик клика -
+   page-template.html. */
+.fig .zoom, .article-hero .zoom { display: block; position: relative; border-bottom: none; cursor: zoom-in; }
+.fig .zoom::after,
+.article-hero .zoom::after {
+  content: 'Открыть крупнее';
+  position: absolute; right: 0.6rem; bottom: 0.6rem;
+  background: rgba(28, 24, 21, 0.78); color: #FAF6EF;
+  font-family: var(--font-mono); font-size: var(--fs-small); letter-spacing: 0.05em;
+  padding: 0.32rem 0.62rem; border-radius: var(--r-xs);
+  opacity: 0; transition: opacity var(--dur-base) var(--ease-out);
+}
+.fig .zoom:focus-visible::after,
+.article-hero .zoom:focus-visible::after { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+  .fig .zoom:hover::after,
+  .article-hero .zoom:hover::after { opacity: 1; }
+}
+@media (hover: none) { .fig .zoom::after, .article-hero .zoom::after { opacity: 0.8; } }
+.lightbox {
+  position: fixed; inset: 0; z-index: 80;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(18, 15, 14, 0.93); padding: 1.5rem; cursor: zoom-out;
+}
+.lightbox img { max-width: 100%; max-height: 100%; border-radius: var(--r-sm); }
+.lightbox-close {
+  position: absolute; top: 0.7rem; right: 1.1rem;
+  background: none; border: 0; color: #FAF6EF;
+  font-family: var(--font-mono); font-size: 1.6rem; line-height: 1; cursor: pointer;
+  min-width: 44px; min-height: 44px;
+}
+
+/* 22.7 Превью в карточках «Читайте также» */
+.related-card { padding: 0; overflow: hidden; }
+.related-card .rc-thumb {
+  display: block; width: 100%; height: auto;
+  aspect-ratio: 16 / 9; object-fit: cover;
+  border-bottom: 1px solid var(--line);
+}
+.related-card .rc-body { display: flex; flex-direction: column; flex: 1; padding: 1rem 1.15rem 1.15rem; }
+
+/* 22.8 Второй блок «поделиться» - в начале статьи, компактный */
+.share-top { margin: var(--rhythm-block) 0; gap: var(--sp-2); }
+.share-top .share-btn { padding: 0 var(--sp-3); font-size: var(--fs-small); min-height: 44px; }
+.share-top .eyebrow { font-size: var(--fs-small); margin-right: 0.15rem; }
+
+@media (prefers-color-scheme: dark) {
+  .tablewrap {
+    background-image:
+      linear-gradient(to right, var(--paper) 32%, transparent),
+      linear-gradient(to left, var(--paper) 32%, transparent),
+      radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.55), transparent),
+      radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.55), transparent);
+  }
+  /* v3: было box-shadow: none - светлая двухслойная тень на тёмном фоне выглядела
+     грязным пятном. Теперь глубину держит тот же токен, что и везде, и он уже
+     разведён по темам, поэтому гасить тень целиком больше не нужно. */
+  .quick-answer { box-shadow: var(--lift-1), var(--edge); }
+}
+
+/* ---------- Тёмная тема: приглушение кремовых карточек-визуалов ----------
+   Класс viz ставится ТОЛЬКО на собственные карточки бренда (кремовая подложка
+   #FAF6EF-семейства). Скриншоты чужих интерфейсов (Amnezia, claude.com, Claude
+   Docs, страница Git for Windows) класс НЕ получают: там важна достоверность
+   цвета, приглушение исказило бы то, что человек будет сверять со своим экраном.
+   Правило различения при разметке: подложка тёплая, R-B >= 8 - наша карточка;
+   нейтрально-белая или холодная - чужой интерфейс. */
+@media (prefers-color-scheme: dark){
+  img.viz{filter:brightness(.88) contrast(1.02)}
+}
+
+/* ---------- 23. Правый рельс (Д.2, бриф разд. 2.3 и правка №8 топ-10) ----------
+   Было: при 1440 колонка текста кончалась на 1080px, дальше 360px пустоты,
+   которую держал пустой .layout-balance. Композиция читалась как недоделанная.
+   Стало: та же колонка несёт липкую карточку перехода в воронку и «наверх».
+   Ширина колонки НЕ изменилась - центрирование колонки текста (раздел 6)
+   держится на симметрии TOC и балансира, ломать её нельзя.
+   Ниже 1200px рельс не показывается: те же выходы уже стоят в потоке статьи
+   (CTA в середине, CTA в хвосте, подвал), второй раз их дублировать незачем. */
+.rail {
+  position: sticky; top: calc(var(--header-h) + var(--sp-6));
+  display: flex; flex-direction: column; gap: var(--sp-3);
+  padding: var(--sp-6);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-1);
+}
+.rail .eyebrow { font-size: var(--fs-small); }
+.rail p { margin: 0; font-size: var(--fs-small); line-height: 1.5; color: var(--muted); }
+/* кнопка рельса берёт акцент, а не жёлтый --cta-link: жёлтый рассчитан на
+   тёмную плашку .cta, на светлой карточке он кричит и спорит с шапкой */
+.rail .btn-cta {
+  background: var(--accent-btn); color: var(--accent-btn-ink);
+  font-size: var(--fs-small); padding: var(--sp-3) var(--sp-4); justify-content: center;
+}
+.rail .rail-top {
+  font-family: var(--font-mono); font-size: var(--fs-small); color: var(--muted);
+  border-bottom: none; min-height: 44px; display: inline-flex; align-items: center;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.rail .rail-top::before { content: '↑'; margin-right: var(--sp-2); }
+@media (hover: hover) and (pointer: fine) {
+  .rail .rail-top:hover { color: var(--accent); }
+}
+
+/* ============================================================
+   24. ДИЗАЙН-СЛОЙ v3 «ОТТИСК» (по решению автора)
+   ------------------------------------------------------------
+   Страница ведёт себя как свежий оттиск на плотной бумаге под настольной
+   лампой. Три материала и ни одного больше: БУМАГА (тело, где читают),
+   КРАСКА (терракота и янтарь, где действуют), МАШИНА (чернильные зоны -
+   терминал, CTA, подвал, где доказывают).
+
+   🔴 ЗАКОН ПРУНИНГА. prune_css внутри build_page вырезает правило, только если ВСЕ
+   его селекторы требуют отсутствующий на странице класс. Значит правило БЕЗ
+   классов живёт на КАЖДОЙ из сотен страниц и стоит там байтов. Отсюда закон:
+   тяжёлое вешаем на класс, в бесклассовую зону кладём только то, что обязано
+   быть везде. Ниже бесклассовое ровно одно - подмалёвок листа (24.1).
+
+   🔴 ЗАКОН ДЕГРАДАЦИИ. Базовое состояние ВСЕГДА равно финальному кадру любой
+   анимации. Нет scroll-driven (Safari ≤18) - виден финал. reduced-motion -
+   виден финал. JS выключен - виден финал, весь слой на CSS. Ни одна входная
+   анимация не уводит opacity ниже .35: даже если элемент не получил прогресс
+   таймлайна, он читаем, а не невидим.
+
+   🔴 ЗАКОН LCP. hero-картинка несёт loading=eager fetchpriority=high.
+   Оправа (padding, тень на родителе) можно, анимация на нём - никогда.
+
+   Бесконечных анимаций в слое: 0. Новых узлов DOM: 0. Внешних доменов: 0.
+   Откат волны = вырезать этот блок целиком по маркерам ottisk.
+   ============================================================ */
+/* ottisk:start */
+
+/* 24.1 Подмалёвок листа - единственное бесклассовое правило слоя.
+   Лист перестаёт быть плоской заливкой: сверху тёплый свет лампы, снизу еле
+   заметный отсвет краски. position: fixed + z-index -1 = один композитный
+   слой, при скролле не перерисовывается ни разу. Построен на токенах темы,
+   поэтому работает в обеих. body::before в движке статей был свободен
+   (проверено грепом; в старом кластере на нём висит прогресс-бар, там носитель
+   другой - см. kritik-F2 п.6, эту грабку сюда не тащим). */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -12%, color-mix(in srgb, var(--amber) 7%, transparent), transparent 62%),
+    radial-gradient(90% 60% at 50% 112%, color-mix(in srgb, var(--accent) 5%, transparent), transparent 66%);
+}
+
+/* 24.2 Hero в двойной оправе. Ноль новых узлов: оправа - это padding самой
+   figure, картинка садится внутрь. Первое, что видит человек из поиска:
+   картинка в оправе читается как иллюстрация в издании, картинка без оправы -
+   как вставленный скриншот. Ни одной анимации: это LCP-элемент. */
+.article-hero {
+  padding: 6px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: calc(var(--r-lg) + 6px);
+  box-shadow: var(--lift-2), var(--edge);
+}
+.article-hero img { border: 0; box-shadow: var(--sh-heroimg); }
+.article-hero figcaption { padding: 0 2px; }
+
+/* 24.3 Терминал становится машиной. Три глазка - ОДИН псевдоэлемент с двумя
+   box-shadow вместо двух лишних узлов. Код и команды - главный носитель
+   доверия в техгайде, и ровно этот приём уже живёт в старом кластере
+   (там полоса хрома с тремя точками): два кластера сводятся к одному языку.
+   Класс-гейт .code-block - статьи без кода не платят ни байта.
+   Маску затухания правого края из спеки НЕ берём: <pre> тут на white-space:
+   pre-wrap, горизонтального скролла нет, и маска просто съедала бы хвост
+   каждой строки. */
+/* Д1 (скептик r1): рецепт объёма уехал в токен --code-lift, разведённый по
+   темам, - раньше он стоял тут константой и в сумерках материал сливался с
+   бумагой. Второй селектор нужен для состояния «JS не отработал»: обёртку
+   .code-block создаёт скрипт, без него на странице остаётся голое article pre,
+   и оно тоже обязано выглядеть материалом, а не абзацем. */
+.code-block, article pre { box-shadow: var(--code-lift); }
+.code-block .code-bar { position: relative; padding-left: calc(var(--sp-3) + 52px); }
+.code-block .code-bar::before {
+  content: ''; position: absolute; left: var(--sp-3); top: 50%;
+  width: 9px; height: 9px; border-radius: 50%; transform: translateY(-50%);
+  background: #E0533B; box-shadow: 15px 0 0 #E2B23C, 30px 0 0 #5BB36A;
+}
+
+/* 24.4 Быстрый ответ: метка превращается из подписи в ПЕЧАТЬ. Этот блок
+   читают и человек, и ИИ-ответчик - выделить его окупается дороже всего. */
+.quick-answer { box-shadow: var(--lift-2), var(--edge); }
+.quick-answer::before {
+  top: 0.72rem; padding: 0.22em 0.6em; letter-spacing: 0.16em;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: var(--r-pill); background: var(--paper);
+}
+
+/* 24.5 Интерлюдия-шов над главой. Тонкая линия, тёплая слева (там номер) и
+   гаснущая вправо. Ритм 96px между главами уже стоит, шов делает его видимым:
+   главная жалоба на длинный гайд - «стена текста». Класс-гейт .num: у
+   служебных h2 (чек-лист, FAQ) шва нет, они не главы. */
+article h2.num::after {
+  content: ''; position: absolute; left: 0; right: 0; top: -2.2rem;
+  height: 1px; pointer-events: none; opacity: 0.75;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--lamp) 85%, transparent),
+    var(--line) 22%, var(--line) 70%, transparent);
+}
+
+/* 24.6 Иллюстрации контента: кромка листа + маркер подписи. */
+.fig img { box-shadow: var(--lift-1), var(--edge); }
+.fig figcaption { position: relative; padding-left: 1rem; }
+.fig figcaption::before {
+  content: ''; position: absolute; left: 0; top: 0.62em;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--amber);
+}
+
+/* 24.7 Прогресс-бар: краска, а не просто акцент. Механику (scroll-timeline +
+   JS-фолбэк) не трогаем.
+   Псевдоэлемент «раскалённого края» из спеки сознательно НЕ берём: .readbar
+   живёт на transform: scaleX(), любой вложенный узел сплющивается вместе с
+   ним, и 26-пиксельный ореол превратился бы в точку. */
+.readbar { background: linear-gradient(90deg, var(--accent), var(--amber)); }
+
+/* 24.8 CTA-точки. Плашка .cta тёмная в ОБЕИХ темах, поэтому кромка у неё
+   всегда --edge-dark. Тёплый ореол кнопки включается ровно в момент, когда
+   человек навёл курсор, то есть в момент принятия решения. */
+.cta { box-shadow: var(--lift-3), var(--edge-dark); }
+.cta-inline { box-shadow: var(--lift-1), var(--edge); }
+.btn-cta {
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-base) var(--ease-out),
+              filter var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-cta:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--lamp) 22%, transparent); }
+}
+
+/* 24.9 Карточки «читайте также»: давление вместо парения. Подъём оставлен
+   прежним (2px): при большем карточка «отрывается» и ломает метафору оттиска. */
+.related-card { box-shadow: var(--lift-2), var(--edge); }
+@media (hover: hover) and (pointer: fine) {
+  .related-card:hover { box-shadow: var(--lift-3), var(--edge); }
+}
+
+/* 24.10 FAQ: строка подсвечивается под курсором. Отрицательный margin гасит
+   собственный padding, поэтому текст вопроса не сдвигается ни на пиксель. */
+.faq summary {
+  border-radius: var(--r-sm);
+  margin-inline: -0.5rem; padding-inline: 0.5rem;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .faq summary:hover { background: color-mix(in srgb, var(--panel) 55%, transparent); }
+}
+
+/* 24.11 Копирование команды - 1-3 раза за статью, тут радость уместна
+   (правило Kowalski: частота показа решает, анимировать ли вообще).
+   Класс is-copied вешает тот же обработчик, что меняет надпись
+   (page-template). Его ловит js_runtime_classes литералом внутри
+   classList add, в RUNTIME_CLASSES вносить не надо. */
+.code-block .copy-btn.is-copied {
+  border-color: #5BB36A;
+  background: rgba(91, 179, 106, 0.18);
+}
+
+/* 24.12 Хвост статьи проявляется под приходящим светом - ЕДИНСТВЕННОЕ
+   scroll-driven правило движка. Три страховки разом: @supports (Safari ≤18 не
+   умеет view()), prefers-reduced-motion и базовое состояние = финальный кадр.
+   Стаггер сделан сдвигом ДИАПАЗОНА таймлайна, а не задержкой: ряд «приходит»
+   слева направо и не зависит от времени загрузки.
+   Двигаем translate, а не transform: transform занят ховером, и анимация с
+   fill: both перебила бы его в каскаде. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .related-card {
+      animation: ottisk-emerge linear both;
+      animation-timeline: view(); animation-range: entry 0% entry 55%;
+    }
+    .related-grid > .related-card:nth-child(2n) { animation-range: entry 5% entry 60%; }
+    @keyframes ottisk-emerge {
+      from { opacity: 0.35; translate: 0 10px; }
+      to   { opacity: 1;    translate: 0 0; }
+    }
+  }
+}
+
+/* 24.13 Переключатель темы. Кнопка 44×44 в шапке, три состояния
+   (система → тёмная → светлая), состояние держит html[data-theme] + localStorage.
+   Иконка не мигает подменой display, а перетекает поворотом: обе SVG стоят в
+   одной ячейке grid.
+   Матрица состояний закрыта полностью, включая ручную светлую на тёмной
+   системе - иначе на ней остался бы месяц вместо солнца. */
+.theme-toggle {
+  display: inline-grid; place-items: center; flex: none;
+  width: 2.75rem; height: 2.75rem; min-width: 44px; min-height: 44px;
+  padding: 0; margin: 0;
+  border: 1px solid var(--line); border-radius: var(--r-sm);
+  background: transparent; color: var(--ink); cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.theme-toggle svg {
+  grid-area: 1 / 1; width: 20px; height: 20px; display: block;
+  transition: opacity var(--dur-fast) var(--ease-out), rotate var(--dur-slow) var(--ease-out);
+}
+.theme-toggle .icon-sun  { opacity: 1; rotate: 0deg; }
+.theme-toggle .icon-moon { opacity: 0; rotate: -45deg; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .theme-toggle .icon-sun  { opacity: 0; rotate: 45deg; }
+  html:not([data-theme="light"]) .theme-toggle .icon-moon { opacity: 1; rotate: 0deg; }
+}
+html[data-theme="dark"]  .theme-toggle .icon-sun  { opacity: 0; rotate: 45deg; }
+html[data-theme="dark"]  .theme-toggle .icon-moon { opacity: 1; rotate: 0deg; }
+html[data-theme="light"] .theme-toggle .icon-sun  { opacity: 1; rotate: 0deg; }
+html[data-theme="light"] .theme-toggle .icon-moon { opacity: 0; rotate: -45deg; }
+@media (hover: hover) and (pointer: fine) {
+  .theme-toggle:hover {
+    border-color: color-mix(in srgb, var(--lamp) 60%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--lamp) 16%, transparent);
+  }
+}
+.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.theme-toggle:active { transform: scale(0.94); }
+@media (max-width: 639.98px) {
+  /* в этой ширине site-nav сжимает gap до нуля (пункты уехали в бургер) -
+     кнопке темы нужен свой зазор, иначе она вплотную к бургеру */
+  .theme-toggle { margin-right: var(--sp-2); }
+}
+
+/* 24.14 Гарантия покоя: всё движение слоя выключается одним блоком. */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle svg { transition: none; }
+  .theme-toggle:active { transform: none; }
+  .btn-cta { transition: none; }
+  .faq summary { transition: none; }
+}
+
+/* ---------- 24.15 Д2 · круговой переход темы из точки кнопки ----------
+   Код спеки scout-B-design-spec, раздел 11. Тема расходится волной ИЗ САМОЙ
+   кнопки, а не переключается рывком - самый дешёвый вау на байт во всём списке
+   судьи. Координаты центра кнопки кладёт JS в --vt-x/--vt-y перед стартом.
+   Три уровня отката, каждый обязателен:
+     1) браузер без View Transitions: свойства нет -> весь блок @supports не
+        применяется, JS не находит startViewTransition и переключает мгновенно;
+     2) человек просил покой: @media reduced-motion no-preference не совпадает,
+        плюс JS отдельно проверяет reduce и идёт мимо перехода;
+     3) JS не отработал: переходить нечему, страница живёт системной темой.
+   Селекторы бесклассовые, прунер их сохраняет на каждой странице - цена
+   принята осознанно, она заложена в бюджет инлайна. */
+/* записано в одну строку на правило намеренно: сборщик НЕ минифицирует CSS,
+   отступы и переводы строк уезжают читателю байт в байт (бюджет инлайна тесный) */
+:root{--vt-x:50%;--vt-y:0px}
+@supports (view-transition-name: none){@media (prefers-reduced-motion: no-preference){
+::view-transition-old(root){animation:none}
+::view-transition-new(root){animation:ott-theme-wipe .42s var(--ease-out)}
+@keyframes ott-theme-wipe{from{clip-path:circle(0 at var(--vt-x) var(--vt-y))}to{clip-path:circle(150vmax at var(--vt-x) var(--vt-y))}}
+}}
+
+/* color-scheme пары ручного тумблера: обычное свойство, генератор дублей его не сканирует.
+   html[data-theme] бьёт системный @media по специфичности (0-1-1 против 0-1-0) */
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="light"]{color-scheme:light}
+
+/* ottisk:end */
+
+/* ---------- 25. Тап-цели 44px (класс-фикс laneZ10, слой в шаблоне с 2026-08-18) ----------
+   Раньше слой жил ТОЛЬКО в байтах прода (append-инструмент волны laneZ10,
+   деплой по решению автора 19:55-20:59): любая пересборка страницы из spec.json
+   через build_page.py стирала его молча, в исходнике HTML не было даже
+   следа, что слой должен быть. Найдено приёмкой по решению автора на 4 свежих
+   пересборках (guide-deepseek, guide-bolt-new, guide-notion-ai,
+   guide-mobilnoe-prilozhenie), у всех tap-min=0.
+   Байты ниже - точная копия того, что сейчас реально исполняется на
+   большинстве страниц прода (сверено live-фетчем по решению автора: /, /blog/,
+   /guide-claude-code/, /avtor/, /guide-heygen/ - идентичны байт-в-байт).
+   Шесть страниц THEME_PAGES волны (calculator, guide-dvojnik, guide-gugel,
+   guide-kontent, guide-nejrofoto, guide-obsidian-claude) на проде сейчас
+   несут более ранний черновой вариант той же волны (с ::before-хаком у
+   copy-кнопки вместо min-width) - отдельный, более мелкий дрейф самой
+   волны laneZ10, не трогаю его здесь: следующая пересборка любой из этих
+   шести страниц сама получит актуальный вариант из этого файла.
+   @supports (--tap-min: 44px) - не проверка фичи браузера (кастомные
+   свойства поддерживают все таргеты сайта), а версионная метка: под тем
+   же условием живёт append-инструмент волны laneZ10 (upsert_supports в
+   _rebuild/redesign-2026-08-13/laneZ10/edits.py), поэтому повторный
+   прогон того инструмента поверх страницы, уже собранной с этим блоком,
+   находит его по метке и не дублирует. */
+@supports (--tap-min: 44px){
+:root{--tap-min:44px}
+button.copybtn,button.copy-btn,button.checklist-copy,button.cpb,a.share-btn{min-height:var(--tap-min);min-width:var(--tap-min);box-sizing:border-box;align-content:center}
+a.nav-drop-cta,.nav-drop a,a.btn-nav,a.inline-flex,a.toollink,a.ln,nav a.rounded-full,summary{min-height:var(--tap-min);box-sizing:border-box;align-content:center}
+a.site-logo,a.font-display,a.home,footer a:not(.ln),.site-footer a:not(.ln),.author-links a:not(.ln){position:relative}
+a.site-logo::after,a.font-display::after,a.home::after,footer a:not(.ln)::after,.site-footer a:not(.ln)::after,.author-links a:not(.ln)::after{content:"";position:absolute;left:0;right:0;top:50%;height:var(--tap-min);transform:translateY(-50%);background:none;border:0;pointer-events:auto}
+}
+
+/* ottisk:theme-dupes:start */
+/* СГЕНЕРИРОВАНО скриптом gen_theme_dupes - руками не править.
+   Значения сняты из этого же файла (:root и @media prefers-color-scheme: dark).
+   Перегенерировать: python3 gen_theme_dupes <файл>
+   html[data-theme] побеждает системный @media по специфичности, флаги важности не нужны. */
+html[data-theme="dark"]{--sh-heroimg:0 1px 2px rgba(0, 0, 0, 0.5); --paper:#161311; --panel:#201C18; --card:#1D1915; --ink:#EAE3D6; --ink-soft:#D6CCBD; --muted:#A2988A; --line:#332D26; --line-soft:#2A2520; --accent:#E0693C; --accent-soft:rgba(224, 105, 60, 0.4); --amber:#D89A50; --warn-bg:#2A1E17; --cta-bg:#26211C; --cta-ink:#EAE3D6; --code-bg:#0A0908; --code-line:#454240; --code-lift:var(--edge-dark), 0 0 0 1px rgb(255 255 255/.08), 0 18px 44px -20px rgb(0 0 0/.85); --lift-1:0 0 0 1px rgba(255, 255, 255, 0.05); --lift-2:0 0 0 1px rgba(255, 255, 255, 0.07), 0 10px 28px -14px rgba(0, 0, 0, 0.62); --lift-3:0 0 0 1px rgba(255, 255, 255, 0.09), 0 18px 44px -18px rgba(0, 0, 0, 0.72); --edge:inset 0 1px 0 rgba(255, 255, 255, 0.09)}
+html[data-theme="light"]{--sh-heroimg:0 1px 2px rgba(28, 24, 21, 0.18); --paper:#FAF6EF; --panel:#F3ECE0; --card:#FFFFFF; --ink:#1C1815; --ink-soft:#2A241F; --muted:#6E6358; --line:#E4DACB; --line-soft:#EFE6D7; --accent:#BE4A24; --accent-soft:rgba(190, 74, 36, 0.35); --amber:#C98A3C; --warn-bg:#F7ECE6; --cta-bg:#1C1815; --cta-ink:#FAF6EF; --code-bg:#0E0D0C; --code-line:#2A2724; --code-lift:var(--lift-2), var(--edge-dark); --lift-1:0 1px 1px rgba(28, 24, 21, 0.05); --lift-2:0 1px 1px rgba(28, 24, 21, 0.06), 0 8px 16px -8px rgba(28, 24, 21, 0.10), 0 22px 40px -22px rgba(28, 24, 21, 0.12); --lift-3:0 1px 1px rgba(28, 24, 21, 0.07), 0 12px 22px -10px rgba(28, 24, 21, 0.13), 0 36px 64px -30px rgba(28, 24, 21, 0.18); --edge:inset 0 1px 0 rgba(255, 255, 255, 0.72)}
+html[data-theme="dark"] .tablewrap{background-image:linear-gradient(to right, var(--paper) 32%, transparent), linear-gradient(to left, var(--paper) 32%, transparent), radial-gradient(farthest-side at 0 50%, rgba(0, 0, 0, 0.55), transparent), radial-gradient(farthest-side at 100% 50%, rgba(0, 0, 0, 0.55), transparent)}
+html[data-theme="light"] .tablewrap{background-image:linear-gradient(to right, var(--paper) 32%, transparent), linear-gradient(to left, var(--paper) 32%, transparent), radial-gradient(farthest-side at 0 50%, rgba(28, 24, 21, 0.24), transparent), radial-gradient(farthest-side at 100% 50%, rgba(28, 24, 21, 0.24), transparent)}
+html[data-theme="dark"] .quick-answer{box-shadow:var(--lift-1), var(--edge)}
+html[data-theme="light"] .quick-answer{box-shadow:var(--lift-2), var(--edge)}
+html[data-theme="dark"] img.viz{filter:brightness(.88) contrast(1.02)}
+html[data-theme="light"] img.viz{filter:none}
+/* ottisk:theme-dupes:end */

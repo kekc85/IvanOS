@@ -1,0 +1,15 @@
+# Расписание для Linux, часть 2 из 2 (когда запускать).
+# Сохрани как ~/.config/systemd/user/autopost.timer рядом с autopost.service
+
+[Unit]
+Description=Будильник автопостинга: раз в минуту
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=1min
+# догнать пропущенное, если машина была выключена
+Persistent=true
+Unit=autopost.service
+
+[Install]
+WantedBy=timers.target

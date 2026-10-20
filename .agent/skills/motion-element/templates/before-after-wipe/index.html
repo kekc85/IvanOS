@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      #stage { position: absolute; left: 80px; right: 80px; top: 360px; bottom: 360px; border-radius: 28px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+      .layer { position: absolute; inset: 0; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
+      /* placeholders: заменяются на params before_img/after_img */
+      #before { background: linear-gradient(135deg,#3a3f4b,#23262e); }
+      #after  { background: linear-gradient(135deg,#1e5bff,#36c98e); clip-path: inset(0 100% 0 0); }
+      .tag { font-size: 56px; font-weight: 800; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,.5); }
+      #divider { position: absolute; top: 0; bottom: 0; left: 0; width: 6px; background: #fff; box-shadow: 0 0 30px 6px rgba(79,140,255,.9); }
+      #cap { position: absolute; left: 0; right: 0; top: 200px; text-align: center; font-size: 64px; font-weight: 900; color: #fff; opacity: 0; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="cap">Было → Стало</div>
+      <div id="stage">
+        <div class="layer" id="before"><span class="tag">ДО</span></div>
+        <div class="layer" id="after" data-sfx="whoosh" data-sfx-at="wipe"><span class="tag">ПОСЛЕ</span></div>
+        <div id="divider"></div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const W = 1080 - 160; // stage width
+
+      tl.to("#cap", { opacity: 1, y: 0, duration: 0.5 }, 0.2);
+
+      // Wipe: clip-path reveal of "after" + divider slides across. Bound to timeline.
+      tl.add("wipe", 1.0);
+      tl.fromTo("#after", { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 1.8, ease: "power2.inOut" }, "wipe");
+      tl.fromTo("#divider", { left: 0 }, { left: W, duration: 1.8, ease: "power2.inOut" }, "wipe");
+
+      // settle: divider fades, "после" punch
+      tl.add("settle", "wipe+=1.8");
+      tl.to("#divider", { opacity: 0, duration: 0.4 }, "settle");
+      tl.fromTo("#after .tag", { scale: 1 }, { scale: 1.1, duration: 0.2, ease: "back.out(2)", yoyo: true, repeat: 1 }, "settle");
+      tl.to("#stage", { opacity: 1, duration: 1.4 }, 4.4);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

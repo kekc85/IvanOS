@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>Hero Photo Overlay (P1)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0a0a0a;
+    --canvas-w: 1080px;
+    --canvas-h: 1350px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: var(--canvas-w); height: var(--canvas-h); overflow: hidden; font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: var(--canvas-w);
+    height: var(--canvas-h);
+    position: relative;
+    background: var(--brand-text-dark);
+    overflow: hidden;
+  }
+
+  .hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{hero_image_url}}');
+    background-size: cover;
+    background-position: {{hero_position}};
+    filter: {{hero_filter}};
+  }
+
+  .gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, transparent 45%, rgba(0,0,0,0.75) 85%, rgba(0,0,0,0.9) 100%);
+    pointer-events: none;
+  }
+
+  .corner-counter {
+    position: absolute;
+    top: 36px;
+    right: 36px;
+    color: var(--brand-text-light);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+  }
+
+  .corner-marker {
+    position: absolute;
+    top: 36px;
+    left: 36px;
+    color: var(--brand-text-light);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .corner-marker::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 2px;
+    background: var(--brand-text-light);
+    opacity: 0.7;
+  }
+
+  .typography-zone {
+    position: absolute;
+    left: 60px;
+    right: 60px;
+    bottom: 80px;
+    z-index: 2;
+  }
+
+  .headline {
+    color: var(--brand-text-light);
+    font-size: {{headline_size}};
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+
+  .headline .accent {
+    color: var(--brand-accent);
+    background: var(--brand-primary);
+    padding: 0 12px;
+    border-radius: 4px;
+  }
+
+  .sub-headline {
+    color: var(--brand-text-light);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.3;
+    opacity: 0.92;
+    max-width: 880px;
+  }
+
+  .brand-signature {
+    position: absolute;
+    bottom: 32px;
+    right: 36px;
+    color: var(--brand-text-light);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    opacity: 0.7;
+    z-index: 3;
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="hero-image"></div>
+    <div class="gradient-overlay"></div>
+
+    <div class="corner-marker">{{slide_marker}}</div>
+    <div class="corner-counter">{{slide_counter}}</div>
+
+    <div class="typography-zone">
+      <h1 class="headline">{{headline_html}}</h1>
+      <p class="sub-headline">{{sub_headline}}</p>
+    </div>
+
+    <div class="brand-signature">{{brand_handle}}</div>
+  </div>
+</body>
+</html>

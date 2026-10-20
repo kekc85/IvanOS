@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      #chat { position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 28px; }
+      .b { max-width: 78%; padding: 28px 34px; border-radius: 34px; font-size: 40px; line-height: 1.3; opacity: 0; will-change: transform, opacity; }
+      .them { align-self: flex-start; background: #26282f; color: #e8eaf0; border-bottom-left-radius: 10px; }
+      .me { align-self: flex-end; background: #2b6fff; color: #fff; border-bottom-right-radius: 10px; }
+      .dots { align-self: flex-start; background: #26282f; padding: 30px 36px; border-radius: 34px; border-bottom-left-radius: 10px; display: flex; gap: 12px; opacity: 0; }
+      .dots i { width: 16px; height: 16px; border-radius: 50%; background: #8b90a0; display: inline-block; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
+      <div id="chat">
+        <div class="b them" id="m0" data-sfx="pop" data-sfx-at="m0">это вообще реально без кода?</div>
+        <div class="dots" id="dots"><i></i><i></i><i></i></div>
+        <div class="b me" id="m1" data-sfx="pop" data-sfx-at="m1">я запустил за выходные 🚀</div>
+        <div class="b them" id="m2" data-sfx="pop" data-sfx-at="m2">скинь как, тоже хочу</div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const pop = (id, at) => {
+        tl.add(at.label, at.t);
+        tl.fromTo(id, { opacity: 0, scale: 0.7, y: 24 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.34, ease: "back.out(2.2)" }, at.label);
+      };
+      pop("#m0", { label: "m0", t: 0.4 });
+      // typing indicator before my reply
+      tl.to("#dots", { opacity: 1, duration: 0.3 }, 1.3);
+      tl.to("#dots i", { y: -10, duration: 0.3, repeat: 3, yoyo: true, stagger: 0.12, ease: "sine.inOut" }, 1.4);
+      tl.to("#dots", { opacity: 0, duration: 0.2 }, 2.5);
+      pop("#m1", { label: "m1", t: 2.7 });
+      pop("#m2", { label: "m2", t: 3.7 });
+      tl.to("#chat", { opacity: 1, duration: 2.0 }, 4.4);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

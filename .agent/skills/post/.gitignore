@@ -1,0 +1,15 @@
+.state-archive/
+__pycache__/
+*.pyc
+.factbase-*.md
+.post-state-*.json
+
+# 4i (06.08.2026): классы рабочих данных владельца - в скилле их быть не должно,
+# личное живёт в .business. Санитайзер сборки
+# дублирует этот список как страховку при раздаче ученикам.
+*.jsonl
+.draft-*
+.tmp-*
+scripts/tests/fixtures/green-ivan/
+scripts/tests/fixtures/green/ivan-final-*.txt
+references/.metrics-snapshots/

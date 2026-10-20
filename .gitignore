@@ -1,0 +1,13 @@
+# Node / Next / build
+node_modules/
+.next/
+out/
+dist/
+.vercel/
+
+# Temporary video & render caches
+workspace/reels/kofe/raw_record/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

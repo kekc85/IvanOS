@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ритм дня</title>
+<style>
+  :root{--bd:#dadce0;--txt:#3c4043;--dim:#70757a;--blue:#1a73e8;--red:#ea4335;
+        --deep:#BE4A24;--gold:#C98A3C;--cream:#FAF6EF;--green:#0f9d58;--soft:#f8f9fa}
+  *{box-sizing:border-box}
+  body{margin:0;font:16px/1.6 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+       color:var(--txt);background:#fff}
+  .wrap{max-width:880px;margin:0 auto;padding:30px 20px 90px}
+  h1{font:600 30px/1.2 "Unbounded",-apple-system,sans-serif;margin:0 0 4px;letter-spacing:-.4px}
+  h2{font:600 20px/1.3 "Unbounded",sans-serif;margin:40px 0 12px;padding-top:18px;border-top:1px solid var(--bd)}
+  .lead{font-size:16px;color:var(--dim);margin:0 0 24px}
+  a{color:var(--blue)}
+  .back{display:inline-block;margin-bottom:18px;font-size:14px;text-decoration:none}
+
+  /* лента дня */
+  .day{border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin:20px 0}
+  .row{display:grid;grid-template-columns:104px 1fr;border-bottom:1px solid #eee;align-items:stretch}
+  .row:last-child{border-bottom:0}
+  .t{padding:11px 12px;font:600 13px/1.4 "JetBrains Mono",ui-monospace,monospace;color:var(--dim);
+     background:var(--soft);border-right:1px solid #eee;white-space:nowrap}
+  .b{padding:11px 14px}
+  .b b{display:block;font-size:15px;margin-bottom:2px}
+  .b span{font-size:13.5px;color:var(--dim);line-height:1.5}
+  .row.deep{background:#fdf4f0}
+  .row.deep .b b{color:var(--deep)}
+  .row.deep .t{background:#f9e9e2;color:var(--deep)}
+  .row.dip{background:#fdf9ec}
+  .row.dip .t{background:#f8f0d8;color:#8a6a1f}
+  .row.brk{background:#fafafa}
+  .row.brk .b{font-size:13.5px;color:var(--dim);padding:7px 14px}
+  .row.brk .t{padding:7px 12px;font-size:12px}
+  .row.off{background:#f4f5f7;color:var(--dim)}
+  .row.off .b b{color:var(--dim)}
+  .row.sleep{background:#eceff3}
+  .tag{display:inline-block;font-size:11px;padding:1px 8px;border-radius:20px;margin-left:6px;
+       vertical-align:1px;font-weight:600}
+  .tag.hot{background:var(--deep);color:#fff}
+  .tag.mid{background:#e8eaed;color:#5f6368}
+  .tag.low{background:#e6f4ea;color:#137333}
+  .tag.buf{background:#fef7e0;color:#8a6a1f}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+  th,td{border:1px solid var(--bd);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:var(--soft);font-weight:600}
+  .card{background:var(--soft);border:1px solid var(--bd);border-radius:10px;padding:15px 17px;margin:16px 0}
+  .card.warn{background:#fef7e0;border-color:#f0c36d}
+  .card.key{background:#e8f0fe;border-color:#a8c7fa}
+  ul{padding-left:22px}li{margin:6px 0}
+  code{background:#f1f3f4;padding:2px 6px;border-radius:4px;font:13px "JetBrains Mono",ui-monospace,monospace}
+  .src{font-size:13px;color:var(--dim);font-style:italic}
+  @media(max-width:600px){.wrap{padding:18px 13px 70px}h1{font-size:23px}
+    .row{grid-template-columns:84px 1fr}.t{font-size:12px;padding:9px 8px}.b{padding:9px 11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a class="back" href="/">← к движку</a>
+
+<h1>Ритм дня</h1>
+<p class="lead">Собрано из ресёрча и твоих правок. Профиль в движке настроен ровно по этим цифрам</p>
+
+<div class="card key">
+<b>Твои решения:</b> блок ровно 90 минут, перерыв 10 минут ВНУТРИ него, значит чистого фокуса 80 · ёмкость 80% вместо 60 на время недели накопа
+</div>
+
+<h2>День по часам</h2>
+
+<div class="day">
+  <div class="row off"><div class="t">07:00-08:00</div><div class="b"><b>Подъём и тренировка на улице</b>
+    <span>Свет закрыт естественно: тренировка на воздухе в первый же час после подъёма. Самый сильный циркадный рычаг работает сам. Телефон не трогать</span></div></div>
+
+  <div class="row off"><div class="t">08:00-09:00</div><div class="b"><b>Завтрак и Библия</b>
+    <span>Первый кофе не раньше 08:30</span></div></div>
+
+  <div class="row deep"><div class="t">09:00-10:30</div><div class="b"><b>Блок 1<span class="tag hot">глубокий</span></b>
+    <span><b>фокус 09:00-10:20 · перерыв 10:20-10:30</b><br>Весь запас тяжёлого здесь: съёмка, решения, то что требует головы</span></div></div>
+
+  <div class="row deep"><div class="t">10:30-12:00</div><div class="b"><b>Блок 2<span class="tag hot">глубокий</span></b>
+    <span><b>фокус 10:30-11:50 · перерыв 11:50-12:00</b><br>Пик ещё держится. Второй и последний глубокий блок за день</span></div></div>
+
+  <div class="row dip"><div class="t">12:00-13:00</div><div class="b"><b>Обед и восстановление</b>
+    <span>Прогулка на свету или NSDR 10-20 минут. Провал бдительности начинается в 13:00, обед подводит к нему</span></div></div>
+
+  <div class="row dip"><div class="t">13:00-14:30</div><div class="b"><b>Блок 3<span class="tag low">механика</span></b>
+    <span><b>фокус 13:00-14:20 · перерыв 14:20-14:30</b><br>Провал. Сюда только то, что не требует головы: разбор почты, рутина, механика</span></div></div>
+
+  <div class="row "><div class="t">14:30-16:00</div><div class="b"><b>Блок 4<span class="tag mid">средний</span></b>
+    <span><b>фокус 14:30-15:50 · перерыв 15:50-16:00</b><br>Голова вернулась, но не на пик. Производство, сборка, работа по готовому плану</span></div></div>
+
+  <div class="row "><div class="t">16:00-17:30</div><div class="b"><b>Блок 5<span class="tag mid">рутина</span></b>
+    <span><b>фокус 16:00-17:20 · перерыв 17:20-17:30</b><br>Чаты, ученики, операционка, созвоны. С 17:00 кофеин стоп</span></div></div>
+
+  <div class="row "><div class="t">17:30-19:00</div><div class="b"><b>Блок 6<span class="tag mid">рутина</span></b>
+    <span><b>фокус 17:30-18:50 · перерыв 18:50-19:00</b><br>Хвосты дня, всё где нужен ты, но не твой пик</span></div></div>
+
+  <div class="row off"><div class="t">19:00-19:30</div><div class="b"><b>Ужин</b>
+    <span>За три с половиной часа до сна. Позже нельзя, ломает ночь</span></div></div>
+
+  <div class="row "><div class="t">19:30-21:00</div><div class="b"><b>Блок 7<span class="tag buf">буфер</span></b>
+    <span><b>фокус 19:30-20:50 · перерыв 20:50-21:00</b><br>Держать пустым под то, что прилетит. Если день прошёл чисто - закрытие и разбор</span></div></div>
+
+    <span>Свет приглушить, яркие экраны убрать, тяжёлые разговоры не начинать</span></div></div>
+
+    <span>Держать один и тот же час семь дней в неделю, включая выходные</span></div></div>
+
+</div>
+
+<div class="card warn">
+<b>Семь блоков это 10.5 часа, но заполнять надо не все.</b> При твоей ёмкости 80% планировать можно 9.6 часа из двенадцати. Практически: блоки 1-6 под задачи, седьмой держать пустым под то, что прилетит.<br><br>
+Если планировать все шесть, каждый день будет заканчиваться ощущением провала. Прошлый спринт умер именно так - я тогда напихал 8.8 часа в четверг.
+</div>
+
+<h2>Почему именно так</h2>
+
+<table>
+<tr><th>Правило</th><th>Цифра</th><th>Механизм</th></tr>
+<tr><td>Длина блока</td><td>90 минут</td><td>Ультрадианный цикл. После 90 минут падают ацетилхолин и дофамин, концентрация проседает резко. Первые 5-10 минут блока - разогрев, пик приходит не сразу<br><span class="src">Хуберман · Лоэр и Шварц · Клейтман</span></td></tr>
+<tr><td>Глубоких блоков в день</td><td>один-два</td><td>Больше не бывает у кого угодно. Значит утро - весь твой запас тяжёлого за сутки<br><span class="src">Хуберман · Ньюпорт даёт потолок 4 часа у тренированных</span></td></tr>
+<tr><td>Перерыв</td><td>10 минут внутри блока</td><td>Лёгкий дофаминовый пик от ленты обрушивает baseline, и следующий блок начинается с ощущением, что работа недостаточно интересная<br><span class="src">Хуберман · эмпирика Biedermann 2023: систематические перерывы дают тот же объём за меньшее время</span></td></tr>
+<tr><td>Провал</td><td>13:00-15:00</td><td>Через 6-8 часов после подъёма приходит циркадный дип бдительности. Документирован независимо от еды. Не лечится кофе, лечится обедом, светом и NSDR<br><span class="src">Хуберман</span></td></tr>
+<tr><td>Кофеин</td><td>08:30 - 17:00</td><td>Первая чашка через 90-120 минут после подъёма, чтобы не глушить естественный кортизол. Последняя за 6 часов до сна, период полувыведения 5-6 часов<br><span class="src">Хуберман · Джонсон</span></td></tr>
+<tr><td>Телефон</td><td>первые 60-90 минут</td><td>Самый нарушаемый пункт из всех. Скроллинг утром задаёт короткий пик, после которого рабочая задача кажется пресной<br><span class="src">Хуберман · Джонсон защищает утро от сообщений</span></td></tr>
+<tr><td>Wind down</td><td>два часа</td><td>Свет приглушить, экраны убрать, тяжёлые разговоры не начинать. Плюс ритуал закрытия дня против остаточного внимания, когда задачи крутятся в голове после работы<br><span class="src">Хуберман · Ньюпорт про shutdown-ритуал</span></td></tr>
+<tr><td>Регулярность сна</td><td>важнее длительности</td><td>Один и тот же час подъёма семь дней в неделю - более сильный рычаг, чем количество часов<br><span class="src">Хуберман</span></td></tr>
+<tr><td>Ёмкость</td><td>60%, у тебя 80</td><td>Обязательное не больше 60 процентов таймбокса, остальное буфер. Три методологии сходятся независимо<br><span class="src">MoSCoW/DSDM · 4DX про «вихрь» операционки · Ньюпорт</span></td></tr>
+</table>
+
+<h2>Чем занять десять минут перерыва</h2>
+
+<div class="card">
+<b>Структура, если не сидится:</b><br>
+3 минуты - выйти на воздух или к окну, смотреть вдаль<br>
+4 минуты - пройтись, размять шею и спину<br>
+3 минуты - вода, ничего не делать<br><br>
+<b>Вариант посильнее:</b> NSDR десять минут - управляемое расслабление лёжа, короткий сон без сна. Хуберман называет его инструментом дневного восстановления.<br><br>
+<b>Чего в перерыве быть не должно:</b> телефон, лента, почта, новости, любой входящий поток. Голова должна не получать информацию, а разгружаться.
+</div>
+
+<h2>Что решено и зафиксировано</h2>
+<ul>
+<li><b>Перерыв 10 минут внутри блока</b>, а не после него: блок ровно 90 минут, из них 80 чистого фокуса. Так все блоки стартуют по круглому времени и день не расползается</li>
+<li><b>Ёмкость 80 процентов</b> на время недели накопа. После субботы предложу вернуться к 70, но решение твоё</li>
+<li><b>Тренировка сразу после подъёма на улице</b>, час, шесть дней в неделю. Попадает в окно, которое Хуберман называет оптимальным, и закрывает утренний свет без отдельного усилия</li>
+<li><b>Сетка в движке от 06:00 до 00:00</b> всегда, зоны сна и wind down закрашены</li>
+<li><b>Воскресенье защищено</b>, ноль задач. Разбор недели поэтому в субботу вечером</li>
+</ul>
+
+<p style="margin-top:34px"><a href="/">← движок</a> · <a href="/guide.html">как пользоваться</a></p>
+
+</div>
+</body>
+</html>

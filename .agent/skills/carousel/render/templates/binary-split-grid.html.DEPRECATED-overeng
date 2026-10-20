@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>Binary Split Grid (P4)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0a0a0a;
+    --canvas-bg: #f5f4f0;
+    --left-pos-bg: #1a8f55;
+    --right-neg-bg: #c8392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    background: var(--canvas-bg);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-headline {
+    padding: 48px 60px 32px;
+    color: var(--brand-text-dark);
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
+  .split-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .panel {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel.positive {
+    background-image: url('{{positive_image_url}}');
+    background-size: cover;
+    background-position: center;
+  }
+  .panel.negative {
+    background-image: url('{{negative_image_url}}');
+    background-size: cover;
+    background-position: center;
+  }
+
+  .panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 35%, rgba(0,0,0,0.85) 100%);
+  }
+
+  .panel-label {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    z-index: 2;
+    padding: 10px 18px;
+    border-radius: 999px;
+    color: var(--brand-text-light);
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .panel.positive .panel-label {
+    background: var(--left-pos-bg);
+  }
+  .panel.negative .panel-label {
+    background: var(--right-neg-bg);
+  }
+
+  .panel-symbol {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255,255,255,0.18);
+    font-size: 320px;
+    font-weight: 900;
+    line-height: 1;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .panel-caption {
+    position: absolute;
+    bottom: 32px;
+    left: 28px;
+    right: 28px;
+    color: var(--brand-text-light);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    z-index: 2;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+
+  .bottom-bar {
+    padding: 28px 60px;
+    background: var(--brand-text-dark);
+    color: var(--brand-text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bottom-bar .verdict {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  .bottom-bar .brand-signature {
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.65;
+  }
+
+  .corner-counter {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    color: var(--brand-text-dark);
+    font-size: 20px;
+    font-weight: 600;
+    opacity: 0.5;
+    z-index: 5;
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="corner-counter">{{slide_counter}}</div>
+    <h1 class="top-headline">{{top_headline}}</h1>
+
+    <div class="split-container">
+      <div class="panel positive">
+        <span class="panel-symbol">✔</span>
+        <span class="panel-label">{{positive_label}}</span>
+        <div class="panel-caption">{{positive_caption}}</div>
+      </div>
+      <div class="panel negative">
+        <span class="panel-symbol">✕</span>
+        <span class="panel-label">{{negative_label}}</span>
+        <div class="panel-caption">{{negative_caption}}</div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <span class="verdict">{{verdict}}</span>
+      <span class="brand-signature">{{brand_handle}}</span>
+    </div>
+  </div>
+</body>
+</html>

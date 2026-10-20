@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1350px;
+    background: {{BACKGROUND_COLOR}};
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    overflow: hidden;
+  }
+  .item-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32pt;
+    color: #999;
+    margin-bottom: 60px;
+  }
+  .item-name {
+    font-size: 96pt;
+    font-weight: 900;
+    color: {{ACCENT_COLOR}};
+    line-height: 0.95;
+    margin-bottom: 40px;
+    letter-spacing: -4px;
+  }
+  .item-tagline {
+    font-size: 40pt;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.3;
+    margin-bottom: 60px;
+  }
+  .item-outcome {
+    font-size: 28pt;
+    color: #3a3a3a;
+    line-height: 1.4;
+    padding: 30px;
+    background: rgba(0,0,0,0.04);
+    border-left: 4px solid {{ACCENT_COLOR}};
+    max-width: 800px;
+  }
+</style>
+</head>
+<body>
+  <div class="item-counter">{{COUNTER}}</div>
+  <div class="item-name">{{ITEM_NAME}}</div>
+  <div class="item-tagline">{{ITEM_TAGLINE}}</div>
+  <div class="item-outcome">{{ITEM_OUTCOME}}</div>
+</body>
+</html>

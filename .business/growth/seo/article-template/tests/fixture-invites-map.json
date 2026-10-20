@@ -1,0 +1,19 @@
+{
+ "_комментарий": "ТЕСТОВАЯ карта инвайтов selftest article_build.py. Ссылки ненастоящие: они нужны только чтобы доказать маршрут CTA (инвайт слага вместо адреса оффера с utm) и порядок ключей полный слаг → guide-слаг → без guide- → 25 символов. Боевая карта живёт по пути из config.md, ключ cta.invites_map",
+ "guide-fixture": {
+  "slug": "guide-fixture",
+  "link": "https://t.me/+FXinvite000000001"
+ },
+ "guide-sosed-fikstury": {
+  "slug": "guide-sosed-fikstury",
+  "link": "https://t.me/+FXinvite000000002"
+ },
+ "bez-prefiksa-guide": {
+  "slug": "bez-prefiksa-guide",
+  "link": "https://t.me/+FXinvite000000003"
+ },
+ "obrezannyy-do-25-simvolov": {
+  "slug": "obrezannyy-do-25-simvolov",
+  "link": "https://t.me/+FXinvite000000004"
+ }
+}

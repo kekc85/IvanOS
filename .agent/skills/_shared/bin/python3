@@ -1,0 +1,27 @@
+#!/bin/sh
+# ============================================================================
+# IvanOS python3/python shim (Unix mirror: macOS / Linux). Mirror of python3.cmd.
+# On macOS python3 is native and sits BEFORE this shim in PATH (installer appends
+# the shim dir to the END), so this is normally never reached. It only kicks in
+# when the called name is missing but the sibling exists (e.g. only `python` is
+# installed): then it proxies to whichever real interpreter exists. Hard guard
+# against recursion: the shim dir is excluded from the PATH search.
+# ============================================================================
+self="$0"
+selfdir=$(CDPATH= cd -- "$(dirname -- "$self")" 2>/dev/null && pwd)
+for cand in python3 python; do
+  oldifs=$IFS; IFS=:
+  for d in $PATH; do
+    [ -n "$d" ] || d=.
+    dcanon=$(CDPATH= cd -- "$d" 2>/dev/null && pwd) || dcanon="$d"
+    [ "$dcanon" = "$selfdir" ] && continue
+    case "$d" in *WindowsApps*|*windowsapps*) continue;; esac  # Microsoft Store stub fakes python
+    if [ -x "$d/$cand" ] && [ ! -d "$d/$cand" ]; then
+      IFS=$oldifs
+      exec "$d/$cand" "$@"
+    fi
+  done
+  IFS=$oldifs
+done
+echo "[IvanOS] Python 3 not found in PATH. Install Python 3 from https://www.python.org/downloads/" >&2
+exit 2

@@ -1,0 +1,19 @@
+# Расписание для Linux, часть 1 из 2 (что запускать).
+# Что сделать:
+#   1) подставь два пропуска ниже
+#   2) сохрани как ~/.config/systemd/user/autopost.service
+#   3) рядом положи autopost.timer из соседнего файла
+#   4) включи:  systemctl --user daemon-reload && systemctl --user enable --now autopost.timer
+#   5) проверь: systemctl --user list-timers | grep autopost
+
+[Unit]
+Description=Автопостинг: отправить всё, чему пришло время
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory={{ПУТЬ_К_ДВИЖКУ}}
+ExecStart={{ПУТЬ_К_ПИТОНУ}} {{ПУТЬ_К_ДВИЖКУ}}/cli.py run
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>Brand Color Card (P6)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0a0a0a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', 'Söhne', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    background: var(--brand-primary);
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+    color: var(--brand-text-light);
+  }
+
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse at top right, rgba(255,255,255,0.18), transparent 70%);
+    pointer-events: none;
+  }
+
+  .badge-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .badge {
+    padding: 10px 18px;
+    background: rgba(255,255,255,0.15);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 999px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    backdrop-filter: blur(8px);
+  }
+
+  .big-headline {
+    font-size: 120px;
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .big-headline .strike {
+    text-decoration: line-through;
+    text-decoration-thickness: 8px;
+    opacity: 0.55;
+  }
+
+  .big-headline .highlight {
+    background: var(--brand-text-light);
+    color: var(--brand-primary);
+    padding: 0 16px;
+    border-radius: 8px;
+  }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-bottom: 48px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-number {
+    font-size: 72px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.85;
+    line-height: 1.2;
+  }
+
+  .body-claim {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.35;
+    max-width: 880px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .bottom-bar {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 2px solid rgba(255,255,255,0.3);
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-mark {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+
+  .meta-text {
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.75;
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="badge-row">
+      {{badges_html}}
+    </div>
+
+    <h1 class="big-headline">{{big_headline_html}}</h1>
+
+    {{stats_html}}
+
+    <p class="body-claim">{{body_claim}}</p>
+
+    <div class="bottom-bar">
+      <span class="brand-mark">{{brand_handle}}</span>
+      <span class="meta-text">{{meta_text}}</span>
+    </div>
+  </div>
+</body>
+</html>

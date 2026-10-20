@@ -1,0 +1,321 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "scene-spec.schema.json",
+  "title": "replicate-viral scene spec (Opus rails, AC1)",
+  "description": "Декларативная спека ОДНОЙ сцены reel 1080x1920. Модель выбирает блоки из библиотеки и заполняет их params значениями из enum-меню канона. scene-assemble.py детерминированно собирает index.html из валидированных сниппетов. Модель НЕ пишет CSS/тайминги руками.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "scene_id",
+    "duration",
+    "layers"
+  ],
+  "properties": {
+    "scene_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "id сцены (для composition-id и имени файла)"
+    },
+    "duration": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 60,
+      "description": "длительность сцены в секундах"
+    },
+    "background": {
+      "type": "string",
+      "description": "ЦВЕТ/тип фона root-композиции. Enum из канона (тёмная база ниши / cream автора).",
+      "enum": [
+        "dark",
+        "cream",
+        "grid-floor",
+        "black",
+        "near-black"
+      ]
+    },
+    "family": {
+      "type": "string",
+      "description": "Семья раскладки сцены — профиль режимов вердикта осей в scene-audit (Ф5a). По умолчанию talking-head-split (историческая калибровка, все оси hard). overlap-card (K3 hero: тёмная сцена-пол, аватар bottom-pinned, кроп подбородка, fade-in с 0с) переводит штатно-трипаемые оси A2/M/K/B12/B15 в WARN. Опц.: ассемблер прокидывает в авто-аудит при --render.",
+      "enum": [
+        "talking-head-split",
+        "overlap-card"
+      ],
+      "default": "talking-head-split"
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "description": "Слои сцены снизу вверх. Каждый = один блок библиотеки + его params. z задаёт порядок наложения (больше = выше).",
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "beats": {
+      "type": "array",
+      "description": "ОПЦ. Побитная монтаж-структура сцены (montage skeleton binding). Если рядом со спекой / в out-dir есть scene-skeleton.json — beats[] ОБЯЗАНЫ воспроизводить скелет эталона побитно (число битов == скелету, layout каждого бита == скелету, dur бита ≤ скелета, avatar full-screen=full-head только где скелет avatar_role∈{bookend,anchor}). Спеки БЕЗ beats[] валидны по-старому, пока НЕТ скелета. Анти-монотонность: нельзя ставить говорящую голову (full-head) на бит, где у эталона контент (avatar_role==absent).",
+      "items": {
+        "$ref": "#/$defs/beat"
+      }
+    },
+    "captions": {
+      "$ref": "#/$defs/captions",
+      "description": "Поток субтитров (если не отдельным слоем-блоком J5). Опционально."
+    },
+    "sfx": {
+      "type": "array",
+      "maxItems": 12,
+      "description": "SFX-метки. Плотность не чаще 1/1.5с (валидатор предупреждает). Категория из mapping.md.",
+      "items": {
+        "$ref": "#/$defs/sfx_cue"
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Аудио-дорожки сцены (голос/музыка). Опционально.",
+      "properties": {
+        "vo_src": {
+          "type": "string",
+          "description": "путь к VO (голос автора), относительный или абсолютный"
+        },
+        "vo_volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1
+        },
+        "music_src": {
+          "type": "string"
+        },
+        "music_volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.12
+        }
+      }
+    },
+    "overrides": {
+      "type": "array",
+      "description": "Осознанные отступления от меню/дефолтов. КАЖДОЕ обязано нести why (обоснование сильной модели). Анти-шаблонность: дефолт = меню, override = решение.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "value",
+          "why"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "путь поля, напр. 'layers[1].params.accent_color' или 'background'"
+          },
+          "value": {},
+          "why": {
+            "type": "string",
+            "minLength": 8,
+            "description": "почему отступаем от дефолта/меню"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "beat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layout",
+        "t0",
+        "t1"
+      ],
+      "description": "Один бит монтаж-структуры. layout = раскладка кадра из enum скелета; t0/t1 = окно бита (ОБЯЗАТЕЛЬНЫ — без них длительность не проверить, M2); block = ссылка на блок раскладки (опц.).",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "description": "Раскладка кадра бита (enum скелета). full-head = говорящая голова на весь кадр (допустима ТОЛЬКО на bookend/anchor-битах скелета).",
+          "enum": [
+            "full-demo",
+            "split",
+            "full-ui",
+            "full-head",
+            "anchor-rotate"
+          ]
+        },
+        "t0": {
+          "type": "number",
+          "minimum": 0,
+          "description": "начало бита, сек"
+        },
+        "t1": {
+          "type": "number",
+          "minimum": 0,
+          "description": "конец бита, сек"
+        },
+        "block": {
+          "type": "string",
+          "description": "id блока раскладки этого бита (ссылка, опц.)"
+        }
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block"
+      ],
+      "properties": {
+        "block": {
+          "type": "string",
+          "description": "id блока из библиотеки motion-blocks. ТОЛЬКО параметрические блоки (slots/variables). Существование и параметры проверяет ассемблер против meta.json.",
+          "enum": [
+            "E5-perspective-grid-floor",
+            "K1-vertical-5050-stacked",
+            "K3-overlap-card-avatar",
+            "O6-avatar-feathered-fill",
+            "A18-title-strap-caps",
+            "F5-ai-model-icon-row",
+            "G24-repo-file-list",
+            "G25-readme-card",
+            "G26-glow-frame-highlight",
+            "G27-command-input-typeon",
+            "G28-vscode-tree-reveal",
+            "J5-word-stream-whisper-sync",
+            "J6-word-stream-nunito",
+            "G29-readme-card-hero",
+            "G30-glow-frame-hero",
+            "K6-vertical-5050-instant",
+            "K7-avatar-hero-inset",
+            "K8-fullbleed-plate"
+          ]
+        },
+        "params": {
+          "type": "object",
+          "description": "Значения variables/slots блока. Ключи проверяются против meta.json блока (variables ИЛИ slots). Неизвестный ключ = ошибка валидатора."
+        },
+        "z": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99,
+          "description": "z-index слоя (порядок наложения, больше = выше). По умолчанию = индекс в массиве."
+        },
+        "font_role": {
+          "type": "string",
+          "description": "Шрифт-роль из канона. impact => ассемблер инлайнит oswald.css. Прочие роли блок несёт сам.",
+          "enum": [
+            "impact",
+            "sans-strap",
+            "serif-italic",
+            "mono",
+            "none"
+          ]
+        },
+        "t0": {
+          "type": "number",
+          "minimum": 0,
+          "description": "ОПЦ. Начало окна слоя в сцене, сек. Без него слой держится всю сцену. Позволяет одной композиции нести смену раскладок по битам (монтаж внутри сегмента), не плодя сцены."
+        },
+        "t1": {
+          "type": "number",
+          "minimum": 0,
+          "description": "ОПЦ. Конец окна слоя в сцене, сек. Пара к t0."
+        }
+      }
+    },
+    "captions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "words"
+      ],
+      "properties": {
+        "words": {
+          "type": "array",
+          "description": "Слова потока субтитров с whisper-таймингами.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "t",
+              "s",
+              "e"
+            ],
+            "properties": {
+              "t": {
+                "type": "string",
+                "description": "текст слова/фразы (1-2 слова, word-pop)"
+              },
+              "s": {
+                "type": "number",
+                "minimum": 0,
+                "description": "start, сек"
+              },
+              "e": {
+                "type": "number",
+                "minimum": 0,
+                "description": "end, сек"
+              },
+              "gold": {
+                "type": "boolean",
+                "default": false,
+                "description": "акцентное слово (бренд-золото/жёлтый)"
+              }
+            }
+          }
+        },
+        "style": {
+          "type": "string",
+          "description": "Стиль потока субтитров из канона.",
+          "enum": [
+            "word-stream-whisper",
+            "mono-caps-chip",
+            "serif-italic-pop"
+          ],
+          "default": "word-stream-whisper"
+        }
+      }
+    },
+    "sfx_cue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "t",
+        "category"
+      ],
+      "properties": {
+        "t": {
+          "type": "number",
+          "minimum": 0,
+          "description": "тайм-код события, сек (к реальному движению в кадре)"
+        },
+        "category": {
+          "type": "string",
+          "description": "категория звука из sfx/mapping.md (событие -> категория)",
+          "enum": [
+            "whoosh",
+            "click",
+            "ui",
+            "pop",
+            "ding",
+            "riser",
+            "keyboard",
+            "negative"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "description": "конкретный файл внутри категории (опц.). Если не задан — ассемблер берёт дефолт категории."
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.16,
+          "description": "0.14-0.18 = -18dB подкладка под голос"
+        }
+      }
+    }
+  }
+}

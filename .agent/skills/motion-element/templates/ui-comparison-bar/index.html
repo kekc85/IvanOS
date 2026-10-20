@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      #title { position: absolute; left: 80px; right: 80px; top: 280px; text-align: center; font-size: 64px; font-weight: 900; color: #fff; opacity: 0; }
+      #rows { position: absolute; left: 80px; right: 80px; top: 560px; display: flex; flex-direction: column; gap: 60px; }
+      .row { opacity: 0; }
+      .head { display: flex; align-items: center; gap: 22px; margin-bottom: 18px; }
+      .logo { width: 66px; height: 66px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800; color: #fff; }
+      .nm { font-size: 42px; font-weight: 700; color: #fff; }
+      .score { margin-left: auto; font-size: 42px; font-weight: 800; color: #9aa3b2; }
+      .track { height: 40px; background: #1b1d24; border-radius: 20px; overflow: hidden; }
+      .fill { height: 100%; width: 0; border-radius: 20px; }
+      .win .nm, .win .score { color: #36c98e; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="title">Чем собирать сайт?</div>
+      <div id="rows">
+        <div class="row" id="r0"><div class="head"><div class="logo" style="background:#6b7280">C</div><div class="nm">Cursor</div><div class="score" id="s0">0</div></div><div class="track"><div class="fill" id="f0" style="background:#6b7280" data-w="62"></div></div></div>
+        <div class="row" id="r1"><div class="head"><div class="logo" style="background:#9b6cff">L</div><div class="nm">Lovable</div><div class="score" id="s1">0</div></div><div class="track"><div class="fill" id="f1" style="background:#9b6cff" data-w="74"></div></div></div>
+        <div class="row win" id="r2" data-sfx="ding" data-sfx-at="win"><div class="head"><div class="logo" style="background:#36c98e">CC</div><div class="nm">Claude Code</div><div class="score" id="s2">0</div></div><div class="track"><div class="fill" id="f2" style="background:#36c98e" data-w="95"></div></div></div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.to("#title", { opacity: 1, y: 0, duration: 0.5 }, 0.2);
+
+      ["#r0","#r1","#r2"].forEach((id, i) => {
+        const t = 0.6 + i * 0.5;
+        tl.add("riser" + i, t);
+        tl.to(id, { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }, "riser" + i);
+        const fill = document.querySelector("#f" + i);
+        const target = +fill.dataset.w;
+        const sc = { v: 0 };
+        tl.to(fill, { width: target + "%", duration: 0.9, ease: "power2.out" }, "riser" + i);
+        tl.to(sc, { v: target, duration: 0.9, ease: "power2.out",
+          onUpdate: () => { document.querySelector("#s" + i).textContent = Math.round(sc.v); } }, "riser" + i);
+      });
+
+      // winner pulse
+      tl.add("win", 2.7);
+      tl.fromTo("#r2", { scale: 1 }, { scale: 1.04, duration: 0.22, ease: "back.out(2)", yoyo: true, repeat: 1 }, "win");
+      tl.to("#rows", { opacity: 1, duration: 1.6 }, 4.0);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

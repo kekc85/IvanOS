@@ -1,0 +1,238 @@
+:root{
+  --bd:#dadce0; --bd-soft:#e8eaed; --txt:#3c4043; --txt-dim:#70757a;
+  --bg:#fff; --hover:#f1f3f4; --blue:#1a73e8; --red:#ea4335; --green:#0f9d58;
+  --hh: 52px;              /* высота часа */
+  --gut: 64px;             /* колонка часов */
+}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.4 "Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--txt);background:var(--bg);
+     overflow:hidden;height:100vh;display:flex;flex-direction:column}
+
+/* ---------- шапка (общая для всех вкладок) ---------- */
+header{display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--bd);height:60px;flex:0 0 auto}
+h1{font:600 21px/1 "Unbounded",-apple-system,sans-serif;margin:0;letter-spacing:-.2px}
+.saved{font-size:12px;color:var(--green);opacity:0;transition:opacity .25s;white-space:nowrap;margin-left:auto}
+.saved.on{opacity:1}
+
+/* ---------- панель вкладок ---------- */
+.tabbar{display:flex;gap:2px;margin-left:8px;height:100%}
+.tabbar button{border:0;background:none;padding:0 16px;font-size:14px;color:var(--txt-dim);cursor:pointer;
+                font-family:inherit;border-bottom:2px solid transparent}
+.tabbar button:hover{background:var(--hover);color:var(--txt)}
+.tabbar button.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+
+/* ---------- контейнер активной вкладки ---------- */
+#tab-root{flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
+.stub{height:100%;display:flex;align-items:center;justify-content:center;color:var(--txt-dim);font-size:15px}
+
+/* ---------- вкладка «Неделя»: корневой каркас ---------- */
+.week-root{height:100%;display:flex;flex-direction:column;overflow:hidden}
+
+/* ---------- панель управления неделей ---------- */
+.weekbar{display:flex;align-items:center;gap:14px;padding:10px 16px;border-bottom:1px solid var(--bd-soft);min-height:56px;flex:0 0 auto}
+.today-btn{border:1px solid var(--bd);background:#fff;border-radius:4px;padding:7px 14px;font-size:14px;cursor:pointer;color:var(--txt)}
+.today-btn:hover{background:var(--hover)}
+.nav{display:flex;gap:2px}
+.nav button{border:0;background:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:17px;color:var(--txt-dim)}
+.nav button:hover{background:var(--hover)}
+.range{font-size:19px;font-weight:500;min-width:230px}
+.goal{margin-left:auto;font-size:13px;color:var(--txt-dim);max-width:44vw;text-align:right;line-height:1.35}
+.goal b{color:var(--txt);font-weight:600}
+
+/* ---------- легенда ---------- */
+.legend{display:flex;gap:14px;padding:7px 16px;border-bottom:1px solid var(--bd-soft);font-size:12px;color:var(--txt-dim);align-items:center;flex-wrap:wrap;flex:0 0 auto}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.legend .hint{margin-left:auto;font-size:11px}
+
+/* ---------- дни ---------- */
+.dayrow{display:grid;grid-template-columns:var(--gut) repeat(7,1fr);border-bottom:1px solid var(--bd);background:#fff;z-index:5;flex:0 0 auto}
+.dayrow .corner{border-right:1px solid var(--bd-soft)}
+.day{text-align:center;padding:6px 2px 8px;border-right:1px solid var(--bd-soft)}
+.day .dw{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--txt-dim)}
+.day .dn{font-size:24px;line-height:38px;width:38px;height:38px;margin:1px auto 0;border-radius:50%;font-weight:400}
+.day.today .dw{color:var(--blue)}
+.day.today .dn{background:var(--blue);color:#fff;font-weight:500}
+.day.past{background:#fafafa}
+.day.past .dw,.day.past .dn{color:#bdc1c6}
+.day .load{font-size:11px;color:var(--txt-dim);margin-top:1px;height:13px}
+.day .load.over{color:var(--red);font-weight:600;cursor:help}
+
+/* ---------- полоса «идёт само» ---------- */
+.autorow{display:grid;grid-template-columns:var(--gut) repeat(7,1fr);border-bottom:1px solid var(--bd);
+         background:#f8f9fa;flex:0 0 auto;position:relative;min-height:30px}
+.autorow .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--txt-dim);
+              padding:6px 6px 0 0;text-align:right;line-height:1.15;border-right:1px solid var(--bd-soft)}
+.autorow .cell{border-right:1px solid var(--bd-soft)}
+.lanes{position:absolute;left:var(--gut);right:0;top:0;bottom:0;padding:4px 0}
+.lane{position:absolute;height:19px;border-radius:10px;font-size:11px;line-height:19px;padding:0 9px;
+      color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default;
+      background-image:repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(255,255,255,.18) 5px,rgba(255,255,255,.18) 10px);
+      box-shadow:0 1px 2px rgba(60,64,67,.2)}
+.lane::before{content:"▸ ";opacity:.9}
+
+/* ---------- сетка ---------- */
+.scroll{overflow-y:auto;flex:1 1 auto;min-height:0}
+.grid{display:grid;grid-template-columns:var(--gut) repeat(7,1fr);position:relative}
+.hours{border-right:1px solid var(--bd-soft)}
+.hours div{height:var(--hh);position:relative}
+.hours span{position:absolute;right:8px;top:-8px;font-size:11px;color:var(--txt-dim)}
+.col{border-right:1px solid var(--bd-soft);position:relative}
+.col.past{background:#fafafa}
+.col .slot{height:var(--hh);border-bottom:1px solid var(--bd-soft)}
+
+/* ---------- событие ---------- */
+.ev{position:absolute;left:2px;right:6px;border-radius:5px;padding:3px 7px;overflow:hidden;cursor:grab;
+    font-size:12px;line-height:1.25;color:#fff;box-shadow:0 1px 2px rgba(60,64,67,.25);user-select:none}
+.ev:active{cursor:grabbing}
+.ev .t{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis}
+.ev .m{opacity:.85;font-size:11px}
+.ev.done{opacity:.42}
+.ev.done .t{text-decoration:line-through}
+.ev.fixed{border-left:4px solid rgba(0,0,0,.35)}
+/* точка запуска: тонкая плашка, времени почти не ест */
+.ev.launch{background:#fff !important;color:var(--txt);border:1px dashed;padding:0 6px;
+           box-shadow:none;font-size:11px;display:flex;align-items:center;gap:5px;
+           height:20px;overflow:hidden}
+.ev.launch .t{font-weight:500;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:18px}
+.ev.launch::before{content:"▶";font-size:9px;flex:0 0 auto}
+.ev .rz{position:absolute;left:0;right:0;bottom:0;height:7px;cursor:ns-resize}
+.ev.drag{opacity:.75;z-index:50;box-shadow:0 4px 12px rgba(60,64,67,.4)}
+
+/* ---------- линия сейчас ---------- */
+.now{position:absolute;left:0;right:0;height:2px;background:var(--red);z-index:20;pointer-events:none}
+.now::before{content:"";position:absolute;left:-6px;top:-4px;width:11px;height:11px;border-radius:50%;background:var(--red)}
+.nowlabel{position:absolute;z-index:21;background:var(--red);color:#fff;font-size:10px;padding:1px 4px;border-radius:3px;transform:translate(-100%,-50%);pointer-events:none}
+
+/* ---------- бэклог ---------- */
+.backlog{border-top:1px solid var(--bd);padding:10px 16px;flex:0 0 auto;overflow-x:auto;white-space:nowrap;background:#fafafa}
+.backlog b{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--txt-dim);margin-right:10px}
+.chip{display:inline-block;background:#fff;border:1px solid var(--bd);border-radius:14px;padding:5px 12px;margin-right:7px;font-size:12px;cursor:grab}
+.chip small{color:var(--txt-dim)}
+
+/* ---------- панель редактирования события ---------- */
+.panel{position:fixed;right:0;top:0;bottom:0;width:340px;background:#fff;border-left:1px solid var(--bd);
+       box-shadow:-2px 0 12px rgba(60,64,67,.15);padding:20px;z-index:100;transform:translateX(100%);transition:transform .18s}
+.panel.on{transform:none}
+.panel h3{font:600 17px/1.3 "Unbounded",sans-serif;margin:0 0 4px}
+.panel .meta{font-size:13px;color:var(--txt-dim);margin-bottom:14px}
+.panel .note{font-size:13px;background:var(--hover);padding:10px;border-radius:6px;margin-bottom:14px;line-height:1.45}
+.panel label{display:block;font-size:12px;color:var(--txt-dim);margin:10px 0 3px}
+.panel input,.panel select{width:100%;padding:7px;border:1px solid var(--bd);border-radius:4px;font-size:13px;font-family:inherit}
+.panel .row{display:flex;gap:8px}
+.panel .acts{margin-top:18px;display:flex;gap:8px}
+.panel button{border:0;border-radius:4px;padding:9px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+.bt-done{background:var(--green);color:#fff}
+.bt-del{background:#fff;color:var(--red);border:1px solid var(--bd)}
+.bt-close{background:var(--hover);color:var(--txt);margin-left:auto}
+
+/* ---------- вкладка «Настройки» ---------- */
+.settings-wrap{height:100%;overflow-y:auto;padding:24px 28px;max-width:640px}
+.settings-wrap h2{font:600 19px/1.3 "Unbounded",sans-serif;margin:0 0 4px}
+.settings-wrap .settings-intro{font-size:13px;color:var(--txt-dim);margin:0 0 22px;line-height:1.5}
+.settings-wrap .field{margin-bottom:16px}
+.settings-wrap .field-row{display:flex;gap:14px}
+.settings-wrap .field-row .field{flex:1}
+.settings-wrap label{display:block;font-size:13px;font-weight:600;color:var(--txt);margin-bottom:4px}
+.settings-wrap input[type=time],.settings-wrap input[type=number]{width:100%;padding:8px;border:1px solid var(--bd);border-radius:4px;font-size:13px;font-family:inherit}
+.settings-wrap .hint{font-size:12px;color:var(--txt-dim);margin:4px 0 0;line-height:1.4}
+.settings-wrap fieldset{border:1px solid var(--bd-soft);border-radius:6px;padding:12px 14px;margin:0 0 16px}
+.settings-wrap legend{font-size:13px;font-weight:600;padding:0 6px}
+.days-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.days-row label{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:400;color:var(--txt);
+                 border:1px solid var(--bd);border-radius:14px;padding:5px 10px;cursor:pointer;margin:0}
+.days-row input{margin:0}
+.settings-wrap .save-bar{display:flex;align-items:center;gap:12px;margin-top:22px;padding-top:16px;border-top:1px solid var(--bd-soft)}
+.settings-wrap .save-bar button{border:0;background:var(--blue);color:#fff;border-radius:4px;padding:10px 20px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:600}
+.settings-wrap .save-bar button:hover{opacity:.9}
+.settings-wrap .save-note{font-size:12px;color:var(--green);opacity:0;transition:opacity .25s}
+.settings-wrap .save-note.on{opacity:1}
+
+/* =====================================================================
+   МОБИЛЬНАЯ АДАПТАЦИЯ (<=600px)
+   Зона ответственности этого файла - оболочка (шапка/вкладки/боковая
+   панель/сетка недели/настройки). Вкладка «Цикл» уже сама ломается на
+   1 колонку при <=980px (её CSS живёт в tab-cycle.js) - не трогаем.
+   Вкладка «Трекеры» держит рядом стоящие блоки вечернего чека и сфер, которые
+   на 390px физически не влезают - её CSS тоже инжектится из tab-track.js,
+   поэтому переопределяем точечно через !important (единственный рычаг
+   из отдельного файла стилей поверх встроенного <style>).
+   Выше 600px ничего из этого блока не применяется - на широком экране
+   поведение не меняется.
+   ===================================================================== */
+@media (max-width:600px){
+
+  /* ---------- шапка + вкладки: не обрезаются, переносятся в 2 строки ---------- */
+  header{height:auto;min-height:50px;flex-wrap:wrap;padding:8px 10px;gap:6px 10px}
+  h1{font-size:16px}
+  .tabbar{order:3;width:100%;height:auto;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-left:0}
+  .tabbar button{padding:8px 10px;font-size:13px;flex:0 0 auto}
+  .saved{font-size:11px}
+
+  /* ---------- любая вкладка получает скролл-страховку от оболочки:
+     если внутренний контейнер вкладки не тянет свой overflow сам,
+     страницу всё равно можно долистать целиком ---------- */
+  #tab-root{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+
+  /* ---------- боковая панель события: во весь экран, не полоска сбоку ---------- */
+  .panel{width:100%;padding:16px}
+
+  /* ---------- вкладка «Неделя»: сетка остаётся пригодной на телефоне.
+     Выбранное решение - горизонтальный скролл колонок дней с закреплённой
+     шкалой часов и закреплённой строкой дней (спредшит-паттерн), а НЕ
+     режим одного дня с переключателем: переключатель дней требует нового
+     кликабельного состояния и обработчика в tab-week.js, а этот файл
+     трогать нельзя (чинит другой исполнитель). Горизонтальный скролл же
+     собирается чистым CSS на существующей разметке: .week-root становится
+     единственным скролл-контейнером по обеим осям (вместо отдельного
+     .scroll только для вертикали), а .dayrow/.hours получают
+     position:sticky - без единой правки JS.
+     Высоту часа (--hh) сознательно НЕ меняю: tab-week.js считает позиции
+     событий через захардкоженную HH=52, синхронную только с базовым
+     --hh=52px. Смена --hh тут расфазировала бы сетку часов и блоки
+     событий на видимую величину. Долг: вынести HH в JS на чтение
+     getComputedStyle(--hh), тогда --hh можно будет спокойно уменьшать
+     на телефоне для более компактной сетки. */
+  :root{--gut:52px}
+  .week-root{overflow:auto;-webkit-overflow-scrolling:touch}
+  .scroll{overflow:visible}
+  /* Бэклог держим прижатым к низу и поверх сетки: при горизонтальном скролле
+     колонок он иначе уезжает влево и физически недостижим пальцем.
+     Дефект найден живой проверкой на 390px, чипы перекрывались слотами сетки. */
+  .backlog{position:sticky;left:0;bottom:0;z-index:30;width:100vw;max-width:100vw;
+           background:#fafafa;box-shadow:0 -2px 8px rgba(60,64,67,.16)}
+
+  .weekbar{flex-wrap:wrap;height:auto;padding:10px 12px;gap:8px 12px}
+  .range{font-size:16px}
+  .goal{flex:0 0 100%;max-width:100%;margin-left:0;text-align:left}
+  .legend{flex-wrap:nowrap;white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  .dayrow,.autorow,.grid{grid-template-columns:var(--gut) repeat(7,112px);width:max-content;min-width:100%}
+  .dayrow{position:sticky;top:0;z-index:20;background:#fff}
+  .dayrow .corner{position:sticky;left:0;z-index:22;background:#fff}
+  .autorow .lbl{position:sticky;left:0;z-index:8;background:#f8f9fa}
+  .hours{position:sticky;left:0;z-index:16;background:#fff}
+
+  /* заголовки блоков читаемы: перенос в 2 строки вместо «М...» -
+     дополняет уже существующий тап-открывает-карточку (openPanel в
+     tab-week.js уже показывает полное название) */
+  .ev .t{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.15}
+
+  .backlog{padding:10px 12px}
+
+  /* ---------- вкладка «Настройки»: поля в один столбец ---------- */
+  .settings-wrap{padding:16px}
+  .settings-wrap .field-row{flex-direction:column;gap:0}
+
+  /* ---------- вкладка «Трекеры»: tr-row2 (вечерний чек + сферы бок о бок)
+     физически не влезает в 390px - раскладываем в столбец и снимаем
+     фиксацию высоты по цепочке предков, чтобы вкладка просто
+     пролистывалась целиком. Классы .tr-* объявлены не здесь (инжект из
+     tab-track.js), поэтому единственный доступный рычаг - !important. */
+  .tr-root{overflow-y:auto !important;height:auto !important;min-height:100%}
+  .tr-body{overflow:visible !important;height:auto !important}
+  .tr-habits-block{max-height:none !important}
+  .tr-habits-wrap{max-height:48vh}
+  .tr-row2{display:block !important;height:auto !important;overflow:visible !important}
+  .tr-benchmark-block,.tr-spheres-block{width:100% !important;flex:none !important;height:auto !important;overflow:visible !important;margin-bottom:12px}
+  .tr-benchmark-wrap,.tr-spheres-wrap{max-height:none !important;overflow:visible !important}
+}

@@ -1,0 +1,27 @@
+{
+  "custom_gpt_url": "https://chatgpt.com/g/<АДРЕС-ТВОЕГО-GPT>",
+  "face_image": "",
+  "chrome_profile_dir": "~/.carousel-cdp-profile",
+  "cdp_url": "http://127.0.0.1:9222",
+  "queue_dir": "~/Desktop/Карусели-IvanOS/queue",
+  "output_dir": "~/Desktop/Карусели-IvanOS/output",
+  "archive_dir": "~/Desktop/Карусели-IvanOS/archive",
+  "log_file": "~/Desktop/Карусели-IvanOS/run.log",
+  "grab_mode": "apify",
+  "max_retries": 3,
+  "retry_delay_sec": 60,
+  "generation_timeout_sec": 600,
+  "poll_interval_sec": 5,
+  "parallel_slides": 2,
+  "engine": "codex",
+  "codex_lanes": 3,
+  "codex_attempts": 2,
+  "codex_timeout": 600,
+  "headless": false,
+  "chatgpt_plus_email": "",
+  "chatgpt_forbidden_emails": [],
+  "telegram": {
+    "bot_token_env": "TELEGRAM_BOT_TOKEN",
+    "user_id_env": "TELEGRAM_USER_ID"
+  }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1350px;
+    background: {{BACKGROUND_COLOR}};
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 100px;
+    overflow: hidden;
+  }
+  .step-number {
+    font-size: 220pt;
+    font-weight: 900;
+    color: {{ACCENT_COLOR}};
+    line-height: 0.85;
+    letter-spacing: -8px;
+  }
+  .step-divider {
+    width: 80px;
+    height: 6px;
+    background: #1a1a1a;
+    margin: 40px 0;
+  }
+  .step-headline {
+    font-size: 60pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.1;
+    margin-bottom: 40px;
+  }
+  .step-body {
+    font-size: 32pt;
+    font-weight: 400;
+    color: #3a3a3a;
+    line-height: 1.4;
+    max-width: 850px;
+  }
+  .step-counter {
+    position: absolute;
+    bottom: 60px;
+    right: 60px;
+    font-size: 24pt;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+  <div class="step-number">{{STEP_NUMBER}}</div>
+  <div class="step-divider"></div>
+  <div class="step-headline">{{STEP_HEADLINE}}</div>
+  <div class="step-body">{{STEP_BODY}}</div>
+  <div class="step-counter">{{COUNTER}}</div>
+</body>
+</html>

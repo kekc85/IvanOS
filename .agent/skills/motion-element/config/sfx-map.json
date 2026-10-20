@@ -1,0 +1,213 @@
+{
+  "version": 2,
+  "_note": "Слоёные compound-события (а не 1 файл на тег). Каждый слой ссылается на КАТЕГОРИЮ библиотеки — движок берёт вариацию из пула (round-robin, без немедленного повтора) + humanize. Библиотека: library_root из manifest.json (~/.business/assets/sfx-library). gain_db→linear: 10^(dB/20). offset_ms: 0 = кадр визуального хита, '-' = звук раньше. Стандарты — knowledge/sound-design-standards.md.",
+  "library_manifest": "~/.business/assets/sfx-library/manifest.json",
+  "global": {
+    "lead_in_ms": -15,
+    "humanize": {
+      "pitch_semitones": 0.4,
+      "timing_ms": 8,
+      "gain_db": 2.0
+    },
+    "rotation": "round_robin_no_immediate_repeat",
+    "sidechain_duck": {
+      "target": "music",
+      "reduction_db": -18,
+      "ratio": "4:1"
+    },
+    "loudness": {
+      "integrated_lufs": -14,
+      "true_peak_db": -1
+    }
+  },
+  "events": {
+    "element_pop": {
+      "energy": "small",
+      "rules": {
+        "no_sub": true
+      },
+      "variations": 5,
+      "layers": [
+        {
+          "cat": "pop",
+          "offset_ms": 0,
+          "gain_db": 0
+        },
+        {
+          "cat": "click",
+          "offset_ms": 0,
+          "gain_db": -4
+        },
+        {
+          "cat": "sparkle",
+          "offset_ms": 40,
+          "gain_db": -1,
+          "pitch": 5
+        },
+        {
+          "cat": "transient",
+          "offset_ms": 0,
+          "gain_db": -6
+        }
+      ]
+    },
+    "transition_whoosh": {
+      "energy": "medium",
+      "variations": 6,
+      "layers": [
+        {
+          "cat": "whoosh",
+          "offset_ms": -380,
+          "gain_db": -3
+        },
+        {
+          "cat": "sub",
+          "offset_ms": -120,
+          "gain_db": -9
+        },
+        {
+          "cat": "transient",
+          "offset_ms": 0,
+          "gain_db": -1
+        },
+        {
+          "cat": "sparkle",
+          "offset_ms": 0,
+          "gain_db": -4,
+          "pitch": 5
+        }
+      ]
+    },
+    "counter_tick": {
+      "energy": "small",
+      "variations": 4,
+      "per_step": [
+        {
+          "cat": "tick",
+          "offset_ms": 0,
+          "gain_db": -6,
+          "pitch_ramp": "+0.5_per_step"
+        }
+      ],
+      "final_step": [
+        {
+          "cat": "ding",
+          "offset_ms": 0,
+          "gain_db": 0
+        },
+        {
+          "cat": "sub",
+          "offset_ms": 0,
+          "gain_db": -7
+        }
+      ]
+    },
+    "ui_riser": {
+      "energy": "medium",
+      "variations": 4,
+      "layers": [
+        {
+          "cat": "riser",
+          "offset_ms": -500,
+          "gain_db": -10
+        },
+        {
+          "cat": "ding",
+          "offset_ms": 0,
+          "gain_db": -3
+        }
+      ]
+    },
+    "glitch_hit": {
+      "energy": "medium",
+      "variations": 5,
+      "layers": [
+        {
+          "cat": "glitch",
+          "offset_ms": 0,
+          "gain_db": -2
+        },
+        {
+          "cat": "transient",
+          "offset_ms": 0,
+          "gain_db": -4
+        }
+      ]
+    },
+    "climax_reveal": {
+      "energy": "large",
+      "variations": 8,
+      "pre_hit_vol_cut_db": -4,
+      "layers": [
+        {
+          "cat": "riser",
+          "offset_ms": -700,
+          "gain_db": -13
+        },
+        {
+          "cat": "impact",
+          "offset_ms": 0,
+          "gain_db": 0
+        },
+        {
+          "cat": "transient",
+          "offset_ms": 0,
+          "gain_db": -1
+        },
+        {
+          "cat": "sparkle",
+          "offset_ms": 30,
+          "gain_db": -1,
+          "pitch": 5
+        },
+        {
+          "cat": "sub",
+          "offset_ms": 0,
+          "gain_db": -8
+        }
+      ]
+    }
+  },
+  "template_profiles": {
+    "comment-pop": {
+      "per_event": "element_pop",
+      "climax": "climax_reveal"
+    },
+    "count-up-ticker": {
+      "stepped": "counter_tick",
+      "climax": "climax_reveal"
+    },
+    "kinetic-caption": {
+      "per_event": "element_pop",
+      "climax": "transition_whoosh"
+    },
+    "code-terminal": {
+      "per_event": "element_pop",
+      "climax": "transition_whoosh"
+    },
+    "before-after-wipe": {
+      "per_event": "transition_whoosh",
+      "climax": "climax_reveal"
+    },
+    "ui-comparison-bar": {
+      "per_event": "ui_riser",
+      "climax": "climax_reveal"
+    },
+    "chat-bubbles": {
+      "per_event": "element_pop",
+      "climax": "element_pop"
+    },
+    "scribble-callout": {
+      "per_event": "transition_whoosh",
+      "climax": "transition_whoosh"
+    },
+    "screen-zoom-punch": {
+      "per_event": "transition_whoosh",
+      "climax": "climax_reveal"
+    },
+    "price-odometer": {
+      "stepped": "counter_tick",
+      "climax": "climax_reveal"
+    }
+  }
+}

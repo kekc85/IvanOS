@@ -1,0 +1,18 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.bak
+node_modules/
+.DS_Store
+*.mp4
+*.mov
+*.mp3
+*.wav
+
+# бэкапы-страховки отката (лежат на диске, в репо не нужны)
+*.bak
+*.bak-*
+*.pre-rebuild-*

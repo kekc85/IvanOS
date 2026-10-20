@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1080px;
+    height: 1350px;
+    background: {{BACKGROUND_COLOR}};
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px;
+    overflow: hidden;
+  }
+  .hook-number {
+    font-size: 180pt;
+    font-weight: 900;
+    color: {{ACCENT_COLOR}};
+    line-height: 0.9;
+    margin-bottom: 30px;
+  }
+  .hook-text {
+    font-size: 72pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.05;
+    letter-spacing: -2px;
+  }
+  .hook-sub {
+    font-size: 36pt;
+    font-weight: 400;
+    color: #6a6a6a;
+    margin-top: 30px;
+    line-height: 1.2;
+  }
+  .corner-proof {
+    position: absolute;
+    bottom: 60px;
+    right: 60px;
+    font-size: 18pt;
+    color: #999;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+  <div class="hook-number">{{HOOK_NUMBER}}</div>
+  <div class="hook-text">{{HOOK_TEXT}}</div>
+  <div class="hook-sub">{{HOOK_SUB}}</div>
+  <div class="corner-proof">{{PROOF}}</div>
+</body>
+</html>

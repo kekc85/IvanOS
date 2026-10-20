@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      /* #screen = placeholder UI (заменяется на params.media_src как <img>/<video>). transform-origin наводится на target. */
+      #screen { position: absolute; left: 80px; right: 80px; top: 460px; bottom: 460px; background: #14161d; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+      .topbar { height: 70px; background: #1c1f28; display: flex; align-items: center; padding: 0 26px; gap: 12px; }
+      .tdot { width: 16px; height: 16px; border-radius: 50%; }
+      .ui { padding: 40px; }
+      .ln { height: 28px; background: #2a2e38; border-radius: 8px; margin-bottom: 22px; }
+      #btn { position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); background: #36c98e; color: #0a0a0a; font-size: 38px; font-weight: 800; padding: 22px 56px; border-radius: 16px; }
+      #mask { position: absolute; inset: 0; background: radial-gradient(circle at 50% 84%, rgba(0,0,0,0) 130px, rgba(0,0,0,.72) 260px); opacity: 0; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <div id="screen">
+        <div class="topbar"><span class="tdot" style="background:#ff5f56"></span><span class="tdot" style="background:#ffbd2e"></span><span class="tdot" style="background:#27c93f"></span></div>
+        <div class="ui"><div class="ln" style="width:70%"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:55%"></div><div class="ln" style="width:80%"></div></div>
+        <div id="btn" data-sfx="impact" data-sfx-at="punch">Accept</div>
+        <div id="mask"></div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      // punch-in: scale up the screen with origin near the button + dim mask spotlight
+      gsap.set("#screen", { transformOrigin: "50% 84%" });
+      tl.add("punch", 0.8);
+      tl.to("#screen", { scale: 1.7, duration: 1.0, ease: "power3.inOut" }, "punch");
+      tl.to("#mask", { opacity: 1, duration: 0.8 }, "punch+=0.2");
+      tl.fromTo("#btn", { scale: 1 }, { scale: 1.12, duration: 0.22, ease: "back.out(2)", yoyo: true, repeat: 1 }, "punch+=0.9");
+      // hold then ease back
+      tl.to("#screen", { scale: 1.7, duration: 1.2 }, "punch+=1.0");
+      tl.to({}, { duration: 1.0 }, 3.8);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

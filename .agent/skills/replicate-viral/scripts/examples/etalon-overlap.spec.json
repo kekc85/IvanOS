@@ -1,0 +1,70 @@
+{
+  "scene_id": "etalon-overlap",
+  "duration": 5,
+  "background": "grid-floor",
+  "family": "overlap-card",
+  "layers": [
+    {
+      "block": "K3-overlap-card-avatar",
+      "z": 1,
+      "params": {
+        "card_video_src": "~/.business/growth/assets/footage/opal/raw/E0hrcDO3Noc_Introducing_Opal.mp4",
+        "avatar_video_src": "~/.business/growth/assets/motion-blocks/K-split-screen/K3-overlap-card-avatar/avatar_seg.mp4",
+        "avatar_cutout_src": "~/.business/growth/assets/motion-blocks/K-split-screen/K3-overlap-card-avatar/avatar_cutout.webm"
+      }
+    },
+    {
+      "block": "J5-word-stream-whisper-sync",
+      "z": 5,
+      "font_role": "impact",
+      "params": {
+        "words": "[{\"t\": \"ВАЙБ\", \"s\": 0.2, \"e\": 1.2}, {\"t\": \"КОДИНГ\", \"s\": 1.2, \"e\": 2.2, \"gold\": true}, {\"t\": \"ОДИН\", \"s\": 2.2, \"e\": 3.1}, {\"t\": \"КЛИК\", \"s\": 3.1, \"e\": 4.6, \"gold\": true}]",
+        "accent_color": "#E0A53D",
+        "base_color": "#ffffff",
+        "top": 620,
+        "duration": 5
+      }
+    },
+    {
+      "block": "A18-title-strap-caps",
+      "z": 6,
+      "font_role": "sans-strap",
+      "params": {
+        "text": "VIBE CODING DEMO",
+        "top": 320,
+        "letter_spacing": 18,
+        "color": "#ffffff"
+      }
+    }
+  ],
+  "sfx": [
+    {
+      "t": 0.15,
+      "category": "whoosh",
+      "volume": 0.16
+    },
+    {
+      "t": 2.0,
+      "category": "pop",
+      "volume": 0.15
+    },
+    {
+      "t": 4.2,
+      "category": "ding",
+      "volume": 0.16
+    }
+  ],
+  "overrides": [
+    {
+      "field": "layers[0].block",
+      "value": "K3-overlap-card-avatar",
+      "why": "K3 self-contained несёт floor+card+avatar overlap как hero-слой; отдельный E5 под непрозрачным K3 не виден — фон grid-floor рисует сам K3"
+    },
+    {
+      "field": "layers[A18].params.top",
+      "value": 320,
+      "why": "A18 strap top=320 (в safe-zone y>300) — top=40 давал C2 FAIL (cut-zone y<300)"
+    }
+  ],
+  "_note_asset": "card_video_src перенаведён по решению автора: прежний freepik-spaces/WmdkABEq3cs пропал с диска, golden-якорь был вечно красным (FAIL: сборка не дала index.html). Взят живой ассет из библиотеки футажа."
+}

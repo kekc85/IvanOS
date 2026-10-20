@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>Framework Numbered (LinkedIn P5)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-dark: #1a1a1a;
+    --brand-text-mid: #4a4a4a;
+    --canvas-bg: #fafaf7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', 'Söhne', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    background: var(--canvas-bg);
+    padding: 80px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .meta-author {
+    font-size: 22px;
+    color: var(--brand-text-mid);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .meta-author strong {
+    color: var(--brand-text-dark);
+    font-weight: 700;
+  }
+
+  .meta-step {
+    color: var(--brand-primary);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .step-number {
+    color: var(--brand-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 240px;
+    font-weight: 900;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    color: var(--brand-text-dark);
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+    max-width: 880px;
+  }
+
+  .step-body {
+    color: var(--brand-text-dark);
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.45;
+    margin-bottom: 32px;
+    max-width: 880px;
+  }
+
+  .step-body strong {
+    background: linear-gradient(180deg, transparent 65%, var(--brand-primary) 65%, var(--brand-primary) 90%, transparent 90%);
+    padding: 0 4px;
+    font-weight: 700;
+  }
+
+  .inline-metric {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 14px 24px;
+    background: var(--brand-text-dark);
+    color: #ffffff;
+    border-radius: 6px;
+    margin-top: 8px;
+  }
+
+  .inline-metric .number {
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .inline-metric .label {
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  .sub-points {
+    margin-top: 20px;
+    list-style: none;
+  }
+
+  .sub-points li {
+    color: var(--brand-text-mid);
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.4;
+    padding-left: 32px;
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .sub-points li::before {
+    content: '↳';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--brand-primary);
+    font-weight: 700;
+  }
+
+  .bottom-bar {
+    margin-top: auto;
+    padding-top: 32px;
+    border-top: 2px solid var(--brand-text-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand-handle {
+    color: var(--brand-text-dark);
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .swipe-cue {
+    color: var(--brand-primary);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="top-meta">
+      <span class="meta-author"><strong>{{author_name}}</strong> · {{author_role}}</span>
+      <span class="meta-step">{{step_meta}}</span>
+    </div>
+
+    <div class="step-number">{{step_number}}</div>
+    <h1 class="step-title">{{step_title}}</h1>
+    <p class="step-body">{{step_body_html}}</p>
+
+    {{inline_metric_html}}
+    {{sub_points_html}}
+
+    <div class="bottom-bar">
+      <span class="brand-handle">{{brand_handle}}</span>
+      <span class="swipe-cue">{{swipe_cue}}</span>
+    </div>
+  </div>
+</body>
+</html>

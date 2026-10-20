@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      #wrap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; }
+      #label { font-size: 44px; font-weight: 600; color: #9aa3b2; letter-spacing: 2px; text-transform: uppercase; opacity: 0; margin-bottom: 30px; }
+      #num { font-size: 220px; font-weight: 900; color: #fff; line-height: 1; text-shadow: 0 0 60px rgba(79,140,255,.5); }
+      #num .pre, #num .suf { color: #4f8cff; }
+      #old { font-size: 70px; font-weight: 700; color: #6b7280; text-decoration: line-through; margin-top: 24px; opacity: 0; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <div id="wrap">
+        <div id="label">MRR клуба</div>
+        <div id="num" data-sfx="tick" data-sfx-at="roll"><span class="pre">$</span><span id="val">0</span></div>
+        <div id="old">было $0</div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const FROM = 0, TO = 9700;
+      const fmt = (n) => Math.round(n).toLocaleString("ru-RU");
+      const valEl = document.getElementById("val");
+
+      tl.to("#label", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+
+      // Number roll: driven by timeline progress (progress-driven) → seek-exact on render.
+      tl.add("roll", 0.6);
+      const counter = { v: FROM };
+      tl.to(counter, {
+        v: TO, duration: 3.2, ease: "power2.out",
+        onUpdate: () => { valEl.textContent = fmt(counter.v); }
+      }, "roll");
+
+      // Punch + glow on settle, strikethrough old price.
+      tl.add("settle", "roll+=3.2");
+      tl.fromTo("#num", { scale: 1 }, { scale: 1.12, duration: 0.18, ease: "back.out(3)" }, "settle");
+      tl.to("#num", { scale: 1, duration: 0.3, ease: "power2.out" }, "settle+=0.18");
+      tl.to("#old", { opacity: 1, y: 0, duration: 0.5 }, "settle+=0.1");
+
+      tl.to("#root", { opacity: 1, duration: 1.4 }, 4.4); // hold to read
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

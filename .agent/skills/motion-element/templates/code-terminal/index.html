@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: "JetBrains Mono", monospace; }
+      #term { position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%);
+        background: #12141a; border-radius: 28px; box-shadow: 0 30px 80px rgba(0,0,0,.55); overflow: hidden; }
+      .bar { height: 84px; background: #1b1e27; display: flex; align-items: center; gap: 16px; padding: 0 34px; }
+      .dot { width: 24px; height: 24px; border-radius: 50%; }
+      .body { padding: 44px 40px; font-size: 42px; line-height: 1.5; color: #d7dae2; min-height: 540px; }
+      .line { white-space: pre-wrap; }
+      .prompt { color: #4f8cff; } .cmd { color: #fff; } .out { color: #36c98e; }
+      .type { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; }
+      #caret { display: inline-block; width: 18px; height: 46px; background: #4f8cff; vertical-align: middle; margin-left: 4px; opacity: 1; }
+      .out, #out2 { opacity: 0; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; font-family: Inter, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="7" data-width="1080" data-height="1920">
+      <div id="term">
+        <div class="bar"><span class="dot" style="background:#ff5f56"></span><span class="dot" style="background:#ffbd2e"></span><span class="dot" style="background:#27c93f"></span></div>
+        <div class="body">
+          <div class="line"><span class="prompt">claude&gt;</span> <span class="cmd type" id="cmd" data-sfx="typewriter" data-sfx-at="type"></span><span id="caret"></span></div>
+          <div class="line out" id="out1" data-sfx="whoosh" data-sfx-at="run">✓ собрал лендинг за 18s</div>
+          <div class="line out" id="out2">✓ deploy → https://ivan.app</div>
+        </div>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const text = "собери мне лендинг под запуск";
+      const cmd = document.getElementById("cmd");
+
+      // Type-on: width-of-substring driven by progress (progress-driven). Reveal chars by slicing on onUpdate.
+      tl.add("type", 0.3);
+      const o = { n: 0 };
+      tl.to(o, { n: text.length, duration: 2.0, ease: "none",
+        onUpdate: () => { cmd.textContent = text.slice(0, Math.round(o.n)); } }, "type");
+
+      // caret blink (deterministic: stepped opacity on a repeating sub-tween is fine for seek)
+      tl.to("#caret", { opacity: 0, duration: 0.45, repeat: 6, yoyo: true, ease: "steps(1)" }, 0);
+
+      // run → outputs appear
+      tl.add("run", "type+=2.2");
+      tl.to("#caret", { opacity: 0, duration: 0.1 }, "run");
+      tl.fromTo("#out1", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, "run+=0.1");
+      tl.fromTo("#out2", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.4 }, "run+=0.6");
+      tl.to("#term", { opacity: 1, duration: 1.6 }, 5.2);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

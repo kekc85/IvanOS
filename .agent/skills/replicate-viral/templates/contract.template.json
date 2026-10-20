@@ -1,0 +1,52 @@
+{
+  "_doc": "FROZEN COMPOSITION CONTRACT — выведен ИЗМЕРЕНИЕМ оригинала DXBt1opjDH2 (face-detect покадрово, 2026-06-15), не выдуман. Деконструкция КОПИРУЕТ шаблон в <project>/contract.json и заполняет per-act числа замером ingest-кадров. composition-gate.py сверяет ПИКСЕЛИ текущего рендера с этим контрактом каждый прогон. Координаты 1080x1920.",
+
+  "layout_system": "UI_HERO_FACECAM_INSET",
+  "_layout_doc": "ЗАМЕР: сайты/UI = ГЕРОЙ, заполняют ~82-100% кадра КАЖДЫЙ бит, всегда в движении, присутствуют весь ролик. Спикер = МАЛЕНЬКАЯ face-cam врезка (face ~317-324px шир ~30% ширины, face area ~5%, person <=~18%) в углу/у края; появляется лишь в части актов (хук bottom, CTA corner), в UI-демо актах (t=5.5-22.5 оригинала лиц НЕТ) ОТСУТСТВУЕТ. НЕ talking-head-доминанта, НЕ верх/низ сплит, НЕ спикер на пол-кадра.",
+
+  "frame": {"w": 1080, "h": 1920, "fps": 30},
+
+  "ui_hero": {
+    "_doc": "Сайт/UI — главный визуал, во весь кадр (hero). Замер: покрытие ~82-100% каждый бит, motion 9.5-46 px/s.",
+    "min_coverage_frac": 0.82,
+    "must_be_present_every_act": true,
+    "motion_floor": 1.5,
+    "_motion_note": "Средний межкадровый diff в hero-зоне >= floor. Статичный скрин = FAIL. Per-act для тонкой UI-анимации (печать/курсор) можно понизить до 0.4, ЗАМЕРИВ ref."
+  },
+
+  "facecam_inset": {
+    "_doc": "Спикер — маленькая врезка в углу. Опционален по акту (в UI-демо актах отсутствует).",
+    "optional_per_act": true,
+    "max_face_area_frac": 0.09,
+    "max_person_area_frac": 0.18,
+    "forbid_dominant": true,
+    "_forbid_doc": "person_area > max_person_area_frac ИЛИ спикер full-bleed/полу-кадра карточкой снизу = FAIL. Это дефект, который бил автор: аватар-доминанта вместо сайта-героя.",
+    "allowed_positions": ["bottom-center", "bottom-right", "top-right", "corner"],
+    "_cutout_note": "Чистая вырезка person, посадить МЕЛКО в угол (мелкая врезка прощает огрехи кромки лучше крупной). На V4 full-frame футаже допустимо. Будущее — V5 medium-shot,."
+  },
+
+  "caption_zone": {
+    "_doc": "Жёлтые/белые callout-подписи (цена, лейблы) поверх сайтов. Никогда не на лице врезки.",
+    "color": ["#f7c204", "#ffffff"],
+    "y0": 640,
+    "y1": 1760,
+    "never_on_facecam_face": true
+  },
+
+  "invariants": [
+    "UI/сайт = hero-слой, покрывает >= ui_hero.min_coverage_frac кадра КАЖДЫЙ акт",
+    "person (если есть в акте) = маленькая врезка person_area <= facecam_inset.max_person_area_frac в углу/у края",
+    "ЗАПРЕЩЕНО: спикер-доминанта / full-frame talking-head как основной слой / спикер в нижней полосе-карточке на пол-кадра",
+    "ЗАПРЕЩЕНО: сайт зажат в под-область (верхняя треть/полоса) — сайт обязан быть hero во весь кадр",
+    "сайт/UI всегда в движении (motion_floor)",
+    "подпись никогда не на лице врезки"
+  ],
+
+  "acts": [
+    {"_doc": "ШАБЛОН — деконструкция ЗАПОЛНЯЕТ per-act замером ingest-кадров (measured_from обязателен). Числа ниже = пример из замера оригинала, НЕ финал.",
+     "name": "hook",   "t0": 0.0,  "t1": 7.0,  "ui_hero_box": [0,0,1080,1920], "facecam": {"present": true,  "box": [382,1045,699,1500], "pos": "bottom-center"}, "caption_window": [[640,760]],  "measured_from": "ingest f@1.0s"},
+    {"name": "steps",  "t0": 7.0,  "t1": 24.0, "ui_hero_box": [0,0,1080,1920], "facecam": {"present": false},                                              "caption_window": [[1500,1700]], "measured_from": "ingest f@13.0s (нет лица)"},
+    {"name": "result", "t0": 24.0, "t1": 30.0, "ui_hero_box": [0,0,1080,1920], "facecam": {"present": false},                                              "caption_window": [[1500,1700]], "measured_from": "ingest f@22.5s (нет лица)"},
+    {"name": "cta",    "t0": 30.0, "t1": 34.0, "ui_hero_box": [0,0,1080,1920], "facecam": {"present": true,  "box": [402,482,726,1100], "pos": "top-right"},  "caption_window": [[1500,1700]], "measured_from": "ingest f@27.5s"}
+  ]
+}

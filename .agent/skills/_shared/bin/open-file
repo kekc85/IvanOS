@@ -1,0 +1,46 @@
+#!/bin/sh
+# open-file — cross-platform "open this artifact in the OS default app".
+#
+# Usage: open-file <path>
+#   macOS  -> open <path>
+#   Linux  -> xdg-open <path>  (falls back to gio/gnome-open/kde-open)
+#   Windows (Git-Bash/MSYS/Cygwin) -> start <path>  (cmd builtin)
+#
+# Opens the given file/URL with the right OS command so a skill never has to
+# hardcode the macOS-only `open`. Mirrors open-file.cmd for native Windows shells.
+set -eu
+
+if [ "$#" -lt 1 ]; then
+  echo "usage: open-file <path-or-url>" >&2
+  exit 2
+fi
+
+target=$1
+
+# Detect platform: prefer uname, fall back for Windows POSIX shells.
+uname_s=$(uname -s 2>/dev/null || echo unknown)
+
+case "$uname_s" in
+  Darwin)
+    exec open "$target"
+    ;;
+  Linux)
+    if command -v xdg-open >/dev/null 2>&1; then exec xdg-open "$target"; fi
+    if command -v gio >/dev/null 2>&1; then exec gio open "$target"; fi
+    if command -v gnome-open >/dev/null 2>&1; then exec gnome-open "$target"; fi
+    if command -v kde-open >/dev/null 2>&1; then exec kde-open "$target"; fi
+    echo "open-file: no opener found (install xdg-utils)" >&2
+    exit 1
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    # Windows POSIX shells: `cmd /c start` opens with the default app.
+    exec cmd //c start "" "$target"
+    ;;
+  *)
+    # Last resort: macOS-style open if present, else xdg-open.
+    if command -v open >/dev/null 2>&1; then exec open "$target"; fi
+    if command -v xdg-open >/dev/null 2>&1; then exec xdg-open "$target"; fi
+    echo "open-file: unsupported platform ($uname_s)" >&2
+    exit 1
+    ;;
+esac

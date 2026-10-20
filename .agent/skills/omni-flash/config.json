@@ -1,0 +1,16 @@
+{
+  "_comment": "Target = Google Flow (labs.google/flow), Gemini Omni Flash. BYOA: ученик сам поднимает СВОЙ залогиненный CDP-Chrome (порт 9222) на СВОЁМ Google-аккаунте, скилл только connect_over_cdp. cdp_url аккаунт-агностичен - не менять. Селекторы заполняются после `omni_driver.py probe` на живом DOM Flow - сейчас это ГИПОТЕЗЫ, требуют probe.",
+  "cdp_url": "http://localhost:9222",
+  "flow_url": "https://labs.google/flow",
+  "page_settle_sec": 6,
+  "upload_settle_sec": 8,
+  "generation_timeout_sec": 300,
+  "poll_interval_sec": 5,
+  "selectors": {
+    "_status": "UNVERIFIED - заполнить из probe-вывода до первого run",
+    "file_input": "input[type=file]",
+    "editor": "textarea, div[contenteditable=\"true\"], div.ProseMirror",
+    "submit": "button[aria-label*=\"enerate\" i]:not([disabled]), button[type=\"submit\"]:not([disabled])",
+    "result_video": "video[src], video source[src], a[download]"
+  }
+}

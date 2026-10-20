@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Установка с нуля: Claude Code из России за один вечер</title>
+<meta name="description" content="Пошаговая установка с нуля для новичка: где взять готовый аккаунт Claude и оплатить российской картой, как поставить VS Code и расширение Claude. Каждый шаг по скриншотам и с анимацией, куда именно нажимать. Без терминала и без программирования." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400..600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { paper:'#FAF6EF', panel:'#F3ECE0', card:'#FFFFFF', ink:'#1C1815', muted:'#6E6358', line:'#E4DACB', accent:'#BE4A24', amber:'#C98A3C' },
+  fontFamily: { display:['Fraunces','serif'], body:['Newsreader','serif'], mono:['"JetBrains Mono"','monospace'] },
+}}}
+</script>
+<style>
+  html{scroll-behavior:smooth;overflow-x:hidden} body{background:#FAF6EF;color:#1C1815;overflow-x:hidden}
+  h1,h2,h3{text-wrap:balance;overflow-wrap:break-word}
+  @media (max-width:480px){h1.hero-h1{font-size:1.95rem;line-height:1.12}}
+  .eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:.7rem}
+  .rule{height:1px;background:#E4DACB}
+  .ln{position:relative;text-decoration:none}.ln::after{content:'';position:absolute;left:0;bottom:-2px;height:1px;width:0;background:#BE4A24;transition:width .3s}.ln:hover::after{width:100%}
+  .prose-ru{font-size:1.15rem;line-height:1.65}.prose-ru p{margin-top:1rem}
+  .repo{font-family:'JetBrains Mono',monospace}
+  .toolnum{font-family:'JetBrains Mono',monospace;color:#BE4A24;font-weight:700;font-size:.78rem;letter-spacing:.1em}
+  .codebox{background:#0E0D0C;color:#D7D0C4;border:1px solid #2A2724;border-radius:.75rem}
+  .codebox pre{white-space:pre-wrap;word-break:break-word;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.6}
+  .codebox .cmt{color:#7E8A82}
+  .copybtn{transition:background-color .2s,color .2s,border-color .2s}
+  .copybtn:hover{background:#BE4A24;color:#FAF6EF;border-color:#BE4A24}
+  .copybtn.copied{background:#2F7D54;color:#fff;border-color:#2F7D54}
+  .note{background:#F3ECE0;border-left:3px solid #C98A3C;border-radius:.5rem}
+  .warn{background:#F7ECE6;border-left:3px solid #BE4A24;border-radius:.5rem}
+  .tag{background:#F3ECE0;border:1px solid #E4DACB;border-radius:.4rem;font-family:'JetBrains Mono',monospace;font-size:.72rem}
+  .freecard{background:#FFFFFF;border:1px solid #E4DACB;border-radius:1rem}
+  table.fix{width:100%;border-collapse:collapse;font-size:.98rem}
+  table.fix th{text-align:left;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#6E6358;padding:.6rem .8rem;border-bottom:1px solid #E4DACB}
+  table.fix td{padding:.7rem .8rem;border-bottom:1px solid #EFE6D7;vertical-align:top;color:#2A241F}
+  table.fix tr:last-child td{border-bottom:none}
+
+  /* === микрошаги === */
+  .micro{counter-reset:micro;list-style:none;padding:0;margin:1.25rem 0}
+  .micro>li{position:relative;padding-left:3rem;min-height:2rem;margin-top:1rem}
+  .micro>li::before{counter-increment:micro;content:counter(micro);position:absolute;left:0;top:-2px;width:2rem;height:2rem;border-radius:50%;background:#BE4A24;color:#FAF6EF;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.95rem;display:flex;align-items:center;justify-content:center}
+  .micro>li b{color:#1C1815}
+
+  /* === реальные скрины с указателями === */
+  figure.shot{position:relative;display:block;border:1px solid #E4DACB;border-radius:.9rem;overflow:hidden;box-shadow:0 14px 34px -16px rgba(28,24,21,.4);background:#fff;margin:1.4rem 0 .4rem}
+  .shot-frame{position:relative;display:block;line-height:0;font-size:0}
+  figure.shot img{display:block;width:100%;height:auto}
+  figure.shot figcaption{font-size:.85rem;color:#6E6358;padding:.55rem .85rem;border-top:1px solid #EFE6D7;background:#FBF7F0}
+  .ring{position:absolute;transform:translate(-50%,-50%);border:3px solid #BE4A24;border-radius:999px;box-shadow:0 0 0 4px rgba(190,74,36,.18);animation:ringPulse 1.5s ease-in-out infinite;pointer-events:none;z-index:3}
+  @keyframes ringPulse{0%,100%{box-shadow:0 0 0 4px rgba(190,74,36,.10);opacity:1}50%{box-shadow:0 0 0 12px rgba(190,74,36,0);opacity:.78}}
+  .pin{position:absolute;transform:translate(-50%,-50%);background:#BE4A24;color:#FAF6EF;font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;padding:.22rem .55rem;border-radius:.45rem;white-space:nowrap;box-shadow:0 4px 12px -3px rgba(28,24,21,.55);z-index:4}
+
+  /* === анимированный UI: окно VS Code === */
+  .vsc{position:relative;border-radius:.9rem;overflow:hidden;border:1px solid #2A2724;background:#1e1e1e;color:#cfcfcf;box-shadow:0 18px 44px -18px rgba(0,0,0,.55);margin:1.4rem 0 .4rem;font-family:'JetBrains Mono',monospace}
+  .vsc-top{height:34px;background:#323233;display:flex;align-items:center;gap:7px;padding:0 13px}
+  .vsc-dot{width:11px;height:11px;border-radius:50%}
+  .vsc-wrap{display:flex;min-height:300px}
+  .vsc-act{width:54px;flex:none;background:#333334;display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px 0}
+  .vsc-ico{width:24px;height:24px;color:#7c7c7c;position:relative}
+  .vsc-ico svg{width:100%;height:100%;display:block;fill:none;stroke:currentColor;stroke-width:1.7}
+  .vsc-ico.on{color:#fff;position:relative}
+  .vsc-ico.on::before{content:'';position:absolute;left:-15px;top:-3px;bottom:-3px;width:2px;background:#fff}
+  .vsc-side{flex:1;min-width:0;background:#252526;padding:14px}
+  .vsc-search{background:#3c3c3c;border:1px solid #6a6a6a;border-radius:5px;padding:8px 10px;font-size:13px;color:#e8e8e8;display:flex;align-items:center}
+  .vsc-caret{display:inline-block;width:1px;height:14px;background:#e8e8e8;margin-left:1px;animation:caret 1.05s step-end infinite;vertical-align:middle}
+  @keyframes caret{50%{opacity:0}}
+  .vsc-card{position:relative;margin-top:13px;background:#2d2d2e;border:1px solid #3d3d3e;border-radius:7px;padding:11px;display:flex;gap:11px;align-items:flex-start}
+  .vsc-logo{width:36px;height:36px;border-radius:8px;background:#BE4A24;flex:none;display:flex;align-items:center;justify-content:center}
+  .vsc-logo svg{width:24px;height:24px}
+  .vsc-name{color:#fff;font-size:13px;font-weight:700;line-height:1.2}
+  .vsc-pub{font-size:11.5px;color:#cfcfcf;margin-top:3px;display:flex;align-items:center;gap:5px}
+  .vsc-badge{color:#3aa0ff}
+  .vsc-desc{font-size:10.5px;color:#9a9a9a;margin-top:5px}
+  .vsc-install{margin-top:9px;display:inline-block;background:#2ea043;color:#fff;font-size:12px;font-weight:700;padding:6px 16px;border-radius:5px;position:relative}
+  .vsc-install.press{animation:press 9s ease-in-out infinite}
+  @keyframes press{0%,60%,72%,100%{transform:scale(1);filter:brightness(1)}65%{transform:scale(.94);filter:brightness(1.25)}}
+  .vsc-main{flex:1.4;background:#1e1e1e;display:none;padding:16px;color:#5a5a5a;font-size:11px;line-height:1.9}
+  @media(min-width:680px){.vsc-main{display:block}}
+  /* пульсирующие кольца-указатели поверх мока */
+  .vsc-pt{position:absolute;transform:translate(-50%,-50%);border:2.5px solid #ffd23f;border-radius:50%;z-index:6;pointer-events:none;animation:ringPulseY 1.5s ease-in-out infinite}
+  @keyframes ringPulseY{0%,100%{box-shadow:0 0 0 3px rgba(255,210,63,.10);opacity:1}50%{box-shadow:0 0 0 11px rgba(255,210,63,0);opacity:.7}}
+  .vsc-num{position:absolute;transform:translate(-50%,-50%);background:#ffd23f;color:#1C1815;font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:7;box-shadow:0 3px 8px -2px rgba(0,0,0,.6)}
+  /* летающий курсор */
+  .vsc-cursor{position:absolute;left:0;top:0;width:26px;height:26px;z-index:8;filter:drop-shadow(0 2px 3px rgba(0,0,0,.7));animation:vscCursor 9s cubic-bezier(.55,.06,.3,1) infinite;will-change:left,top}
+  @keyframes vscCursor{
+    0%{left:58%;top:24%}
+    14%{left:6%;top:56%}
+    30%{left:6%;top:56%}
+    33%{left:6.6%;top:57%}
+    36%{left:6%;top:56%}
+    52%{left:23%;top:61%}
+    63%{left:23%;top:61%}
+    66%{left:23.6%;top:62%}
+    69%{left:23%;top:61%}
+    100%{left:58%;top:24%}
+  }
+  /* кольца-указатели, привязанные прямо к элементам (точно на цель) */
+  .ring-y{position:absolute;border:2.6px solid #ffd23f;border-radius:50%;pointer-events:none;animation:ringPulseY 1.5s ease-in-out infinite;z-index:6}
+  .num-y{position:absolute;background:#ffd23f;color:#1C1815;font-weight:700;font-size:12px;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:7;box-shadow:0 3px 8px -2px rgba(0,0,0,.6);font-family:'JetBrains Mono',monospace}
+  .vsc-installwrap{position:relative;display:inline-block;margin-top:9px}
+  .vsc-installwrap .vsc-install{margin-top:0}
+  .vsc-cap{display:flex;gap:8px;flex-wrap:wrap;background:#252526;border-top:1px solid #3a3a3a;padding:10px 13px}
+  .vsc-cap span{font-size:11.5px;color:#9a9a9a;display:flex;align-items:center;gap:6px}
+  .vsc-cap b{color:#ffd23f}
+
+  /* === окно установщика дистрибутива === */
+  .term{position:relative;border-radius:.9rem;overflow:hidden;border:1px solid #2A2724;background:#0E0D0C;color:#D7D0C4;box-shadow:0 18px 44px -18px rgba(0,0,0,.55);margin:1.4rem 0 .4rem;font-family:'JetBrains Mono',monospace}
+  .term-top{height:34px;background:#1c1b1a;display:flex;align-items:center;gap:7px;padding:0 13px}
+  .term-body{padding:16px 18px;font-size:12.5px;line-height:1.85}
+  .term-body .ok{color:#5fd38d}
+  .term-body .dim{color:#7E8A82}
+  .term-body .hl{color:#ffd23f}
+  .term-cur{display:inline-block;width:8px;height:14px;background:#5fd38d;margin-left:2px;animation:caret 1.05s step-end infinite;vertical-align:middle}
+
+  
+  .obs{border-radius:.9rem;overflow:hidden;border:1px solid #2a2740;background:#1e1b2e;box-shadow:0 18px 44px -18px rgba(0,0,0,.55);margin:1.4rem 0 .4rem;font-family:'JetBrains Mono',monospace}
+  .obs-top{height:34px;background:#27243b;display:flex;align-items:center;gap:7px;padding:0 13px}
+  .obs-wrap{display:flex;min-height:240px}
+  .obs-side{width:200px;flex:none;background:#211d33;border-right:1px solid #322c4d;padding:14px;color:#b6abd6;font-size:12px;line-height:2}
+  .obs-side .fold{color:#cdb4ff}
+  .obs-main{flex:1;padding:22px;color:#d8d0ee;font-size:13px;line-height:1.7;background:#1e1b2e}
+  .obs-main h4{color:#fff;font-size:16px;font-weight:700;margin-bottom:8px;font-family:'Fraunces',serif}
+
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .rise{opacity:0;animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}.d1{animation-delay:.05s}.d2{animation-delay:.16s}.d3{animation-delay:.27s}
+  @media (prefers-reduced-motion:reduce){
+    .rise{animation:none;opacity:1;transform:none}
+    .ring,.pin,.vsc-pt,.vsc-num,.ring-y,.num-y{animation:none}
+    .vsc-cursor,.vsc-install.press,.vsc-caret,.term-cur{animation:none}
+    .vsc-cursor{left:24%;top:73%}
+  }
+</style>
+</head>
+<body class="font-body antialiased">
+
+<header class="sticky top-0 z-40 bg-paper/85 backdrop-blur border-b border-line">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#" class="font-display text-xl font-semibold tracking-tight">Установка системы</a>
+    <nav class="flex items-center gap-6 text-[15px]">
+      <a href="#shag-1" class="ln hidden sm:inline text-ink/80 hover:text-ink">С начала</a>
+      
+      
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="mx-auto max-w-3xl px-5 sm:px-8 pt-8"><p class="font-mono text-xs text-muted">Старт · Установка с нуля</p></div>
+
+  <!-- HERO -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 pt-8 sm:pt-10 pb-4">
+    <p class="eyebrow font-mono text-accent rise d1">Старт · Claude Code</p>
+    <h1 class="hero-h1 rise d2 font-display font-light leading-[1.07] tracking-tight mt-4 text-[2.2rem] sm:text-[3.1rem]">Установка с нуля: Claude Code из России за один вечер</h1>
+    <p class="rise d3 mt-6 prose-ru text-muted">Это пошаговая инструкция с нуля. На каждый шаг живой скриншот и анимация, где красным кольцом показано, куда именно нажимать. Заблудиться негде. К концу вечера у тебя на компьютере стоит Claude с оплаченной подпиской, и ты своими словами собрал им первую страницу. Без терминала и без программирования, английский тоже не нужен. Полтора часа времени, обычный Mac или Windows, и ты внутри</p>
+  </section>
+
+  <!-- ЧТО СОБИРАЕМ -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="eyebrow font-mono text-accent">Что это вообще такое</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-3">Не чат с вопросами, а сотрудник, который делает работу</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Большинство людей знают Claude как чат: задал вопрос, получил ответ. Это процентов пять его силы. Claude Code это та же модель, только она живёт у тебя на компьютере и умеет делать. Ставишь задачу обычными словами на русском, и он сам пишет, собирает, складывает файлы и показывает результат</p>
+      <p>Поэтому я и называю это не «нейросетью», а сотрудником. Ты не пишешь код и не учишь команды. Ты объясняешь словами, что нужно, как объяснил бы человеку. Сегодня мы пройдём весь путь: поставим этого сотрудника на твой компьютер и тут же дадим первое задание, чтобы ты своими глазами увидел, что всё работает</p>
+    </div>
+    <div class="note p-4 mt-6"><p class="text-sm text-ink/80">Как читать гайд: красное кольцо на скриншоте и жёлтое кольцо в анимации это «нажми сюда». Просто повторяй за картинкой, шаг за шагом. Не торопись, ничего сломать нельзя</p></div>
+  </section>
+
+  <!-- ИЗ ЧЕГО СОСТОИТ ВЕЧЕР -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="eyebrow font-mono text-accent">Карта вечера</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-3">Весь маршрут на одной странице</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Чтобы ты держал картинку целиком, вот весь маршрут. Ставим самого Claude: аккаунт с подпиской, программа VS Code, расширение Claude, русский интерфейс, вход и первая страница, собранная одним предложением. Семь шагов, каждый по скриншоту</p>
+    </div>
+    
+  </section>
+
+  <!-- ЧТО ПОНАДОБИТСЯ -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="eyebrow font-mono text-accent">Перед стартом</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-3">Что понадобится</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Всё, что нужно, у тебя либо уже есть, либо стоит как пара чашек кофе в месяц</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3 mt-6">
+      <div class="freecard p-4"><p class="font-display text-lg">Компьютер</p><p class="text-sm text-ink/75 mt-1">Mac или Windows, обычный, не игровой. Телефон не подойдёт, нужна именно машина-компьютер</p></div>
+      <div class="freecard p-4"><p class="font-display text-lg">Около полутора часов</p><p class="text-sm text-ink/75 mt-1">Один спокойный вечер. Все шаги это скачать, нажать, вставить по картинкам</p></div>
+      <div class="freecard p-4"><p class="font-display text-lg">Две бесплатные программы</p><p class="text-sm text-ink/75 mt-1">VS Code и расширение Claude. Оба ставятся как обычное приложение</p></div>
+      <div class="freecard p-4"><p class="font-display text-lg">Одна подписка</p><p class="text-sm text-ink/75 mt-1">Аккаунт Claude с подпиской, оплачивается российской картой. Как именно, в первом шаге</p></div>
+    </div>
+  </section>
+
+  <!-- ШАГ 1 - АККАУНТ И ПОДПИСКА -->
+  <section id="shag-1" class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 1 / Доступ</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Аккаунт и подписка из России</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Самый частый страх: «из России же не получится, всё заблокировано». Скажу честно, как есть. Напрямую сейчас не зарегистрироваться: сайт Claude не открывается с российских IP, на российский номер регистрация не проходит, карты режет антифрод. Поэтому рабочий путь один и проверенный: взять готовый аккаунт с уже оплаченной подпиской на маркетплейсе цифровых товаров. Аккаунт уже привязан продавцом к нужному региону, тебе остаётся только войти. Я сам начинал именно так</p>
+    </div>
+
+    <figure class="shot">
+      <img src="assets/guide-claudecode/plati.png" alt="Поиск аккаунта Claude на Плати Маркете: список товаров с ценами и кнопками Купить">
+      <figcaption><b>①</b> вбиваешь «claude» в поиск → <b>②</b> выбираешь карточку с подпиской <b>Pro</b> и жмёшь «Купить». Цена видна прямо на карточке, обычно около 1600-2200&nbsp;₽. После оплаты придут логин и пароль</figcaption>
+    </figure>
+
+    <p class="font-display text-lg mb-2 mt-7">Делаем по шагам</p>
+    <ol class="micro prose-ru text-ink/90">
+      <li>Открой сайт <span class="repo">plati.market</span> (Плати Маркет), площадку цифровых товаров за рубли</li>
+      <li>В строку поиска наверху впиши <b>claude</b> и нажми поиск</li>
+      <li>Выбери карточку, где есть слово <b>Pro</b> (подписка Claude Pro). Смотри на отзывы и число продаж, бери продавца с хорошими, и желательно с авто-выдачей и заменой при сбое</li>
+      <li>Нажми <b>«Купить»</b> и оплати российской картой прямо на странице</li>
+      <li>После оплаты ты получишь <b>логин и пароль</b> от готового аккаунта. Сохрани их, они понадобятся на Шаге 5</li>
+    </ol>
+
+    <div class="grid sm:grid-cols-2 gap-3 mt-2 mb-5">
+      <div class="freecard p-4"><p class="font-display text-lg">Pro, около $20 (~1600-2200&nbsp;₽)</p><p class="text-sm text-ink/75 mt-1">На старт этого хватает с запасом. Бери его первым</p></div>
+      <div class="freecard p-4"><p class="font-display text-lg">Max, от ~8&nbsp;тыс&nbsp;₽</p><p class="text-sm text-ink/75 mt-1">Берёшь позже, когда начнёшь делать серьёзно. У Max два уровня: 5x около $100 и 20x около $200. Это уже команда сотрудников за цену одного дня работы дизайнера</p></div>
+    </div>
+    <div class="note p-4"><p class="text-sm text-ink/80">Подписка стоит как ужин в кафе, а делает работу, за которую раньше платили подрядчику. На старт хватает Pro, дороже имеет смысл только когда на этом уже зарабатываешь</p></div>
+
+    <div class="warn p-4 mt-4"><p class="text-sm text-ink/85"><b>Чтобы аккаунт жил долго.</b> Главная причина блокировок это резкая смена страны, IP и пароля на рабочем аккаунте. Просто не трогай эти настройки без нужды, и аккаунт спокойно работает. Логин и пароль сохрани отдельно: если что-то собьётся, нормальный продавец меняет доступ по запросу. Поэтому и берём продавца с поддержкой и заменой</p></div>
+
+    <div class="note p-4 mt-3"><p class="text-sm text-ink/80"><b>Слышал про «кредиты Claude Code с 15 июня»?</b> Это изменение поставили на паузу, оно не вступило в силу. Работа в расширении внутри VS Code (ровно наш сценарий) по-прежнему идёт по лимитам твоей подписки, ничего доплачивать сверху не нужно</p></div>
+  </section>
+
+  <!-- ШАГ 2 - VS CODE -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 2 / Программа</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Поставить VS Code</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>VS Code это бесплатная рабочая программа, что-то вроде тетради для проектов: слева файлы, справа место для твоего ИИ-сотрудника. Звучит как «программа для программистов», но кода ты не увидишь, пока сам не попросишь. Ставится как любое приложение</p>
+    </div>
+
+    <figure class="shot">
+      <img src="assets/guide-claudecode/vscode-download.png" alt="Главная страница code.visualstudio.com с большой кнопкой Download">
+      <figcaption>Сайт <b>code.visualstudio.com</b>: посередине большая тёмная кнопка <b>Download</b> (обведена). Сайт сам поймёт, у тебя Mac или Windows, и предложит нужный файл</figcaption>
+    </figure>
+
+    <p class="font-display text-lg mb-2 mt-7">Делаем по шагам</p>
+    <ol class="micro prose-ru text-ink/90">
+      <li>Зайди на <span class="repo">code.visualstudio.com</span></li>
+      <li>Нажми большую кнопку <b>Download</b> посередине, файл начнёт скачиваться</li>
+      <li><b>На Windows:</b> открой скачанный файл двойным кликом → жми <b>Next</b>, потом ещё <b>Next</b>, в конце <b>Finish</b></li>
+      <li><b>На Mac:</b> открой скачанный файл → перетащи значок «Visual Studio Code» в папку <b>«Программы»</b> → запусти его. Если выскочит «открыть несмотря на разработчика», нажми «Открыть»</li>
+      <li>Программа открылась, на этом Шаг 2 закончен</li>
+    </ol>
+    <div class="note p-4"><p class="text-sm text-ink/80">Скачивай только с сайта <b>code.visualstudio.com</b>, не с рекламы в поиске и не со сторонних сборок. Программа бесплатная и официальная</p></div>
+  </section>
+
+  <!-- ШАГ 3 - РАСШИРЕНИЕ CLAUDE -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 3 / Сотрудник</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Поставить Claude внутрь VS Code</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Это главный шаг, и тут чаще всего теряются. Сейчас покажу прямо на анимации, куда вести мышкой. Claude встаёт внутрь VS Code как дополнение, в три клика. Смотри: жёлтое кольцо это «нажми сюда»</p>
+    </div>
+
+    <!-- АНИМИРОВАННЫЙ UI: установка расширения -->
+    <div class="vsc" role="img" aria-label="Анимация: в VS Code открываем раздел расширений, ищем Claude Code, выбираем издателя Anthropic и нажимаем Install">
+      <div class="vsc-top">
+        <span class="vsc-dot" style="background:#ff5f57"></span>
+        <span class="vsc-dot" style="background:#febc2e"></span>
+        <span class="vsc-dot" style="background:#28c840"></span>
+        <span style="margin-left:10px;font-size:12px;color:#9a9a9a">Visual Studio Code</span>
+      </div>
+      <div class="vsc-wrap">
+        <!-- активная панель слева -->
+        <div class="vsc-act">
+          <span class="vsc-ico"><svg viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg></span>
+          <span class="vsc-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg></span>
+          <span class="vsc-ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M8.3 7.2L16 8.5"/></svg></span>
+          <!-- расширения (четыре квадратика) - активна -->
+          <span class="vsc-ico on" title="Расширения"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="ring-y" style="inset:-9px"></span><span class="num-y" style="left:-28px;top:-12px">1</span></span>
+        </div>
+        <!-- боковая панель: поиск + карточка -->
+        <div class="vsc-side">
+          <div class="vsc-search">Claude Code<span class="vsc-caret"></span></div>
+          <div class="vsc-card">
+            <span class="num-y" style="left:-9px;top:-9px">2</span>
+            <span class="vsc-logo"><svg viewBox="0 0 24 24" fill="#fff" stroke="none"><g><rect x="11" y="2" width="2" height="20" rx="1"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(45 12 12)"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(90 12 12)"/><rect x="11" y="2" width="2" height="20" rx="1" transform="rotate(135 12 12)"/></g></svg></span>
+            <div style="min-width:0">
+              <div class="vsc-name">Claude Code for VS Code</div>
+              <div class="vsc-pub">Anthropic <span class="vsc-badge">✔</span> <span style="color:#777">издатель</span></div>
+              <div class="vsc-desc">Harness the power of Claude Code…</div>
+              <span class="vsc-installwrap"><span class="vsc-install press">Install</span><span class="ring-y" style="inset:-7px;border-radius:9px"></span><span class="num-y" style="right:-11px;top:-12px">3</span></span>
+            </div>
+          </div>
+        </div>
+        <!-- редактор (фон) -->
+        <div class="vsc-main">// сюда Claude будет писать твой проект<br>// ты пишешь словами, он собирает</div>
+      </div>
+      <!-- летающий курсор (живость; точные цели задают жёлтые кольца на элементах) -->
+      <svg class="vsc-cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 1.5L9 21z" fill="#fff" stroke="#1C1815" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <div class="vsc-cap">
+        <span><b>1.</b> Открой расширения, четыре квадратика слева</span>
+        <span><b>2.</b> Впиши «Claude Code» и проверь издателя <b>Anthropic</b></span>
+        <span><b>3.</b> Нажми зелёную <b>Install</b></span>
+      </div>
+    </div>
+    <p class="text-sm text-muted mt-2">↑ Анимация повторяется по кругу. Просто веди мышкой туда же, куда едет белый курсор</p>
+
+    <p class="font-display text-lg mb-2 mt-8">Делаем по шагам</p>
+    <ol class="micro prose-ru text-ink/90">
+      <li>Слева в VS Code есть узкая полоска с иконками. Найди иконку из <b>четырёх квадратиков</b> и нажми её, это «Расширения»</li>
+      <li>Сверху появится строка поиска. Впиши туда <b>Claude Code</b></li>
+      <li>В списке найди карточку, где издатель <b>Anthropic</b> (с синей галочкой). Это важно: бери только Anthropic, под именем «Claude» бывают подделки</li>
+      <li>Нажми на карточке зелёную кнопку <b>Install</b> («Установить»)</li>
+      <li>Если VS Code попросит, нажми <b>Reload</b> («Перезагрузить окно»). Готово: в VS Code появится иконка <b>Spark</b> (оранжевая ✱), через неё будем входить на Шаге 5</li>
+    </ol>
+
+    <p class="font-display text-lg mb-2 mt-7">Как убедиться, что это настоящий Claude</p>
+    <div class="prose-ru text-ink/90 mb-3"><p>Вот так выглядит правильная карточка. Один ориентир: издатель <b>Anthropic</b> с синей галочкой, под ней миллионы установок. Если издатель другой, это не то, закрывай и ищи Anthropic</p></div>
+    <figure class="shot">
+      <img src="assets/guide-claudecode/marketplace.png" alt="Карточка расширения Claude Code for VS Code от издателя Anthropic с зелёной кнопкой Install">
+      <figcaption>Настоящее расширение: <b>①</b> издатель <b>Anthropic</b> с синей галочкой, <b>②</b> зелёная кнопка <b>Install</b>. Бери только Anthropic, под именем «Claude» бывают подделки</figcaption>
+    </figure>
+
+    <div class="warn p-4 mt-4"><p class="text-sm text-ink/85"><b>Только издатель Anthropic.</b> Это единственное место, где можно поставить не то. Сверь имя издателя, и всё правильно. Сломать ничего нельзя: расширение ставится и удаляется как обычная программа</p></div>
+  </section>
+
+  <!-- ШАГ 4 - РУССКИЙ ИНТЕРФЕЙС -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 4 / По-русски</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Сделать интерфейс на русском</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Сразу после установки весь VS Code будет на английском, и именно это пугает новичка сильнее всего. Чинится за пару минут. Ставишь ещё одно бесплатное расширение от Microsoft, и программа становится полностью русской: меню, кнопки, подсказки. Делать это не обязательно, Claude и без того понимает русский, но с русским интерфейсом спокойнее, ничего не теряется</p>
+    </div>
+    <div class="note p-4 mt-5"><p class="text-sm text-ink/80">VS Code не предлагает русский сам и в настройках его нет, это нормально. Русский ставится отдельным расширением, ровно так же, как ты ставил Claude в Шаге 3</p></div>
+
+    <figure class="shot">
+      <img src="assets/guide-claudecode/russian-pack.png" alt="Панель расширений VS Code: поиск Russian Language Pack и карточка от издателя Microsoft с кнопкой Install">
+      <figcaption><b>①</b> снова открой расширения, иконка из четырёх квадратиков слева. <b>②</b> в поиск впиши <b>Russian Language Pack</b>. <b>③</b> в карточке от издателя <b>Microsoft</b> нажми синюю <b>Install</b></figcaption>
+    </figure>
+
+    <p class="font-display text-lg mb-2 mt-7">Делаем по шагам</p>
+    <ol class="micro prose-ru text-ink/90">
+      <li>Слева нажми ту же иконку из <b>четырёх квадратиков</b>, «Расширения», как в Шаге 3</li>
+      <li>В строку поиска впиши <b>Russian Language Pack</b></li>
+      <li>Выбери карточку, где издатель <b>Microsoft</b> (Russian Language Pack for Visual Studio Code)</li>
+      <li>Нажми синюю кнопку <b>Install</b> («Установить»)</li>
+      <li>Внизу справа выскочит окошко, нажми в нём <b>Change Language and Restart</b>. VS Code перезапустится уже на русском</li>
+    </ol>
+
+    <figure class="shot">
+      <img src="assets/guide-claudecode/russian-restart.png" alt="Окно VS Code предлагает сменить язык интерфейса на русский и перезапуститься, кнопка Change Language and Restart">
+      <figcaption>После установки внизу справа появляется такое окно. <b>④</b> нажми <b>Change Language and Restart</b> («Сменить язык и перезапустить»), VS Code закроется и откроется уже по-русски</figcaption>
+    </figure>
+
+    <div class="note p-4 mt-4"><p class="text-sm text-ink/80"><b>Если окошко не появилось:</b> нажми <span class="repo">Cmd+Shift+P</span> (на Windows <span class="repo">Ctrl+Shift+P</span>), впиши <b>Configure Display Language</b>, выбери в списке русский (<span class="repo">ru</span>) и перезапусти VS Code. Передумаешь, там же можно так же вернуть English</p></div>
+  </section>
+
+  <!-- ШАГ 5 - ВХОД -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 5 / Вход</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Войти по подписке</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Теперь подключаем тот аккаунт, что ты купил на Шаге 1. Никаких ключей и кодов: обычный вход логином и паролем</p>
+    </div>
+    <ol class="micro prose-ru text-ink/90">
+      <li>Нажми иконку <b>Spark</b> (оранжевая ✱). Она в правом верхнем углу редактора (видна, когда открыт хотя бы один файл) или внизу справа в строке состояния как <b>✱ Claude Code</b>. Откроется панель Claude</li>
+      <li>В панели нажми <b>Sign in</b> («Войти»). Откроется окно входа, введи <b>логин и пароль</b> от аккаунта Claude, те, что пришли с Плати после оплаты</li>
+      <li>Подтверди вход (кнопка Allow или «Разрешить»). Система скажет, что всё получилось</li>
+      <li>Вернись в VS Code, панель Claude готова к работе</li>
+    </ol>
+    <div class="note p-4 mt-1"><p class="text-sm text-ink/80">Не видишь иконку Spark? Открой любой файл, она показывается только при открытом файле. Или нажми <span class="repo">Cmd/Ctrl+Shift+P</span>, впиши <b>Developer: Reload Window</b> и нажми Enter. Видишь надпись «Not logged in» или «Please run /login», значит просто ещё не нажал Sign in, сделай вход и возвращайся</p></div>
+    <div class="warn p-4 mt-3"><p class="text-sm text-ink/85"><b>Про VPN.</b> Аккаунт ты взял уже привязанным к нужному региону, и именно поэтому ничего крутить с сетью не надо. Не меняй на рабочем аккаунте страну и IP без причины: резкая смена это и есть главный триггер блокировок. Если вход с первого раза не прошёл, не торопись менять настройки, сначала напиши продавцу, у которого покупал</p></div>
+  </section>
+
+  <!-- ШАГ 6 - ПАПКА -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 6 / Рабочее место</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Открыть рабочую папку</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>Claude нужно место, куда складывать то, что он соберёт. Это обязательный шаг, без открытой папки ему некуда работать</p>
+    </div>
+    <ol class="micro prose-ru text-ink/90">
+      <li>В меню сверху нажми <span class="repo">File</span>, потом <span class="repo">Open Folder</span> («Открыть папку»)</li>
+      <li>Создай новую пустую папку, например <span class="repo">claude-demo</span> на рабочем столе</li>
+      <li>Выбери эту папку и нажми «Открыть». Готово</li>
+    </ol>
+    <div class="note p-4 mt-1"><p class="text-sm text-ink/80">Имя папки английскими буквами, без пробелов и русских букв. Это снимает почти все мелкие сбои, когда «файл не открывается»</p></div>
+  </section>
+
+  <!-- ШАГ 7 - ПЕРВАЯ ПОБЕДА -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="toolnum">Шаг 7 / Первая победа</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-2">Первый результат одним предложением</h2>
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>А теперь сама проверка, и сразу первая победа. Никаких команд учить не надо. Пишешь Claude обычными словами на русском, как другу, и он собирает настоящую страницу. Вот как это выглядит</p>
+    </div>
+
+    <!-- АНИМИРОВАННЫЙ UI: промпт → страница -->
+    <div class="vsc" role="img" aria-label="Анимация: пишем Claude фразу на русском, он собирает страницу-визитку">
+      <div class="vsc-top">
+        <span class="vsc-dot" style="background:#ff5f57"></span>
+        <span class="vsc-dot" style="background:#febc2e"></span>
+        <span class="vsc-dot" style="background:#28c840"></span>
+        <span style="margin-left:10px;font-size:12px;color:#9a9a9a">Claude · панель</span>
+      </div>
+      <div style="padding:16px;background:#1e1e1e">
+        <div style="background:#2d2d2e;border:1px solid #3d3d3e;border-radius:8px;padding:12px;color:#e8e8e8;font-size:12.5px;line-height:1.55">
+          сделай красивую современную страницу-визитку: моё имя по центру, короткая подпись и кнопка, тёплые цвета<span class="vsc-caret"></span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;align-items:center">
+          <span class="vsc-install press" style="margin-top:0;background:#2ea043">Accept</span>
+          <span style="font-size:11.5px;color:#9a9a9a">← Claude собрал страницу, нажми «Принять»</span>
+        </div>
+        <!-- мини-браузер с результатом -->
+        <div style="margin-top:14px;border:1px solid #3d3d3e;border-radius:8px;overflow:hidden">
+          <div style="background:#323233;height:24px;display:flex;align-items:center;gap:5px;padding:0 9px">
+            <span class="vsc-dot" style="width:8px;height:8px;background:#ff5f57"></span>
+            <span class="vsc-dot" style="width:8px;height:8px;background:#febc2e"></span>
+            <span class="vsc-dot" style="width:8px;height:8px;background:#28c840"></span>
+          </div>
+          <div style="background:#FAF6EF;color:#1C1815;padding:26px 16px;text-align:center;font-family:'Fraunces',serif">
+            <div style="font-size:24px;font-weight:600;letter-spacing:-.01em">Твоё имя</div>
+            <div style="font-size:12px;color:#6E6358;margin-top:6px;font-family:'Newsreader',serif">короткая подпись о тебе</div>
+            <span style="display:inline-block;margin-top:14px;background:#BE4A24;color:#FAF6EF;font-size:12px;padding:7px 18px;border-radius:999px;font-family:'JetBrains Mono',monospace">Написать мне</span>
+          </div>
+        </div>
+      </div>
+      <div class="vsc-cap">
+        <span><b>1.</b> Пишешь фразу на русском</span>
+        <span><b>2.</b> Жмёшь <b>Accept</b></span>
+        <span><b>3.</b> Открываешь, готовая страница</span>
+      </div>
+    </div>
+
+    <p class="font-display text-lg mb-2 mt-7">Скопируй эту фразу в панель Claude</p>
+    <div class="codebox p-4"><div class="flex justify-end mb-2"><button class="copybtn font-mono text-[11px] border border-white/20 rounded-full px-3 py-1 text-paper/80">Скопировать</button></div><pre>сделай красивую современную страницу-визитку: моё имя по центру,
+короткая подпись под ним и кнопка, тёплые цвета и приятный шрифт</pre></div>
+
+    <ol class="micro prose-ru text-ink/90">
+      <li>Вставь фразу выше в панель Claude и нажми Enter</li>
+      <li>Claude покажет, что собрал, нажми <b>Accept</b> («Принять»)</li>
+      <li>Открой результат: правый клик по файлу <span class="repo">.html</span> → <b>Show in Folder</b> → двойной клик. Страница откроется в браузере</li>
+    </ol>
+
+    <div class="prose-ru text-ink/90 mt-5">
+      <p>На экране настоящая страница, которую ты сделал одним предложением на русском. Ни строчки кода ты не написал. Вот это и есть вся «техника», которую нужно знать: можешь объяснить другу, сможешь объяснить Claude. Claude стоит и работает. Дальше разворачиваем вокруг него рабочую систему</p>
+    </div>
+  </section>
+
+  <!-- ЕСЛИ ЧТО-ТО ПОШЛО НЕ ТАК -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="eyebrow font-mono text-accent">Если застрял</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-3 mb-6">Симптом, что нажать</h2>
+    <div class="freecard p-2 sm:p-3">
+      <table class="fix">
+        <thead><tr><th>Что видишь</th><th>Что делать</th></tr></thead>
+        <tbody>
+          <tr><td>Поставил не то расширение</td><td>Удали и поставь только то, где издатель <b>Anthropic</b>, под именем «Claude» есть подделки</td></tr>
+          <tr><td>Не найду, где войти в Claude</td><td>Открой любой файл, иконка <b>Spark</b> (✱) показывается только при открытом файле; или <span class="repo">Cmd/Ctrl+Shift+P</span> → <b>Developer: Reload Window</b></td></tr>
+          <tr><td>Пишет «Not logged in» / «Please run /login»</td><td>Сначала нажми Sign in и войди логином-паролем, потом возвращайся к запросу</td></tr>
+          <tr><td>Вход не проходит из России</td><td>Не меняй на аккаунте страну и IP, аккаунт уже привязан к региону. Не вышло с первого раза, напиши продавцу на Плати, у него замена</td></tr>
+          
+          
+          
+          
+          <tr><td>Claude «не видит» файл</td><td>Сохрани файл, <span class="repo">Cmd+S</span> на Mac, <span class="repo">Ctrl+S</span> на Windows, и спроси снова</td></tr>
+          <tr><td>Файл не открывается из браузера</td><td>Папка с русскими буквами или пробелами, перенеси проект в папку с английским именем</td></tr>
+          <tr><td>Интерфейс остался английским</td><td><span class="repo">Cmd/Ctrl+Shift+P</span> → <b>Configure Display Language</b> → выбери русский (<span class="repo">ru</span>) и перезапусти VS Code</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note p-4 mt-6"><p class="text-sm text-ink/80"><b>Главный приём:</b> застрял, спроси самого Claude. Скопируй текст ошибки и напиши: «у меня такая ошибка: … объясни простыми словами и исправь». В большинстве случаев он разберётся сам. Застрять навсегда тут невозможно, у тебя в панели всегда есть, кого спросить</p></div>
+  </section>
+
+  <!-- ЧЕКЛИСТ -->
+  <section class="mx-auto max-w-3xl px-5 sm:px-8 py-8">
+    <div class="rule mb-8"></div>
+    <p class="eyebrow font-mono text-accent">Готовность</p>
+    <h2 class="font-display text-2xl sm:text-3xl leading-snug mt-3 mb-6">Шесть галочек, и ты в деле</h2>
+    <ul class="space-y-3">
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">Аккаунт Claude куплен на Плати, подписка активна</p></li>
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">VS Code установлен и открывается</p></li>
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">Расширение Claude Code (издатель Anthropic) стоит, иконка Spark видна</p></li>
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">Интерфейс на русском, поставлен Russian Language Pack от Microsoft (по желанию)</p></li>
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">Вход сделан, Claude отвечает в панели</p></li>
+      <li class="flex gap-3"><span class="text-accent">☐</span><p class="text-ink/90">Первая страница-визитка собрана и открылась в браузере</p></li>
+      </ul>
+    <div class="prose-ru text-ink/90 mt-6"><p>Отметил все шесть, у тебя на компьютере стоит твой первый ИИ-сотрудник на родном языке, ты вошёл по подписке и своими словами собрал первую страницу. Claude готов к работе</p></div>
+  </section>
+
+  <!-- гайд завершается чек-листом, никуда не ведёт -->
+</main>
+
+<footer class="bg-ink text-paper border-t border-paper/15">
+  <div class="mx-auto max-w-5xl px-5 sm:px-8 py-12 flex flex-col sm:flex-row gap-8 justify-between">
+    <div><p class="font-display text-xl">Установка системы</p><p class="text-paper/55 mt-2 max-w-xs">Пошаговый старт для тех, кто начинает с нуля</p></div>
+    <div class="flex gap-10 text-[15px]">
+      <div class="flex flex-col gap-2 text-paper/75"><a href="#shag-1" class="ln">С начала</a></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.copybtn').forEach(btn=>{
+    btn.addEventListener('click',async()=>{
+      const pre=btn.closest('.codebox').querySelector('pre');
+      try{ await navigator.clipboard.writeText(pre.innerText.trim());
+        const o=btn.textContent;btn.textContent='Скопировано';btn.classList.add('copied');
+        setTimeout(()=>{btn.textContent=o;btn.classList.remove('copied')},1600);
+      }catch(e){ const r=document.createRange();r.selectNode(pre);const s=window.getSelection();s.removeAllRanges();s.addRange(r);
+        try{document.execCommand('copy');btn.textContent='Скопировано';btn.classList.add('copied');setTimeout(()=>{btn.textContent='Скопировать';btn.classList.remove('copied')},1600);}catch(_){}
+        s.removeAllRanges(); }
+    });
+  });
+</script>
+</body>
+</html>

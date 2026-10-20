@@ -1,0 +1,84 @@
+{
+ "habits": [
+  {
+   "id": "steps",
+   "name": "Пример: 10 000 шагов",
+   "archived": false,
+   "createdAt": "2001-01-01",
+   "group": "body",
+   "source": "ask",
+   "hint": "Пример. Замени на свою. Порог ставь из источника, которому доверяешь"
+  },
+  {
+   "id": "workout",
+   "name": "Пример: тренировка",
+   "archived": false,
+   "createdAt": "2001-01-01",
+   "group": "body",
+   "source": "ask",
+   "hint": "Пример. Замени на свою"
+  },
+  {
+   "id": "reading",
+   "name": "Пример: чтение 20 минут",
+   "archived": false,
+   "createdAt": "2001-01-01",
+   "group": "focus",
+   "source": "ask",
+   "hint": "Пример. Замени на свою"
+  },
+  {
+   "id": "no_scroll",
+   "name": "Пример: день без залипания в ленте",
+   "archived": false,
+   "createdAt": "2001-01-01",
+   "group": "focus",
+   "source": "ask",
+   "hint": "Пример. Замени на свою"
+  },
+  {
+   "id": "evening_checkin",
+   "name": "Вечерний чек-ин",
+   "archived": false,
+   "createdAt": "2001-01-01",
+   "group": "spirit",
+   "source": "ask",
+   "hint": "Вечерний чек. Вопросы к нему свои: впиши их в BENCHMARK_CONTOURS в static/tab-track.js"
+  }
+ ],
+ "spheres": [
+  {
+   "id": "body",
+   "name": "Тело",
+   "archived": false
+  },
+  {
+   "id": "mind",
+   "name": "Ум",
+   "archived": false
+  },
+  {
+   "id": "work",
+   "name": "Работа",
+   "archived": false
+  },
+  {
+   "id": "money",
+   "name": "Деньги",
+   "archived": false
+  },
+  {
+   "id": "relations",
+   "name": "Отношения",
+   "archived": false
+  },
+  {
+   "id": "rest",
+   "name": "Отдых",
+   "archived": false
+  }
+ ],
+ "log": {},
+ "benchmark": {},
+ "monthly": {}
+}

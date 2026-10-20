@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0e0f13; font-family: Inter, system-ui, sans-serif; }
+      #cap { position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%);
+        text-align: center; display: flex; flex-wrap: wrap; gap: 18px 24px; justify-content: center; align-content: center; }
+      .w { display: inline-block; font-size: 110px; font-weight: 900; color: #fff; opacity: 0; will-change: transform, opacity;
+        text-shadow: 0 6px 30px rgba(0,0,0,.5); }
+      .w.hl { color: #4f8cff; }
+      #wm { position: absolute; right: 80px; bottom: 130px; font-size: 30px; font-weight: 600; color: rgba(255,255,255,.62); z-index: 99; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="6" data-width="1080" data-height="1920">
+      <!-- one .w per word; .hl = акцентное слово. data-sfx="impact" на каждое появление -->
+      <div id="cap">
+        <span class="w" data-sfx="impact">Перестань</span>
+        <span class="w" data-sfx="impact">писать</span>
+        <span class="w hl" data-sfx="impact">контент</span>
+        <span class="w" data-sfx="impact">руками</span>
+      </div>
+      <div id="wm"><твой-хэндл></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const words = gsap.utils.toArray(".w");
+      // beat-like slam timings; per-word label "w0".. для SFX cue (бит-онсеты librosa подменят при наличии музыки)
+      const t = [0.3, 1.0, 1.7, 2.5];
+      words.forEach((el, i) => {
+        tl.add("w" + i, t[i]);
+        tl.fromTo(el, { opacity: 0, scale: 0.4, y: 30 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.32, ease: "back.out(2.4)" }, "w" + i);
+      });
+      // hold всех слов до конца
+      tl.to("#cap", { opacity: 1, duration: 2.5 }, 3.2);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+<meta charset="UTF-8">
+<title>Hero Screenshot Overlay (P2)</title>
+<style>
+  :root {
+    --brand-primary: {{brand_primary}};
+    --brand-accent: {{brand_accent}};
+    --brand-text-light: #ffffff;
+    --brand-text-dark: #0a0a0a;
+    --canvas-bg: #f5f4f0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; overflow: hidden; font-family: 'Inter', 'Helvetica Neue', sans-serif; }
+
+  .slide {
+    width: 1080px;
+    height: 1350px;
+    position: relative;
+    background: var(--canvas-bg);
+    padding: 60px;
+  }
+
+  .headline {
+    color: var(--brand-text-dark);
+    font-size: {{headline_size}};
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-transform: {{headline_transform}};
+    margin-bottom: 32px;
+    max-width: 960px;
+  }
+
+  .headline .accent {
+    color: var(--brand-primary);
+  }
+
+  .screenshot-frame {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    aspect-ratio: 16 / 10;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 30px 80px rgba(0,0,0,0.25),
+      0 8px 24px rgba(0,0,0,0.15);
+    background: #1a1a1a;
+  }
+
+  .screenshot-chrome {
+    height: 32px;
+    background: linear-gradient(to bottom, #2c2c2c, #1f1f1f);
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+  }
+  .screenshot-chrome .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot.red { background: #ff5f56; }
+  .dot.yellow { background: #ffbd2e; }
+  .dot.green { background: #27c93f; }
+
+  .screenshot-image {
+    width: 100%;
+    height: calc(100% - 32px);
+    background-image: url('{{screenshot_url}}');
+    background-size: cover;
+    background-position: top center;
+  }
+
+  .annotation-callout {
+    position: absolute;
+    top: {{callout_top}};
+    right: -40px;
+    background: var(--brand-primary);
+    color: var(--brand-text-light);
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transform: rotate(-3deg);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+  }
+  .annotation-callout::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -28px;
+    transform: translateY(-50%);
+    border: 14px solid transparent;
+    border-right-color: var(--brand-primary);
+  }
+
+  .sub-context {
+    margin-top: 40px;
+    color: var(--brand-text-dark);
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 1.4;
+    opacity: 0.78;
+    max-width: 880px;
+  }
+
+  .real-element-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 8px 16px;
+    background: var(--brand-text-dark);
+    color: var(--brand-text-light);
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+  }
+
+  .brand-signature {
+    position: absolute;
+    bottom: 36px;
+    right: 60px;
+    color: var(--brand-text-dark);
+    font-size: 22px;
+    font-weight: 500;
+    opacity: 0.55;
+  }
+
+  .corner-counter {
+    position: absolute;
+    top: 60px;
+    right: 60px;
+    color: var(--brand-text-dark);
+    font-size: 22px;
+    font-weight: 600;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="corner-counter">{{slide_counter}}</div>
+
+    <h1 class="headline">{{headline_html}}</h1>
+
+    <div class="screenshot-frame">
+      <div class="screenshot-chrome">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="screenshot-image"></div>
+      <div class="annotation-callout">{{callout_text}}</div>
+    </div>
+
+    <p class="sub-context">{{sub_context}}</p>
+    <span class="real-element-tag">{{real_element_tag}}</span>
+
+    <div class="brand-signature">{{brand_handle}}</div>
+  </div>
+</body>
+</html>

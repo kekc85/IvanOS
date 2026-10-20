@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Расписание для macOS. Что сделать:
+  1) подставь два пропуска ниже
+  2) сохрани файл как ~/Library/LaunchAgents/autopost.plist
+  3) включи:  launchctl load ~/Library/LaunchAgents/autopost.plist
+  4) проверь: launchctl list | grep autopost
+  Выключить: launchctl unload ~/Library/LaunchAgents/autopost.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>autopost</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>{{ПУТЬ_К_ПИТОНУ}}</string>
+    <string>{{ПУТЬ_К_ДВИЖКУ}}/cli.py</string>
+    <string>run</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>{{ПУТЬ_К_ДВИЖКУ}}</string>
+
+  <!-- просыпаться раз в минуту: очередь сама решит, чему пришло время -->
+  <key>StartInterval</key>
+  <integer>60</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>{{ПУТЬ_К_ДВИЖКУ}}/../autopost-raspisanie.out</string>
+  <key>StandardErrorPath</key>
+  <string>{{ПУТЬ_К_ДВИЖКУ}}/../autopost-raspisanie.err</string>
+</dict>
+</plist>
